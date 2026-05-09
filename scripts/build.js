@@ -26,4 +26,34 @@ await writeFile(join(dist, 'assets/app.js'), app);
 await writeFile(join(dist, 'src/scoreEngine.js'), await (await import('node:fs/promises')).readFile(join(root, 'src/scoreEngine.js'), 'utf8'));
 await writeFile(join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${siteOrigin}/sitemap.xml\n`);
 await writeFile(join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.filter((page) => page.path.endsWith('index.html') || page.path.endsWith('.html')).map((page) => `  <url><loc>${siteOrigin}/${page.path.replace(/index\.html$/,'')}</loc></url>`).join('\n')}\n</urlset>\n`);
+await writeFile(join(dist, '_headers'), `/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/src/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.html
+  Cache-Control: public, max-age=300, must-revalidate
+
+/robots.txt
+  Cache-Control: public, max-age=3600
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+`);
+await writeFile(join(dist, '_redirects'), `# Cloudflare Pages redirects for AP Score Calculator.
+# Canonical policy after launch: / is available, but its canonical tag points to /ap-score-calculator-2026/.
+# Keep / reachable for users and ads, and let canonical tags consolidate organic indexing to /ap-score-calculator-2026/.
+# Do not add a / <-> /ap-score-calculator-2026/ redirect until Search Console / analytics data confirms it will not hurt UX or campaigns.
+# If Cloudflare Pages exposes a *.pages.dev preview host publicly, prefer a dashboard-level custom-domain redirect
+# or add a host-aware redirect rule there so apscorecalculator.store remains the only indexed production host.
+`);
 console.log(`Built ${pages.length} HTML pages into ${dist}`);

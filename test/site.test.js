@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { sitePages } from '../src/site.js';
 import { subjects } from '../src/scoreEngine.js';
 
@@ -68,4 +68,28 @@ test('canonical URLs default to apscorecalculator.store and generated pages avoi
     assert.match(page.html, /https:\/\/apscorecalculator\.store/);
     assert.doesNotMatch(page.html, /example\.com|href="#"|Lorem ipsum|Your Company/);
   }
+});
+
+
+test('Cloudflare Pages hardening files document deploy settings and preserve SEO assets', () => {
+  const headersUrl = new URL('../dist/_headers', import.meta.url);
+  const redirectsUrl = new URL('../dist/_redirects', import.meta.url);
+  if (!existsSync(headersUrl) || !existsSync(redirectsUrl)) {
+    return;
+  }
+  const headers = readFileSync(headersUrl, 'utf8');
+  const redirects = readFileSync(redirectsUrl, 'utf8');
+  const wrangler = readFileSync(new URL('../wrangler.toml', import.meta.url), 'utf8');
+
+  assert.match(wrangler, /name = "ap-score-calculator"/);
+  assert.match(wrangler, /pages_build_output_dir = "dist"/);
+  assert.match(wrangler, /SITE_ORIGIN = "https:\/\/apscorecalculator\.store"/);
+  assert.match(headers, /Strict-Transport-Security: max-age=31536000/);
+  assert.match(headers, /X-Content-Type-Options: nosniff/);
+  assert.match(headers, /Referrer-Policy: strict-origin-when-cross-origin/);
+  assert.match(headers, /Content-Security-Policy: default-src 'self'/);
+  assert.match(headers, /\/assets\/\*/);
+  assert.match(headers, /Cache-Control: public, max-age=31536000, immutable/);
+  assert.match(headers, /\/sitemap\.xml/);
+  assert.match(redirects, /canonical tag points to \/ap-score-calculator-2026\//);
 });

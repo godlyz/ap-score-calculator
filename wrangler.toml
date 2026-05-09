@@ -1,0 +1,14 @@
+name = "ap-score-calculator"
+compatibility_date = "2026-05-09"
+pages_build_output_dir = "dist"
+
+# Cloudflare Pages project notes
+# Production branch: main
+# Build command: npm run build
+# Output directory: dist
+# Production origin / canonical origin: https://apscorecalculator.store
+# Required build environment variable (optional override):
+# SITE_ORIGIN = "https://apscorecalculator.store"
+
+[vars]
+SITE_ORIGIN = "https://apscorecalculator.store"
