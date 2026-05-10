@@ -106,6 +106,18 @@ function subjectCategory(subject) {
   return 'English';
 }
 
+function confidenceLabel(subject) {
+  const labels = { low: 'Conservative estimate', medium: 'Moderate confidence estimate', high: 'Higher confidence estimate' };
+  return labels[subject.confidence] || 'Estimate confidence noted';
+}
+
+function confidenceCopy(subject) {
+  if (subject.confidence === 'low') {
+    return 'Confidence: conservative. This subject has essay-heavy, recent-change, or reader-dependent scoring, so leave a larger safety buffer around every estimated cutoff.';
+  }
+  return 'Confidence: moderate. The calculator is useful for planning, but yearly equating and section-level scoring can still move the official boundary.';
+}
+
 function subjectMatrix() {
   const groups = ['STEM', 'English', 'Social Science'];
   return groups.map((group) => {
@@ -124,7 +136,8 @@ function hubPage() {
     { q: 'Is this AP score calculator official?', a: 'No. This calculator is unofficial and is not affiliated with or endorsed by College Board. It uses public exam structures, historical scoring patterns, and transparent assumptions to provide a planning estimate. Your official AP score may differ.' },
     { q: 'How accurate is the calculator?', a: 'Use it as a directional study-planning tool, not a score report. Actual AP scores can vary by year, exam form, and official score-setting process.' },
     { q: 'What score do I need for a 5?', a: 'Enter your section points in a subject calculator to see an estimated gap to a 5. The number is not an official cutoff. It is a planning estimate based on the calculator’s conversion assumptions.' },
-    { q: 'Does this site store my scores?', a: 'No. Calculator inputs are processed in your browser by this static site and are not stored by us.' }
+    { q: 'Does this site store my scores?', a: 'No. Calculator inputs are processed in your browser by this static site and are not stored by us.' },
+    { q: 'Which calculators have lower confidence?', a: 'Essay-heavy or recently changed subjects such as AP Lang, AP Lit, and AP Psychology use more conservative confidence language. If your estimate is close to a cutoff, treat it as a range and aim for extra buffer points.' }
   ];
   const quickLinks = subjects.slice(0, 6).map((subject) => `<a href="/${subject.slug}-score-calculator/">${escapeHtml(subject.shortName)}</a>`).join('');
   const body = `
@@ -137,7 +150,7 @@ function hubPage() {
       <a class="button" href="#calculator-start">Choose your subject</a>
       <a class="button secondary" href="#methodology">How estimates work</a>
     </div>
-    <p class="hero-disclaimer">This is an independent planning tool. It is not affiliated with or endorsed by College Board.</p>
+    <p class="hero-disclaimer">This is an independent planning tool. It is not affiliated with or endorsed by College Board. Use every estimate as a range, especially when your result is close to a cutoff.</p>
   </div>
   <aside class="hero-panel preview-card" aria-label="Calculator preview">
     <span class="preview-label">Example preview</span>
@@ -146,6 +159,7 @@ function hubPage() {
     <p>Estimated Composite Score: 74 / 100</p>
     <ul>
       <li>You may need about 8 more composite points to reach a 5.</li>
+      <li>Confidence: moderate — add buffer near cutoffs.</li>
       <li>Inputs stay in your browser.</li>
       <li>Enter your real section points on a subject page to see your estimate.</li>
     </ul>
@@ -171,12 +185,14 @@ function hubPage() {
       <li>Enter estimated MCQ, FRQ, DBQ, LEQ, or essay points from a practice attempt.</li>
       <li>The calculator clamps impossible inputs and maps valid points into an estimated composite score.</li>
       <li>The result compares that composite with historical score bands and shows estimated gaps to 3, 4, and 5.</li>
+      <li>Confidence labels flag subjects where essays, FRQ partial credit, recent structure changes, or yearly equating make the estimate less certain.</li>
     </ol>
   </div>
   <aside class="note">
     <h2>2026 planning note</h2>
     <p>Last updated: ${lastUpdated}. These calculators are maintained for 2026 AP planning. They use public exam structures, historical scoring patterns, and transparent assumptions to estimate an AP score range.</p>
     <p>They are not official College Board score calculators. Your final AP score is determined by College Board and may differ from this estimate.</p>
+    <p>For AP Lang, AP Lit, and AP Psychology, this v1.2 iteration uses more conservative wording because essay-reader variation or recent scoring changes make exact cutoff claims riskier.</p>
   </aside>
 </section>
 <section class="section faq">
@@ -202,7 +218,8 @@ function subjectPage(subject) {
     { q: `Is this ${subject.shortName} calculator official?`, a: 'No. This calculator is unofficial and is not affiliated with or endorsed by College Board. It uses public exam structures, historical scoring patterns, and transparent assumptions to provide a planning estimate. Your official AP score may differ.' },
     { q: `What score do I need for a 5 on ${subject.shortName}?`, a: 'Enter your section points in the calculator to see an estimated gap to a 5. The number is not an official cutoff. It is a planning estimate based on the calculator’s conversion assumptions.' },
     { q: 'How should I use the score-needed result?', a: 'Use it as study guidance. Try adjusting one section at a time to see which extra raw points may move your score fastest.' },
-    { q: 'Are the raw score conversions exact?', a: 'No. This conversion chart is estimated from public exam structure and historical scoring patterns. It is not an official College Board conversion table.' }
+    { q: 'Are the raw score conversions exact?', a: 'No. This conversion chart is estimated from public exam structure and historical scoring patterns. It is not an official College Board conversion table.' },
+    { q: `How confident is this ${subject.shortName} estimate?`, a: `${confidenceCopy(subject)} ${subject.riskNote}` }
   ];
   const inputs = subject.sections.map((section) => `<label>${escapeHtml(section.label)} <span>0–${section.max}</span><input inputmode="numeric" type="number" min="0" max="${section.max}" step="1" data-key="${section.key}" data-max="${section.max}" value=""></label>`).join('\n');
   const rows = conversionRows(subject).map((row) => `<tr><td>${row.apScore}</td><td>${escapeHtml(row.range)}</td><td>${row.apScore === 5 ? 'Estimated high-score range; keep reviewing misses.' : row.apScore >= 3 ? 'May be college-credit relevant, but policies vary by school.' : 'Use as a diagnostic baseline for study planning.'}</td></tr>`).join('\n');
@@ -214,7 +231,7 @@ function subjectPage(subject) {
     <p class="eyebrow">Maintained for 2026 · unofficial ${escapeHtml(subject.shortName)} estimate</p>
     <h1>${escapeHtml(subject.title)}</h1>
     <p class="hero-copy">${escapeHtml(subject.description)} Enter raw section points from a practice test to see an estimated AP score, estimated composite score, and the study gap to your next target. This is not an official AP score.</p>
-    <div class="trust-row"><span>Local browser calculation</span><span>Transparent assumptions</span><span>No signup</span><span>Unofficial estimate</span></div>
+    <div class="trust-row"><span>Local browser calculation</span><span>Transparent assumptions</span><span>${confidenceLabel(subject)}</span><span>No signup</span><span>Unofficial estimate</span></div>
   </div>
   <div class="calculator-card" id="calculator">
     <div class="card-kicker">Score input</div>
@@ -224,6 +241,7 @@ function subjectPage(subject) {
       <strong data-result-score>Enter scores</strong>
       <p data-result-composite>Estimated Composite Score will appear here.</p>
       <p data-result-explanation class="result-explanation">Add your raw points to see the score band and study gap.</p>
+      <p class="confidence-badge" data-result-confidence>${escapeHtml(confidenceLabel(subject))}: ${escapeHtml(confidenceCopy(subject))}</p>
       <p class="validation-message" data-validation-message hidden></p>
       <ul data-result-needed></ul>
       <p class="microcopy">Unofficial estimate. Actual AP scores may differ. Your calculator inputs are processed in your browser and are not stored by us.</p>
@@ -234,7 +252,7 @@ function subjectPage(subject) {
   <div class="section-heading">
     <p class="eyebrow">Raw score conversion</p>
     <h2>Estimated ${escapeHtml(subject.shortName)} composite ranges</h2>
-    <p class="note-inline">This conversion chart is an estimate based on public exam structure and historical scoring patterns. It is not an official College Board conversion table, and actual AP score cutoffs may vary by year and exam administration.</p>
+    <p class="note-inline">This conversion chart is an estimate based on public exam structure and historical scoring patterns. It is not an official College Board conversion table, and actual AP score cutoffs may vary by year and exam administration. ${escapeHtml(subject.riskNote)}</p>
   </div>
   <div class="table-wrap"><table><thead><tr><th>Estimated AP Score</th><th>Estimated composite range</th><th>How to read it</th></tr></thead><tbody>${rows}</tbody></table></div>
 </section>
@@ -245,10 +263,13 @@ function subjectPage(subject) {
     <p>${escapeHtml(subject.structure)}</p>
     <p>Example preview: with a sample composite of ${sampleResult.composite}, this calculator estimates you may need about ${sampleResult.needed[5]} more composite points to reach a 5. Enter your own section points above for your estimate.</p>
     <p>Because raw section weights differ, the best study move is not always “more total questions.” Review the section inputs and prioritize the area where a realistic raw-point gain may move your composite past the next estimated range.</p>
+    <p>If the calculator says you are within about 5–8 composite points of a 3, 4, or 5, treat that as a near-cutoff zone. In that zone, use the result to choose your next study target instead of treating the predicted AP score as settled.</p>
   </div>
   <aside class="note">
     <h2>Methodology and assumptions</h2>
     <p>${escapeHtml(subject.assumptions)}</p>
+    <p><strong>${escapeHtml(confidenceLabel(subject))}:</strong> ${escapeHtml(confidenceCopy(subject))}</p>
+    <p>${escapeHtml(subject.riskNote)}</p>
     <p>This calculator combines your section inputs into an estimated raw or composite score, then maps that score to an AP 1–5 range using historical scoring patterns, public exam structure, and transparent assumptions. Because official AP score setting can vary by year and exam administration, this result should be used as an unofficial planning estimate.</p>
     <p>Last updated: ${lastUpdated}</p>
   </aside>
@@ -265,8 +286,8 @@ function subjectPage(subject) {
   <a href="/ap-score-calculator-2026/">All AP score calculators</a>${related}
 </section>`;
   return pageShell({
-    title: `${subject.title} | Score Estimate`,
-    description: `Free unofficial ${subject.shortName} score calculator for 2026 AP planning. Enter section points to estimate your AP score, composite range, and gap to 5.`,
+    title: `${subject.title} | Raw Score Estimate & Gap to 5`,
+    description: `Free unofficial ${subject.shortName} score calculator for 2026 AP planning. Estimate your score, confidence level, composite range, and gap to 3/4/5.`,
     path: `/${subject.slug}-score-calculator/`,
     body,
     schema: [

@@ -13,6 +13,8 @@ export const subjects = [
     ],
     displayMaxComposite: 130,
     cutoffs: { 1: 0, 2: 38, 3: 58, 4: 76, 5: 92 },
+    confidence: 'medium',
+    riskNote: 'DBQ/LEQ and yearly score-setting can move the final boundary, so treat the gap as a conservative planning range rather than a fixed cutoff.',
     structure: 'AP US History includes multiple-choice questions, short-answer questions, one DBQ, and one LEQ. This MVP maps your section points into an estimated composite score.',
     assumptions: 'Estimated from public exam structure and historical scoring patterns; not an official College Board conversion.'
   },
@@ -29,6 +31,8 @@ export const subjects = [
       { key: 'argument', label: 'Argument Essay', max: 6, weight: 3 }
     ],
     cutoffs: { 1: 0, 2: 32, 3: 50, 4: 68, 5: 83 },
+    confidence: 'low',
+    riskNote: 'Essay rubric scoring is highly variable across readers and prompts; use a wider buffer before assuming you are safely in the next AP score band.',
     structure: 'AP Lang combines multiple choice with three essays. Essay inputs use rubric-style point estimates.',
     assumptions: 'Essay scoring is approximate; final scores depend on official reading and yearly score setting.'
   },
@@ -43,6 +47,8 @@ export const subjects = [
       { key: 'frq', label: 'Free Response', max: 46, weight: 1 }
     ],
     cutoffs: { 1: 0, 2: 38, 3: 60, 4: 74, 5: 90 },
+    confidence: 'medium',
+    riskNote: 'FRQ partial credit and exam-form difficulty can shift boundaries, especially near the 3/4 and 4/5 edges.',
     structure: 'AP Chemistry includes multiple-choice and free-response sections. This calculator treats each entered point as an estimated raw/composite point.',
     assumptions: 'Cutoffs are estimated ranges based on historical scoring patterns and public exam structure.'
   },
@@ -57,6 +63,8 @@ export const subjects = [
       { key: 'frq', label: 'Free Response', max: 54, weight: 1 }
     ],
     cutoffs: { 1: 0, 2: 32, 3: 52, 4: 68, 5: 82 },
+    confidence: 'medium',
+    riskNote: 'Calculator/no-calculator mix is simplified into two inputs, so keep a small safety buffer near each estimated cutoff.',
     structure: 'AP Calculus AB combines calculator and no-calculator work across MCQ and FRQ sections. This MVP uses two simple inputs for speed.',
     assumptions: 'The formula is a transparent estimate and does not reproduce official scoring tables.'
   },
@@ -71,6 +79,8 @@ export const subjects = [
       { key: 'frq', label: 'Free Response', max: 46, weight: 1 }
     ],
     cutoffs: { 1: 0, 2: 36, 3: 58, 4: 73, 5: 88 },
+    confidence: 'medium',
+    riskNote: 'FRQ scoring details and yearly equating can change the practical boundary; use the estimate to prioritize weak topics.',
     structure: 'AP Biology uses multiple choice and free response. The calculator gives an estimated composite and target-score gap.',
     assumptions: 'Estimated from historical patterns; actual yearly cutoffs can vary.'
   },
@@ -85,6 +95,8 @@ export const subjects = [
       { key: 'frq', label: 'Free Response', max: 20, weight: 2.25 }
     ],
     cutoffs: { 1: 0, 2: 35, 3: 52, 4: 68, 5: 82 },
+    confidence: 'medium',
+    riskNote: 'The calculator uses total FRQ points for speed, so individual FRQ task variation is not modeled exactly.',
     structure: 'AP Gov includes multiple choice and four free-response tasks. This calculator uses total FRQ points for a fast estimate.',
     assumptions: 'Estimated for informational use only; not a fixed official cutoff.'
   },
@@ -99,6 +111,8 @@ export const subjects = [
       { key: 'frq', label: 'Free Response', max: 50, weight: 1 }
     ],
     cutoffs: { 1: 0, 2: 34, 3: 52, 4: 68, 5: 84 },
+    confidence: 'medium',
+    riskNote: 'Investigative-task and FRQ partial-credit variation can matter near a cutoff, so use the shown gap as a planning range.',
     structure: 'AP Statistics combines MCQ and FRQ performance. The calculator estimates a composite score and AP score band.',
     assumptions: 'Cutoffs are approximate and should be used as study guidance, not official results.'
   },
@@ -113,6 +127,8 @@ export const subjects = [
       { key: 'frq', label: 'Free Response', max: 14, weight: 2 }
     ],
     cutoffs: { 1: 0, 2: 42, 3: 58, 4: 74, 5: 88 },
+    confidence: 'low',
+    riskNote: 'AP Psychology scoring and exam structure have had recent changes; this page intentionally uses conservative confidence language until more current public scoring evidence is available.',
     structure: 'AP Psychology estimates combine a large MCQ section with two FRQs. Enter raw section points for a quick prediction.',
     assumptions: 'Estimated for 2026 freshness using public structure and historical score patterns.'
   },
@@ -129,6 +145,8 @@ export const subjects = [
       { key: 'argument', label: 'Literary Argument Essay', max: 6, weight: 3 }
     ],
     cutoffs: { 1: 0, 2: 34, 3: 52, 4: 70, 5: 86 },
+    confidence: 'low',
+    riskNote: 'Three essay scores make this estimate especially reader-dependent; build a larger buffer before treating a 4/5 estimate as secure.',
     structure: 'AP Literature combines multiple choice with three essay responses. Essay points are rubric-style estimates.',
     assumptions: 'Essay results are especially approximate and depend on official scoring.'
   }
@@ -199,6 +217,8 @@ export function calculateScore(slug, inputs = {}) {
     predictedScore: score,
     scoreBand: String(score),
     needed,
+    confidence: subject.confidence,
+    riskNote: subject.riskNote,
     nextAction: nextTarget
       ? `You may need about ${needed[nextTarget]} more estimated composite points to reach a ${nextTarget}.`
       : 'You are in the estimated 5 range. Keep reviewing weak sections.'

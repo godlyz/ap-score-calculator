@@ -28,6 +28,8 @@ test('subject pages contain SEO, calculator, schema, internal links, and require
     assert.match(page.html, /data-calculator/);
     assert.match(page.html, /Estimated AP score/);
     assert.match(page.html, /Result interpretation/);
+    assert.match(page.html, /Estimate confidence|Conservative estimate|Moderate confidence estimate/);
+    assert.match(page.html, /near-cutoff zone|safety buffer|wider buffer|planning range/);
     assert.match(page.html, /Estimated raw\/composite conversion chart|Raw score conversion/);
     assert.match(page.html, /What score do I need\?/);
     assert.match(page.html, /FAQPage/);
@@ -52,6 +54,7 @@ test('hub links to all subject pages with indexable subject matrix and 2026 posi
   assert.match(hub.html, /Last updated/);
   assert.match(hub.html, /mobile-first/);
   assert.match(hub.html, /what score you need/i);
+  assert.match(hub.html, /lower confidence|conservative confidence|near a cutoff/i);
   assert.doesNotMatch(hub.html, /example\.com/);
 });
 
@@ -60,6 +63,8 @@ test('built calculator validation copy names adjusted fields and values', () => 
 
   assert.match(app, /was adjusted to/);
   assert.match(app, /adjustments\.join\('; '\)/);
+  assert.match(app, /near-cutoff zone; add buffer/);
+  assert.match(app, /Estimate confidence/);
   assert.doesNotMatch(app, /Adjusted .* to the allowed range 0–/);
 });
 
