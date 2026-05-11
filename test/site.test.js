@@ -17,6 +17,20 @@ test('static site renders hub plus all nine subject pages and legal/contact page
   }
 });
 
+test('v3 homepage is distinct from hub and features APUSH with correct rebuilt links', () => {
+  const pages = sitePages();
+  const home = pages.find((page) => page.path === 'index.html');
+  const hub = pages.find((page) => page.path === 'ap-score-calculator-2026/index.html');
+
+  assert.notEqual(home.html, hub.html);
+  assert.match(home.html, /Free AP score calculators for 2026 planning/);
+  assert.match(home.html, /Featured subject matrix/);
+  assert.match(home.html, /href="\/apush-score-calculator\/"/);
+  assert.match(home.html, /APUSH is visually featured/);
+  assert.match(home.html, /href="\/ap-score-calculator-2026\/"/);
+  assert.doesNotMatch(home.html, /apushscorecalculator\.us|old APUSH route|v1\.2 iteration/);
+});
+
 test('subject pages contain SEO, calculator, schema, internal links, and required disclaimers', () => {
   const pages = sitePages();
 
@@ -24,7 +38,11 @@ test('subject pages contain SEO, calculator, schema, internal links, and require
     const page = pages.find((item) => item.path === `${subject.slug}-score-calculator/index.html`);
     assert(page, `missing page for ${subject.slug}`);
     assert.match(page.html, new RegExp(`<title>${subject.title}`));
-    assert.match(page.html, new RegExp(`<h1>${subject.title}</h1>`));
+    if (subject.slug === 'apush') {
+      assert.match(page.html, /<h1>APUSH Score Calculator 2026<\/h1>/);
+    } else {
+      assert.match(page.html, new RegExp(`<h1>${subject.title}</h1>`));
+    }
     assert.match(page.html, /data-calculator/);
     assert.match(page.html, /Estimated AP score/);
     assert.match(page.html, /Result interpretation/);
@@ -50,11 +68,11 @@ test('hub links to all subject pages with indexable subject matrix and 2026 posi
     assert.match(hub.html, new RegExp(subject.title));
   }
   assert.match(hub.html, /Subject matrix/);
-  assert.match(hub.html, /How results are estimated/);
+  assert.match(hub.html, /What each calculator shows/);
   assert.match(hub.html, /Last updated/);
-  assert.match(hub.html, /mobile-first/);
-  assert.match(hub.html, /what score you need/i);
-  assert.match(hub.html, /lower confidence|conservative confidence|near a cutoff/i);
+  assert.match(hub.html, /browser-local|Browse-first/);
+  assert.match(hub.html, /Browse every AP calculator in one place/);
+  assert.match(hub.html, /APUSH is highlighted under Social Science/);
   assert.doesNotMatch(hub.html, /example\.com/);
 });
 
@@ -66,6 +84,21 @@ test('built calculator validation copy names adjusted fields and values', () => 
   assert.match(app, /near-cutoff zone; add buffer/);
   assert.match(app, /Estimate confidence/);
   assert.doesNotMatch(app, /Adjusted .* to the allowed range 0–/);
+});
+
+test('v3 APUSH page follows design handoff IA and trust requirements', () => {
+  const apush = sitePages().find((page) => page.path === 'apush-score-calculator/index.html');
+
+  assert.match(apush.html, /<h1>APUSH Score Calculator 2026<\/h1>/);
+  assert.match(apush.html, /Estimate my APUSH score/);
+  assert.match(apush.html, /See scoring formula/);
+  assert.match(apush.html, /MCQ 0–55, SAQ 0–9, DBQ 0–7, LEQ 0–6/);
+  assert.match(apush.html, /APUSH exam structure/);
+  assert.match(apush.html, /What to practice next/);
+  assert.match(apush.html, /Does it store my scores\?/);
+  assert.match(apush.html, /Not affiliated with College Board/);
+  assert.match(apush.html, /href="\/ap-score-calculator-2026\/"/);
+  assert.doesNotMatch(apush.html, /fake|testimonial|guaranteed|official AP score report/);
 });
 
 test('canonical URLs default to apscorecalculator.store and generated pages avoid dead placeholder links', () => {
@@ -97,4 +130,74 @@ test('Cloudflare Pages hardening files document deploy settings and preserve SEO
   assert.match(headers, /Cache-Control: public, max-age=31536000, immutable/);
   assert.match(headers, /\/sitemap\.xml/);
   assert.match(redirects, /canonical tag points to \/ap-score-calculator-2026\//);
+});
+
+
+test('v3.1 APUSH visual-rich redesign includes dashboard charts and mobile input acceptance markers', () => {
+  const apush = sitePages().find((page) => page.path === 'apush-score-calculator/index.html');
+  const home = sitePages().find((page) => page.path === 'index.html');
+
+  assert.match(apush.html, /score-dashboard-visual/);
+  assert.match(apush.html, /data-apush-dashboard/);
+  assert.match(apush.html, /data-dashboard-score/);
+  assert.match(apush.html, /data-dashboard-composite/);
+  assert.match(apush.html, /data-score-band-strip/);
+  assert.match(apush.html, /data-target-strip/);
+  assert.match(apush.html, /Score band dashboard/);
+  assert.match(apush.html, /score-band-strip/);
+  assert.match(apush.html, /section weighting chart|APUSH section weighting chart/);
+  assert.match(apush.html, /target-strip/);
+  assert.match(apush.html, /Weak MCQ/);
+  assert.match(apush.html, /MCQ correct/);
+  assert.match(apush.html, /SAQ total points/);
+  assert.doesNotMatch(apush.html, /Multiple Choice <span>0–55/);
+  assert.match(home.html, /popular-paths/);
+  assert.match(home.html, /Stay in the hero flow/);
+});
+
+test('v3.1 APUSH dashboard stays synchronized with calculateScore-driven state', () => {
+  const app = readFileSync(new URL('../dist/assets/app.js', import.meta.url), 'utf8');
+  const apush = sitePages().find((page) => page.path === 'apush-score-calculator/index.html');
+
+  assert.match(app, /data-apush-dashboard/);
+  assert.match(app, /data-dashboard-score/);
+  assert.match(app, /data-dashboard-composite/);
+  assert.match(app, /data-score-band-strip/);
+  assert.match(app, /data-target-strip/);
+  assert.match(app, /syncDashboard\(root,/);
+  assert.match(app, /calculateScore\(subject\.slug,values\)/);
+  assert.match(app, /near-cutoff zone; add buffer/);
+  assert.match(apush.html, /data-apush-dashboard/);
+});
+
+
+
+
+test('v3.2 every subject page includes shared visual dashboard and dynamic score bands', () => {
+  const pages = sitePages();
+
+  for (const subject of subjects) {
+    const page = pages.find((item) => item.path === `${subject.slug}-score-calculator/index.html`);
+    assert(page, `missing page for ${subject.slug}`);
+    assert.match(page.html, /score-dashboard-visual/);
+    assert.match(page.html, /data-score-dashboard/);
+    assert.match(page.html, /data-dashboard-score/);
+    assert.match(page.html, /data-dashboard-composite/);
+    assert.match(page.html, /data-score-band-strip/);
+    assert.match(page.html, /data-target-strip/);
+    assert.match(page.html, new RegExp(`See the ${subject.shortName} score bands`));
+    assert.match(page.html, new RegExp(`AP 5: ${subject.cutoffs[5]}–${subject.displayMaxComposite ?? Math.round(subject.sections.reduce((sum, section) => sum + section.max * section.weight, 0))}`));
+  }
+});
+
+test('v3.2 homepage uses featured APUSH plus balanced eight-card subject grid', () => {
+  const home = sitePages().find((page) => page.path === 'index.html');
+  const featuredStart = home.html.indexOf('featured-subject-row');
+  const balancedStart = home.html.indexOf('subject-grid-balanced');
+
+  assert(featuredStart > -1, 'missing featured subject row');
+  assert(balancedStart > featuredStart, 'balanced grid should follow featured row');
+  assert.match(home.html, /Featured APUSH dashboard path|Featured subject · calculator-first APUSH page/);
+  assert.equal((home.html.match(/class="subject-card/g) || []).length, subjects.length);
+  assert.match(home.html, /href="\/apush-score-calculator\/"/);
 });
