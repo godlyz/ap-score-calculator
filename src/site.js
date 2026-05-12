@@ -23,20 +23,20 @@ function pageShell({ title, description, path, body, schema = [], nav = 'default
   return `<!doctype html>
 <html lang="en">
 <head>
-  <script>try{const t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.dataset.theme='dark';}catch(e){}</script>
+  <script>try{const t=localStorage.getItem('theme');const prefersDark=matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.dataset.theme=t==='light'?'light':t==='dark'?'dark':prefersDark?'dark':'light';}catch(e){document.documentElement.dataset.theme='light';}</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}">
   <link rel="canonical" href="${escapeHtml(canonical)}">
-  <link rel="stylesheet" href="/assets/styles.css?v=v5-layout-balance-density">
+  <link rel="stylesheet" href="/assets/styles.css?v=v5-theme-nav-fix">
   ${schemaTags}
 </head>
 <body>
   ${siteHeader(nav, path)}
   <main>${body}</main>
   ${siteFooter()}
-  <script type="module" src="/assets/app.js?v=v5-layout-balance-density"></script>
+  <script type="module" src="/assets/app.js?v=v5-theme-nav-fix"></script>
 </body>
 </html>`;
 }
@@ -50,20 +50,7 @@ function siteHeader(nav, currentPath) {
   const hubPath = '/ap-score-calculator-2026/';
   const apushPath = '/apush-score-calculator/';
   const homePath = '/';
-  const primary = nav === 'home'
-    ? `
-      <a href="#subjects">Subjects</a>
-      <a href="#hub-preview">Hub preview</a>
-      <a href="#methodology">Methodology</a>
-      <a href="/privacy.html">Privacy</a>`
-    : nav === 'hub'
-      ? `
-      ${navItem(homePath, 'Home', currentPath, homePath)}
-      ${navItem(hubPath, 'Hub', currentPath, hubPath)}
-      ${navItem(apushPath, 'APUSH', currentPath, apushPath)}
-      ${navItem('/privacy.html', 'Privacy', currentPath, '/privacy.html')}
-      ${navItem('/terms.html', 'Terms', currentPath, '/terms.html')}`
-      : `
+  const primary = `
       ${navItem(homePath, 'Home', currentPath, homePath)}
       ${navItem(hubPath, 'Hub', currentPath, hubPath)}
       ${navItem(apushPath, 'APUSH', currentPath, apushPath)}
@@ -72,7 +59,7 @@ function siteHeader(nav, currentPath) {
   return `<header class="site-header">
     <a class="brand" href="/" aria-label="AP Score Calculator 2026 home"><span class="brand-mark" aria-hidden="true">▦</span><span>AP Score Calculator 2026</span></a>
     <nav aria-label="Primary navigation">${primary}</nav>
-    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark mode"><span data-theme-icon>◐</span><em data-theme-label>System</em></button>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme"><span data-theme-icon>☀</span><em data-theme-label>Light</em></button>
   </header>`;
 }
 
