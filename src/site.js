@@ -29,14 +29,14 @@ function pageShell({ title, description, path, body, schema = [], nav = 'default
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}">
   <link rel="canonical" href="${escapeHtml(canonical)}">
-  <link rel="stylesheet" href="/assets/styles.css?v=v5-layout-cohesion-9d5ac00">
+  <link rel="stylesheet" href="/assets/styles.css?v=v5-layout-balance-density">
   ${schemaTags}
 </head>
 <body>
   ${siteHeader(nav, path)}
   <main>${body}</main>
   ${siteFooter()}
-  <script type="module" src="/assets/app.js?v=v5-layout-cohesion-9d5ac00"></script>
+  <script type="module" src="/assets/app.js?v=v5-layout-balance-density"></script>
 </body>
 </html>`;
 }
@@ -142,14 +142,14 @@ function subjectCategory(subject) {
 
 function confidenceLabel(subject) {
   const labels = { low: 'Conservative estimate', medium: 'Moderate confidence estimate', high: 'Higher confidence estimate' };
-  return labels[subject.confidence] || 'Estimate confidence noted';
+  return labels[subject.confidence] || 'Estimate confidence';
 }
 
 function confidenceCopy(subject) {
   if (subject.confidence === 'low') {
-    return 'Confidence: conservative. This subject has essay-heavy, recent-change, or reader-dependent scoring, so leave a larger safety buffer around every estimated cutoff.';
+    return 'Leave a larger buffer around cutoffs for essay-heavy or reader-dependent scoring.';
   }
-  return 'Confidence: moderate. The calculator is useful for planning, but yearly equating and section-level scoring can still move the official boundary.';
+  return 'Useful for planning; yearly equating and section scoring can shift official boundaries.';
 }
 
 
