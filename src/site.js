@@ -29,14 +29,15 @@ function pageShell({ title, description, path, body, schema = [], nav = 'default
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}">
   <link rel="canonical" href="${escapeHtml(canonical)}">
-  <link rel="stylesheet" href="/assets/styles.css?v=v5-theme-nav-fix">
+  <link rel="stylesheet" href="/assets/styles.css?v=v5-theme-toggle-hotfix">
   ${schemaTags}
 </head>
 <body>
   ${siteHeader(nav, path)}
   <main>${body}</main>
   ${siteFooter()}
-  <script type="module" src="/assets/app.js?v=v5-theme-nav-fix"></script>
+  <script>window.__apThemeToggleFallback=function(){const btn=document.querySelector('[data-theme-toggle]');const label=document.querySelector('[data-theme-label]');const icon=document.querySelector('[data-theme-icon]');const prefersDark=()=>window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;const normalize=(mode)=>mode==='dark'||mode==='light'?mode:(prefersDark()?'dark':'light');const apply=(mode)=>{const next=normalize(mode);document.documentElement.dataset.theme=next;try{localStorage.setItem('theme',next);}catch(e){}if(label)label.textContent=next==='dark'?'Dark':'Light';if(icon)icon.textContent=next==='dark'?'☾':'☀';if(btn){btn.setAttribute('aria-label',next==='dark'?'Switch to light mode':'Switch to dark mode');btn.setAttribute('aria-pressed',next==='dark'?'true':'false');}};apply(normalize((()=>{try{return localStorage.getItem('theme')}catch(e){return null}})()));if(btn&&!btn.dataset.themeBound){btn.dataset.themeBound='true';btn.addEventListener('click',()=>apply(document.documentElement.dataset.theme==='dark'?'light':'dark'));}};window.__apThemeToggleFallback();</script>
+  <script type="module" src="/assets/app.js?v=v5-theme-toggle-hotfix"></script>
 </body>
 </html>`;
 }
