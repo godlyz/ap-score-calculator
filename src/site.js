@@ -28,14 +28,14 @@ function pageShell({ title, description, path, body, schema = [], nav = 'default
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}">
   <link rel="canonical" href="${escapeHtml(canonical)}">
-  <link rel="stylesheet" href="/assets/styles.css?v=v5-theme-external-bind-fix">
+  <link rel="stylesheet" href="/assets/styles.css?v=v5-theme-system-mode-fix">
   ${schemaTags}
 </head>
 <body>
   ${siteHeader(nav, path)}
   <main>${body}</main>
   ${siteFooter()}
-  <script type="module" src="/assets/app.js?v=v5-theme-external-bind-fix"></script>
+  <script type="module" src="/assets/app.js?v=v5-theme-system-mode-fix"></script>
 </body>
 </html>`;
 }
