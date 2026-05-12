@@ -1,4 +1,4 @@
-import { calculateScore, conversionRows, maxComposite, subjects } from './scoreEngine.js';
+import { buildStudyPlan, calculateScore, conversionRows, maxComposite, subjects } from './scoreEngine.js';
 
 export const siteOrigin = (process.env.SITE_ORIGIN || 'https://apscorecalculator.store').replace(/\/$/, '');
 const lastUpdated = 'May 9, 2026';
@@ -23,6 +23,7 @@ function pageShell({ title, description, path, body, schema = [], nav = 'default
   return `<!doctype html>
 <html lang="en">
 <head>
+  <script>try{const t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.dataset.theme='dark';}catch(e){}</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${escapeHtml(title)}</title>
@@ -35,7 +36,7 @@ function pageShell({ title, description, path, body, schema = [], nav = 'default
   ${siteHeader(nav, path)}
   <main>${body}</main>
   ${siteFooter()}
-  <script type="module" src="/assets/app.js"></script>
+  <script type="module" src="/assets/app.js?v=v4-dynamic-dashboard"></script>
 </body>
 </html>`;
 }
@@ -71,6 +72,7 @@ function siteHeader(nav, currentPath) {
   return `<header class="site-header">
     <a class="brand" href="/" aria-label="AP Score Calculator 2026 home"><span class="brand-mark" aria-hidden="true">▦</span><span>AP Score Calculator 2026</span></a>
     <nav aria-label="Primary navigation">${primary}</nav>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark mode"><span data-theme-icon>◐</span><em data-theme-label>System</em></button>
   </header>`;
 }
 
@@ -194,12 +196,79 @@ function targetComparisonStrip(subject, result) {
 function heroDashboardVisual(subject, result) {
   const title = subject.slug === 'apush' ? 'APUSH score dashboard preview' : `${subject.shortName} score dashboard preview`;
   const legacyApushAttr = subject.slug === 'apush' ? ' data-apush-dashboard' : '';
-  return `<aside class="hero-panel score-dashboard-visual" data-score-dashboard${legacyApushAttr} aria-label="${escapeHtml(title)}">
-    <div class="dashboard-top"><span class="preview-label">Live-style preview</span><b>${escapeHtml(subject.shortName)} score dashboard</b></div>
+  return `<aside class="hero-panel score-dashboard-visual mini-score-preview" data-score-dashboard${legacyApushAttr} aria-label="${escapeHtml(title)}">
+    <div class="dashboard-top"><span class="preview-label">Live-style preview</span><b>${escapeHtml(subject.shortName)} estimate</b></div>
     <div class="dashboard-score"><span>Estimated AP</span><strong data-dashboard-score>${result.predictedScore}</strong><em data-dashboard-composite>${result.composite}/${result.maxComposite} composite</em></div>
     ${scoreBandStrip(subject, result.composite)}
-    ${targetComparisonStrip(subject, result)}
   </aside>`;
+}
+
+function studyPlanPanel(subject, values = {}) {
+  const plan = buildStudyPlan(subject.slug, values);
+  const diagnostics = plan.diagnostics.map((item) => `<div class="diagnostic-row" data-diagnostic-row="${item.key}"><div><strong>${escapeHtml(item.label)}</strong><span>${item.accuracyPct}% accuracy · ${item.weightedLost.toFixed(1)} weighted points available</span></div><div class="diagnostic-track"><i data-diagnostic-bar="${item.key}" style="width:${Math.max(4, Math.min(100, item.accuracyPct))}%"></i></div><em data-diagnostic-value="${item.key}">${item.weightedEarned.toFixed(1)}/${item.weightedMax.toFixed(1)}</em></div>`).join('');
+  const gainOptions = plan.gainOptions.map((option) => `<li><strong>${escapeHtml(option.label)}</strong><span>${escapeHtml(option.description)}</span></li>`).join('');
+  const timelines = plan.timelines.map((timeline) => `<article class="timeline-card" data-study-timeline="${timeline.weeks}"><span>${timeline.weeks} weeks</span><h4>${escapeHtml(timeline.title)}</h4><ul>${timeline.actions.map((action) => `<li>${escapeHtml(action)}</li>`).join('')}</ul></article>`).join('');
+  return `<section class="study-plan-panel" data-study-plan aria-label="Dynamic study plan">
+    <div class="study-plan-head"><p class="eyebrow">Dynamic study plan</p><h2>Personalized next-step plan</h2><p data-study-status>${escapeHtml(plan.status)}</p></div>
+    <div class="study-plan-grid">
+      <article class="study-insight"><span>Target gap</span><strong data-study-gap>${escapeHtml(plan.targetLabel)}</strong><p data-study-gap-copy>${escapeHtml(plan.gapText)}</p></article>
+      <article class="study-insight"><span>Best next focus</span><strong data-study-focus-title>${escapeHtml(plan.weakest.label)}</strong><p data-study-focus>${escapeHtml(plan.focus)}</p></article>
+    </div>
+    <div class="diagnostics-block"><h3>Section diagnostics</h3><div data-study-diagnostics>${diagnostics}</div></div>
+    <div class="gain-options"><h3>Fastest improvement options</h3><ul data-study-gains>${gainOptions}</ul></div>
+    <div class="timeline-grid" data-study-timelines>${timelines}</div>
+    <p class="microcopy">This plan uses predicted score, target gap, weakest section, normalized section performance, and weighted lost points. It is unofficial study guidance, not an AP score guarantee.</p>
+  </section>`;
+}
+
+function referenceAccordions(subject, rows) {
+  const examRows = subject.sections.map((section) => `<tr><td>${escapeHtml(subject.slug === 'apush' ? apushLabel(section) : section.label)}</td><td>0–${section.max} points</td><td>${subject.compositeModel === 'weighted-100' ? `${section.weight}% weighted contribution` : `Weight ${section.weight}`}</td></tr>`).join('');
+  return `<section class="section reference-accordions" id="formula">
+    <div class="section-heading"><p class="eyebrow">Reference drawer</p><h2>${escapeHtml(subject.shortName)} scoring reference</h2><p>Use these details when you want the estimated ranges, scoring model, exam inputs, and assumptions. The calculator result and study plan above remain the primary product flow.</p></div>
+    <details open><summary>Estimated ${escapeHtml(subject.shortName)} composite ranges</summary><div class="table-wrap"><table><thead><tr><th>Estimated AP Score</th><th>Estimated composite range</th><th>How to read it</th></tr></thead><tbody>${rows}</tbody></table></div></details>
+    <details><summary>How scoring works</summary><p>${escapeHtml(subject.structure)}</p><p>${escapeHtml(subject.assumptions)}</p></details>
+    <details><summary>Exam format inputs</summary><div class="table-wrap"><table><thead><tr><th>Section</th><th>Input range</th><th>Calculator weighting</th></tr></thead><tbody>${examRows}</tbody></table></div>${subject.slug === 'apush' ? '<p class="note-inline">APUSH is fully digital in Bluebook; practice typed DBQ/LEQ timing while using these section scores.</p>' : ''}</details>
+    <details><summary>Methodology and confidence</summary><p><strong>${escapeHtml(confidenceLabel(subject))}:</strong> ${escapeHtml(confidenceCopy(subject))}</p><p>${escapeHtml(subject.riskNote)}</p><p>Last updated: ${lastUpdated}. This calculator is independent and not affiliated with College Board.</p></details>
+  </section>`;
+}
+
+function apushDynamicResultsPanel(subject, result) {
+  const rows = conversionRows(subject).slice().reverse();
+  const sectionRows = subject.sections.map((section) => {
+    const raw = Math.round(section.max * 0.7);
+    const weighted = section.max > 0 ? (raw / section.max) * section.weight : 0;
+    const pct = Math.max(0, Math.min(100, (raw / section.max) * 100));
+    return `<div class="v4-contrib-row" data-contrib-row="${section.key}"><span>${escapeHtml(section.key.toUpperCase())} (${Math.round(section.weight)}%)</span><div><i data-contrib-bar="${section.key}" style="width:${pct.toFixed(1)}%"></i></div><strong data-contrib-value="${section.key}">${weighted.toFixed(1)}</strong></div>`;
+  }).join('');
+  const bandCards = rows.map((row) => `<div class="v4-band-card v4-band-${row.apScore}" data-v4-band="${row.apScore}"><strong>${row.apScore}</strong><span>${escapeHtml(row.range)}</span></div>`).join('');
+  return `<aside class="v4-results-panel" data-v4-apush-results aria-live="polite" aria-label="Dynamic APUSH estimated results dashboard">
+    <div class="v4-results-card">
+      <div class="v4-results-head"><h2>Estimated Results</h2><p>Unofficial estimate — real curves vary slightly each year.</p></div>
+      <div class="v4-score-row"><div><span>Predicted AP Score</span><strong data-v4-score>${result.predictedScore}</strong></div><div class="v4-stars" data-v4-stars aria-label="Predicted score stars"></div></div>
+      <p class="v4-score-label" data-v4-label>Use your inputs to identify the weakest APUSH section.</p>
+      <div class="v4-composite"><div><span>Composite (out of ${result.maxComposite})</span><strong data-v4-composite>${result.composite}</strong></div><div class="v4-progress-track"><i data-v4-composite-bar style="width:${Math.min(100, result.composite / result.maxComposite * 100).toFixed(1)}%"></i></div><div class="v4-scale"><span>0</span><span>${subject.cutoffs[2]}</span><span>${subject.cutoffs[3]}</span><span>${subject.cutoffs[4]}</span><span>${subject.cutoffs[5]}</span><span>${result.maxComposite}</span></div></div>
+      <div class="v4-contrib"><h3>Section Contributions</h3>${sectionRows}</div>
+      <div class="v4-band-grid">${bandCards}</div>
+    </div>
+    <div class="v4-next-card"><h3>📌 What to do with this result</h3><p>→ Find the section contributing the fewest composite points in the breakdown above — that is where to focus next.</p><p>→ Use the <a href="#formula">Scoring Explained</a> section to see how many composite points separate your current score from the next band.</p><p>→ Follow a 3-month APUSH study plan and systematically raise your weakest section.</p></div>
+  </aside>`;
+}
+
+
+function apushHowItWorksDeepSection() {
+  return `<section class="section v4-theme-section v4-how-works" id="scoring-explained">
+    <div class="v4-theme-head"><h2>How This APUSH Score Calculator Works</h2><p>The calculator uses APUSH section weights and maps the resulting composite to a 1–5 score using estimated cutoffs. Here is the exact math so students can verify the result instead of trusting a black box.</p></div>
+    <div class="v4-step-grid"><article class="v4-theme-card"><h3>Step 1 — Convert each section to its weighted score</h3><div class="v4-formula-list"><div><b class="blue">MCQ (40%)</b><code>(correct ÷ 55) × 40 = contribution</code><span>E.g. 45 correct → (45/55) × 40 = <strong>32.7</strong></span></div><div><b class="purple">SAQ (20%)</b><code>(points ÷ 9) × 20 = contribution</code><span>E.g. 7 pts → (7/9) × 20 = <strong>15.6</strong></span></div><div><b class="green">DBQ (25%)</b><code>(points ÷ 7) × 25 = contribution</code><span>E.g. 5 pts → (5/7) × 25 = <strong>17.9</strong></span></div><div><b class="orange">LEQ (15%)</b><code>(points ÷ 6) × 15 = contribution</code><span>E.g. 4 pts → (4/6) × 15 = <strong>10.0</strong></span></div></div></article><article class="v4-theme-card"><h3>Step 2 — Add to composite, map to 1–5</h3><p>Add all four weighted contributions. The total is your composite out of 100, then it maps to an estimated 1–5 AP score.</p><div class="v4-cutoff-bars"><div class="score5"><b>5</b><i style="width:100%"></i><span>80–100 pts</span></div><div class="score4"><b>4</b><i style="width:79%"></i><span>65–79 pts</span></div><div class="score3"><b>3</b><i style="width:64%"></i><span>45–64 pts</span></div><div class="score2"><b>2</b><i style="width:44%"></i><span>30–44 pts</span></div><div class="score1"><b>1</b><i style="width:30%"></i><span>&lt; 30 pts</span></div></div><p class="v4-note-line">Actual cutoffs can shift each year. Use this as planning guidance, not an official score report.</p></article></div>
+    <article class="v4-worked-example"><h3>📝 Worked Example — Student Aiming for a 5</h3><div class="v4-example-grid"><div><b>MCQ: 45/55</b><span>(45/55) × 40 = 32.7</span></div><div><b>SAQ: 7/9</b><span>(7/9) × 20 = 15.6</span></div><div><b>DBQ: 5/7</b><span>(5/7) × 25 = 17.9</span></div><div><b>LEQ: 4/6</b><span>(4/6) × 15 = 10.0</span></div></div><p><strong>Composite: 32.7 + 15.6 + 17.9 + 10.0 = 76.2 → Predicted Score: 4</strong> — just below the 5 threshold. To push into a 5, this student needs about 3.8 more composite points.</p></article>
+
+  </section>`;
+}
+function apushExamFormatDeepSection() {
+  return `<section class="section v4-theme-section v4-exam-format" id="exam-format"><div class="v4-theme-head"><h2>2026 APUSH exam structure and digital format</h2><p>The AP U.S. History exam is 3 hours and 15 minutes long. Since May 2025 it is fully digital through College Board's Bluebook app; students type all essays while content, timing, and rubrics remain aligned with the APUSH exam.</p></div><div class="v4-table-wrap"><table><thead><tr><th>Section</th><th>Details</th><th>Time</th><th>Max Points</th><th>Score Weight</th></tr></thead><tbody><tr><td>Multiple Choice (MCQ)</td><td>55 stimulus-based questions; no wrong-answer penalty</td><td>55 min</td><td>55 pts</td><td>40%</td></tr><tr><td>Short Answer (SAQ)</td><td>3 questions; each worth 3 points</td><td>40 min</td><td>9 pts</td><td>20%</td></tr><tr><td>Document-Based Question (DBQ)</td><td>1 essay with 7 source documents</td><td>60 min</td><td>7 pts</td><td>25%</td></tr><tr><td>Long Essay (LEQ)</td><td>Choose 1 of 3 prompts: causation, comparison, or CCOT</td><td>40 min</td><td>6 pts</td><td>15%</td></tr></tbody></table></div><div class="v4-bluebook-callout"><h3>Digital Bluebook Exam — Key Facts for 2026</h3><ul><li>Download Bluebook and complete the preview before exam day.</li><li>Scratch paper is provided; outline DBQ and LEQ before typing.</li><li>Content, rubrics, and scoring are the same as the paper-style exam.</li><li>Practice timed typing for DBQ and LEQ.</li><li>You can tag and return to MCQs within the section.</li></ul></div><div class="v4-benchmark-grid"><article><h3>What Score Do You Need? Benchmarks for a 3, 4, and 5</h3><table><thead><tr><th>Section</th><th>For a 3</th><th>For a 4</th><th>For a 5</th></tr></thead><tbody><tr><td>MCQ 55 Qs</td><td>30–35</td><td>38–43</td><td>45+</td></tr><tr><td>SAQ 9 pts</td><td>4–5</td><td>6–7</td><td>7–8</td></tr><tr><td>DBQ 7 pts</td><td>2–3</td><td>4–5</td><td>5–6</td></tr><tr><td>LEQ 6 pts</td><td>2</td><td>3–4</td><td>4–5</td></tr></tbody></table></article><aside><h3>The Fastest Way to Raise Your Score</h3><p>DBQ is 25% of the score. Improving from 3/7 to 5/7 can add about 7 composite points, enough to move many students from a 3 toward a 4.</p></aside></div><div class="v4-credit-cards"><h3>APUSH Score & College Credit: What Each Score Gets You</h3><div><b class="score5">5</b><p><strong>Extremely Well Qualified.</strong> Many schools grant U.S. History credit or placement.</p></div><div><b class="score4">4</b><p><strong>Well Qualified.</strong> Often earns one semester or satisfies a general education requirement.</p></div><div><b class="score3">3</b><p><strong>Qualified.</strong> Minimum credit score at many institutions, but policies vary.</p></div><div><b class="score2">1–2</b><p><strong>Usually no credit.</strong> Still useful as a diagnostic for APUSH preparation.</p></div></div></section>`;
+}
+function apushResourcesDeepSection() {
+  const cards = [['🏆','APUSH Tips for Getting a 5','Full exam strategy: section score targets, study schedule, essay priorities, and composite math behind a 5.'],['📄','APUSH DBQ Examples & Tips','Thesis examples, document grouping, sourcing strategies, and how to earn complexity on the 7-point DBQ rubric.'],['✍️','APUSH LEQ Examples & Tips','Thesis templates and examples for causation, comparison, and CCOT prompts.'],['📚','APUSH Resources & Practice Tests','Practice tests, question banks, review videos, and a weekly routine to combine them.'],['📐','APUSH Scoring Explained','The complete breakdown of how raw section scores convert to composite and final AP score.'],['🎯','Weak MCQ Strategy','How to lift the biggest section when content recall or stimulus pacing is holding your APUSH estimate down.'],['🗓️','3-Month APUSH Study Plan','12-week schedule with content review, practice questions, DBQ/LEQ writing, and calculator check-ins.']];
+  return `<section class="section v4-theme-section v4-resources" id="resources"><div class="v4-theme-head"><h2>What to practice next: APUSH Study Resources — Use These With the Calculator</h2><p>The calculator is most powerful when combined with targeted study. These guides are built around the same rubrics and scoring logic, so every essay improvement directly moves the numbers you enter here.</p></div><div class="v4-resource-grid">${cards.map(([icon,title,copy], index) => `<a href="#resources" class="v4-resource-card card-${index}"><span>${icon}</span><strong>${title}</strong><p>${copy}</p></a>`).join('')}<a href="#resources" class="v4-resource-card wide"><span>🧭</span><strong>APUSH Tips & Guides Hub</strong><p>All strategy articles in one place — section by section, exam format, unit weights, MCQ tactics, and more.</p><em>→</em></a></div><div class="v4-faq-accordion"><h2>APUSH Score Calculator — Frequently Asked Questions</h2>${['How accurate is this APUSH score calculator?','Where do I get my MCQ, SAQ, DBQ, and LEQ scores to enter?','What if one section like DBQ is dragging my composite score down?','What score do I need for college credit?','How often should I use this calculator during APUSH prep?','Is APUSH hard? What is the pass rate?'].map((q)=>`<details><summary>${q}</summary><p>Use the calculator as an unofficial planning estimate. Enter practice-test section scores, then focus study on the section with the best realistic point gain.</p></details>`).join('')}</div></section>`;
 }
 
 function recommendationCards() {
@@ -479,22 +548,22 @@ function subjectPage(subject) {
   <div class="calculator-intro">
     <p class="eyebrow">${isApush ? 'APUSH Score Calculator 2026 · calculator-first page' : `Maintained for 2026 · unofficial ${escapeHtml(subject.shortName)} estimate`}</p>
     <h1>${isApush ? 'APUSH Score Calculator 2026' : escapeHtml(subject.title)}</h1>
-    <p class="hero-copy">${isApush ? 'Enter MCQ, SAQ, DBQ, and LEQ points to see an unofficial APUSH score estimate, composite range, and the gap to your next target.' : `${escapeHtml(subject.description)} Enter raw section points from a practice test to see an estimated AP score, estimated composite score, and the study gap to your next target. This is not an official AP score.`}</p>
+    <p class="hero-copy">${isApush ? 'Enter MCQ, SAQ, DBQ, and LEQ points to see an unofficial APUSH score estimate, composite range, the gap to your next target, and a study plan based on your weakest section.' : `${escapeHtml(subject.description)} Enter raw section points from a practice test to see an estimated AP score, target gap, weakest section, and a dynamic study plan. This is not an official AP score.`}</p>
     <div class="cta-row"><a class="button" href="#calculator">${isApush ? 'Estimate my APUSH score' : 'Estimate my score'}</a><a class="button secondary" href="#formula">${isApush ? 'See scoring formula' : 'See score ranges'}</a></div>
     <div class="trust-row"><span>Free</span><span>Browser-local</span><span>Unofficial</span><span>Not affiliated with College Board</span><span>2026 planning</span></div>
   </div>
   ${heroDashboardVisual(subject, sampleResult)}
 </section>
-<section class="section calculator-workspace${isApush ? ' apush-workspace' : ''}" data-calculator data-subject="${data}" id="calculator">
+<section class="section calculator-workspace${isApush ? ' apush-workspace v5-apush-workspace' : ''}" data-calculator data-subject="${data}" id="calculator">
   <div class="calculator-card">
     <div class="card-kicker">Enter scores</div>
     <form class="input-grid" aria-label="${escapeHtml(subject.shortName)} score inputs">${inputs}</form>
     <p class="input-helper">${isApush ? 'Use raw practice-test points: MCQ 0–55, SAQ 0–9, DBQ 0–7, LEQ 0–6.' : 'Use raw practice-test points for each section. Values are clamped to the allowed range.'}</p>
-    <div class="result-panel" aria-live="polite">
+    <div class="result-panel unified-result-panel" aria-live="polite">
       <span class="label">Estimated AP score</span>
       <strong data-result-score>Enter scores</strong>
       <p data-result-composite>Estimated Composite Score will appear here.</p>
-      <p data-result-explanation class="result-explanation">Add your raw points to see the score band and study gap.</p>
+      <p data-result-explanation class="result-explanation">Add your raw points to see the score band, weakest section, and study gap.</p>
       <p class="confidence-badge" data-result-confidence>${escapeHtml(confidenceLabel(subject))}: ${escapeHtml(confidenceCopy(subject))}</p>
       <p class="validation-message" data-validation-message hidden></p>
       <ul data-result-needed></ul>
@@ -502,58 +571,15 @@ function subjectPage(subject) {
     </div>
   </div>
 </section>
-<section class="section visual-score-section" data-score-dashboard${isApush ? ' data-apush-dashboard' : ''}>
-  <div class="section-heading"><p class="eyebrow">Score band dashboard</p><h2>See the ${escapeHtml(subject.shortName)} score bands before you interpret the estimate</h2><p>The color bands use this subject's estimated cutoffs and max composite. Use the target cards to decide whether to stabilize a 3, push toward a 4, or protect a 5.</p></div>
-  ${scoreBandStrip(subject, sampleResult.composite)}
-  ${targetComparisonStrip(subject, sampleResult)}
-</section>
-${isApush ? `<section class="section two-col weight-section">
-  <div><p class="eyebrow">Section weighting</p><h2>APUSH points do not all move the estimate the same way</h2><p>MCQ, SAQ, DBQ, and LEQ combine into a composite estimate. This chart gives the page a study dashboard, not just a form.</p></div>
-  ${sectionWeightChart()}
-</section>` : ''}
-<section class="section conversion-section" id="formula">
-  <div class="section-heading">
-    <p class="eyebrow">Raw score conversion</p>
-    <h2>Estimated ${escapeHtml(subject.shortName)} composite ranges</h2>
-    <p class="note-inline">This conversion chart is an estimate based on public exam structure and historical scoring patterns. It is not an official College Board conversion table, and actual AP score cutoffs may vary by year and exam administration. ${escapeHtml(subject.riskNote)}</p>
-  </div>
-  <div class="table-wrap"><table><thead><tr><th>Estimated AP Score</th><th>Estimated composite range</th><th>How to read it</th></tr></thead><tbody>${rows}</tbody></table></div>
-</section>
-<section class="section two-col result-interpretation">
-  <div>
-    <p class="eyebrow">Result interpretation</p>
-    <h2>What score do I need?</h2>
-    <p>${escapeHtml(subject.structure)}</p>
-    <p>Example preview: with a sample composite of ${sampleResult.composite}, this calculator estimates you may need about ${sampleResult.needed[5]} more composite points to reach a 5. Enter your own section points above for your estimate.</p>
-    <p>Because raw section weights differ, the best study move is not always “more total questions.” Review the section inputs and prioritize the area where a realistic raw-point gain may move your composite past the next estimated range.</p>
-    <p>If the calculator says you are within about 5–8 composite points of a 3, 4, or 5, treat that as a near-cutoff zone. In that zone, use the result to choose your next study target instead of treating the predicted AP score as settled.</p>
-  </div>
-  <aside class="note">
-    <h2>Methodology and assumptions</h2>
-    <p>${escapeHtml(subject.assumptions)}</p>
-    <p><strong>${escapeHtml(confidenceLabel(subject))}:</strong> ${escapeHtml(confidenceCopy(subject))}</p>
-    <p>${escapeHtml(subject.riskNote)}</p>
-    <p>This calculator combines your section inputs into an estimated raw or composite score, then maps that score to an AP 1–5 range using historical scoring patterns, public exam structure, and transparent assumptions. Because official AP score setting can vary by year and exam administration, this result should be used as an unofficial planning estimate.</p>
-    <p>Last updated: ${lastUpdated}</p>
-  </aside>
-</section>
-${isApush ? `<section class="section two-col apush-structure">
-  <div>
-    <p class="eyebrow">APUSH exam structure</p>
-    <h2>MCQ, SAQ, DBQ, and LEQ all matter</h2>
-    <div class="structure-grid">
-      <div><strong>Multiple Choice</strong><span>55 questions</span></div>
-      <div><strong>Short Answer</strong><span>3 questions · 9 points</span></div>
-      <div><strong>DBQ</strong><span>1 document-based question · 7 points</span></div>
-      <div><strong>LEQ</strong><span>1 long essay question · 6 points</span></div>
+<section class="section v5-apush-followup">
+  <div class="v5-followup-shell">
+    <div class="section-heading v5-followup-heading"><p class="eyebrow">${isApush ? 'Dynamic plan with scoring reference' : 'Dynamic plan with scoring reference'}</p><h2>${isApush ? 'Next-step plan' : 'Next-step plan'}</h2><p>${isApush ? 'Update your scores above, then use this plan first. Open the scoring reference only when you need the cutoff math.' : 'Update your scores above, then use this plan first. Open the scoring reference only when you need the cutoff math.'}</p></div>
+    <div class="v5-followup-grid">
+      <div class="v5-followup-primary">${studyPlanPanel(subject, sample)}</div>
+      <div class="v5-followup-secondary">${referenceAccordions(subject, rows)}</div>
     </div>
   </div>
-  <aside class="note"><h2>What to do with your result</h2><p>If you are aiming for a 3, 4, or 5, use the gap and confidence note to decide where a realistic point gain is most likely.</p><p>Near a cutoff, focus on buffer points instead of treating the estimate as settled.</p></aside>
 </section>
-<section class="section study-guidance">
-  <div class="section-heading"><p class="eyebrow">What to practice next</p><h2>Use your weakest APUSH section as the next study target</h2><p>The calculator is a direction tool. If one section keeps dragging the estimate down, practice that section first.</p></div>
-  ${recommendationCards()}
-</section>` : ''}
 <section class="section faq">
   <div class="section-heading">
     <p class="eyebrow">FAQ</p>

@@ -6,16 +6,17 @@ export const subjects = [
     title: 'AP US History Score Calculator 2026',
     description: 'Estimate your AP US History score from MCQ, SAQ, DBQ, and LEQ points with transparent 2026 assumptions.',
     sections: [
-      { key: 'mcq', label: 'Multiple Choice', max: 55, weight: 1 },
-      { key: 'saq', label: 'Short Answer', max: 9, weight: 2 },
-      { key: 'dbq', label: 'DBQ', max: 7, weight: 4 },
-      { key: 'leq', label: 'LEQ', max: 6, weight: 3 }
+      { key: 'mcq', label: 'Multiple Choice', max: 55, weight: 40 },
+      { key: 'saq', label: 'Short Answer', max: 9, weight: 20 },
+      { key: 'dbq', label: 'DBQ', max: 7, weight: 25 },
+      { key: 'leq', label: 'LEQ', max: 6, weight: 15 }
     ],
-    displayMaxComposite: 130,
-    cutoffs: { 1: 0, 2: 38, 3: 58, 4: 76, 5: 92 },
+    displayMaxComposite: 100,
+    compositeModel: 'weighted-100',
+    cutoffs: { 1: 0, 2: 30, 3: 45, 4: 65, 5: 80 },
     confidence: 'medium',
     riskNote: 'DBQ/LEQ and yearly score-setting can move the final boundary, so treat the gap as a conservative planning range rather than a fixed cutoff.',
-    structure: 'AP US History includes multiple-choice questions, short-answer questions, one DBQ, and one LEQ. This MVP maps your section points into an estimated composite score.',
+    structure: 'AP US History uses a weighted-100 framing: MCQ contributes 40%, SAQ 20%, DBQ 25%, and LEQ 15%. The calculator converts each section into its weighted share before mapping the total to an estimated AP score.',
     assumptions: 'Estimated from public exam structure and historical scoring patterns; not an official College Board conversion.'
   },
   {
@@ -175,6 +176,14 @@ export function sanitizePoint(value, max) {
 }
 
 export function calculateComposite(subject, inputs = {}) {
+  if (subject.compositeModel === 'weighted-100') {
+    return subject.sections.reduce((sum, section) => {
+      const safeValue = sanitizePoint(inputs[section.key], section.max);
+      const contribution = section.max > 0 ? (safeValue / section.max) * section.weight : 0;
+      return round1(sum + Math.round(contribution * 10) / 10);
+    }, 0);
+  }
+
   const raw = subject.sections.reduce((sum, section) => {
     const safeValue = sanitizePoint(inputs[section.key], section.max);
     return sum + safeValue * section.weight;
@@ -197,9 +206,148 @@ export function predictedScore(subject, composite) {
 export function scoreNeeded(slug, composite) {
   const subject = getSubject(slug);
   return [3, 4, 5].reduce((acc, target) => {
-    acc[target] = Math.max(0, subject.cutoffs[target] - composite);
+    const gap = Math.max(0, subject.cutoffs[target] - composite);
+    acc[target] = Math.round(gap * 10) / 10;
     return acc;
   }, {});
+}
+
+export function sectionDiagnostics(subject, inputs = {}) {
+  const rawMax = subject.sections.reduce((sum, section) => sum + section.max * section.weight, 0);
+  const displayMax = maxComposite(subject);
+  return subject.sections.map((section) => {
+    const raw = sanitizePoint(inputs[section.key], section.max);
+    const accuracy = section.max > 0 ? raw / section.max : 0;
+    let weightedEarned;
+    let weightedMax;
+    if (subject.compositeModel === 'weighted-100') {
+      weightedMax = section.weight;
+      weightedEarned = section.max > 0 ? (raw / section.max) * section.weight : 0;
+    } else {
+      const scale = rawMax > 0 ? displayMax / rawMax : 0;
+      weightedMax = section.max * section.weight * scale;
+      weightedEarned = raw * section.weight * scale;
+    }
+    const weightedLost = Math.max(0, weightedMax - weightedEarned);
+    const pointValue = section.max > 0 ? weightedMax / section.max : 0;
+    const weaknessScore = (weightedLost * 0.45) + ((1 - accuracy) * weightedMax * 0.25) + (pointValue * 3);
+    return {
+      key: section.key,
+      label: section.label,
+      raw,
+      max: section.max,
+      weight: section.weight,
+      accuracy: Math.round(accuracy * 1000) / 1000,
+      accuracyPct: Math.round(accuracy * 100),
+      weightedEarned: Math.round(weightedEarned * 10) / 10,
+      weightedMax: Math.round(weightedMax * 10) / 10,
+      weightedLost: Math.round(weightedLost * 10) / 10,
+      weaknessScore: Math.round(weaknessScore * 10) / 10,
+      pointValue: Math.round(pointValue * 10) / 10
+    };
+  }).sort((a, b) => b.weaknessScore - a.weaknessScore);
+}
+
+const confidenceBuffers = { high: 2, medium: 4, low: 6 };
+
+const sectionAdvice = {
+  apush: {
+    mcq: ['stimulus-based MCQ pacing', 'drill missed time periods and explain why each distractor is wrong'],
+    saq: ['SAQ evidence precision', 'write 3-part SAQs with one named fact per point'],
+    dbq: ['DBQ rubric points', 'practice thesis, sourcing, outside evidence, and complexity on one document set'],
+    leq: ['LEQ argument structure', 'outline thesis, topic sentences, and evidence before writing']
+  },
+  'ap-lang': {
+    mcq: ['rhetorical reading accuracy', 'review missed passage questions by claim, evidence, and function'],
+    synthesis: ['synthesis essay source use', 'write a thesis and integrate three sources in a timed outline'],
+    rhetorical: ['rhetorical analysis commentary', 'annotate choices, purpose, and effect before drafting'],
+    argument: ['argument essay evidence', 'build claims with specific examples and counterargument']
+  },
+  'ap-chemistry': {
+    mcq: ['chemistry concept fluency', 'redo missed MCQs by unit and write the rule used'],
+    frq: ['FRQ partial credit', 'practice setup, units, and explanation points on released FRQs']
+  },
+  'ap-calculus-ab': {
+    mcq: ['calculus MCQ accuracy and pacing', 'sort misses by limits, derivatives, integrals, and applications'],
+    frq: ['FRQ setup and notation', 'write complete justifications, units, and calculator/no-calculator steps']
+  },
+  'ap-biology': {
+    mcq: ['biology concept application', 'redo missed graph/data MCQs and name the tested concept'],
+    frq: ['FRQ claim-evidence reasoning', 'practice short explanations with variables, controls, and data references']
+  },
+  'ap-gov': {
+    mcq: ['foundational concept MCQs', 'review missed constitutional principles, cases, and documents'],
+    frq: ['FRQ task verbs', 'practice claim, evidence, comparison, and SCOTUS explanation prompts']
+  },
+  'ap-statistics': {
+    mcq: ['statistics MCQ interpretation', 'redo missed probability, inference, and design questions'],
+    frq: ['FRQ communication', 'write conditions, calculations, and context sentences for each response']
+  },
+  'ap-psychology': {
+    mcq: ['psychology terminology accuracy', 'make retrieval cards for missed terms and apply them to scenarios'],
+    frq: ['FRQ application points', 'practice defining terms and applying them to the prompt situation']
+  },
+  'ap-lit': {
+    mcq: ['literary passage analysis', 'review missed tone, speaker, structure, and inference questions'],
+    poetry: ['poetry essay commentary', 'annotate speaker, shift, imagery, and line-level evidence'],
+    prose: ['prose essay evidence', 'connect narration, characterization, and detail to a defensible claim'],
+    argument: ['literary argument evidence', 'prepare flexible works and topic sentences for common themes']
+  }
+};
+
+function adviceFor(subject, sectionKey) {
+  return sectionAdvice[subject.slug]?.[sectionKey] || ['section-specific accuracy', `practice targeted ${sectionKey} questions and retest`];
+}
+
+function round1(value) {
+  return Math.round(value * 10) / 10;
+}
+
+export function buildStudyPlan(slug, inputs = {}) {
+  const subject = getSubject(slug);
+  const result = calculateScore(slug, inputs);
+  const diagnostics = sectionDiagnostics(subject, inputs);
+  const weakest = diagnostics[0];
+  const secondary = diagnostics[1] || diagnostics[0];
+  const supplemental = diagnostics
+    .filter((item) => item.key !== weakest.key && item.weightedLost > 0)
+    .sort((a, b) => a.pointValue - b.pointValue || b.weaknessScore - a.weaknessScore)[0] || secondary;
+  const strength = diagnostics.filter((item) => item.key !== weakest.key).sort((a, b) => b.accuracy - a.accuracy)[0] || weakest;
+  const targetScore = result.predictedScore >= 5 ? 5 : result.predictedScore >= 4 ? 5 : result.predictedScore >= 3 ? 4 : 3;
+  const gap = targetScore === 5 && result.predictedScore === 5 ? 0 : round1(Math.max(0, subject.cutoffs[targetScore] - result.composite));
+  const buffer = confidenceBuffers[subject.confidence] ?? 4;
+  const bufferGoal = round1(gap + buffer);
+  const [weakestSkill, weakestDrill] = adviceFor(subject, weakest.key);
+  const [secondarySkill, secondaryDrill] = adviceFor(subject, secondary.key);
+  const singleGain = weakest.pointValue;
+  const gainOptions = [
+    {
+      label: `+1 ${weakest.label} point`,
+      gain: singleGain,
+      description: `About +${singleGain.toFixed(1)} estimated composite points from ${weakest.label}.`
+    },
+    {
+      label: `+1 ${weakest.label} point + 1 ${supplemental.label} point`,
+      gain: round1(singleGain + supplemental.pointValue),
+      description: `About +${round1(singleGain + supplemental.pointValue).toFixed(1)} estimated composite points by splitting work across ${weakest.label} and ${supplemental.label}.`
+    }
+  ];
+  const targetLabel = result.predictedScore >= 5 ? 'protect AP 5' : `AP ${targetScore}`;
+  const status = result.predictedScore >= 5
+    ? `You are in the estimated AP 5 range for ${subject.shortName}; use the plan to protect your buffer.`
+    : `You are currently in the estimated AP ${result.predictedScore} range for ${subject.shortName}.`;
+  const gapText = result.predictedScore >= 5
+    ? 'No higher AP band exists. Maintain your buffer and reduce preventable misses.'
+    : `Your next target is ${targetLabel}. You need about ${gap.toFixed(1).replace(/\.0$/, '')} more estimated composite points, or about ${bufferGoal.toFixed(1).replace(/\.0$/, '')} with buffer.`;
+  const focus = strength.key === weakest.key
+    ? `${weakest.label} is the most balanced current section (${weakest.accuracyPct}% accuracy, ${weakest.weightedLost.toFixed(1)} weighted points still available). Keep it stable while you lift the next-biggest gap.`
+    : `${weakest.label} is the best next focus (${weakest.accuracyPct}% accuracy, ${weakest.weightedLost.toFixed(1)} weighted points still available). Your strongest current section is ${strength.label}.`;
+  const timelines = [
+    { weeks: 2, title: '2-week sprint', actions: [`Prioritize ${weakestSkill}: ${weakestDrill}.`, `Run one timed ${weakest.label} drill, then retest and re-enter scores.`, `If the gap remains, add ${secondarySkill} practice.`] },
+    { weeks: 4, title: '4-week build', actions: [`Weeks 1–2: fix ${weakest.label} misses with targeted review.`, `Week 3: combine ${weakest.label} with ${secondary.label} practice.`, `Week 4: take a mixed timed set and compare the new target gap.`] },
+    { weeks: 8, title: '8-week plan', actions: [`Weeks 1–3: rebuild the weakest skill through short drills.`, `Weeks 4–6: rotate ${weakest.label}, ${secondary.label}, and full-section timing.`, `Weeks 7–8: simulate exam pacing and protect ${strength.label}.`] }
+  ];
+  return { subject: subject.name, shortName: subject.shortName, result, diagnostics, weakest, secondary, strength, targetScore, targetLabel, gap, bufferGoal, status, focus, gapText, weakestSkill, weakestDrill, gainOptions, timelines };
 }
 
 export function calculateScore(slug, inputs = {}) {
@@ -208,6 +356,8 @@ export function calculateScore(slug, inputs = {}) {
   const score = predictedScore(subject, composite);
   const needed = scoreNeeded(slug, composite);
   const nextTarget = [3, 4, 5].find((target) => needed[target] > 0);
+  const gap = nextTarget ? needed[nextTarget] : 0;
+  const gapText = subject.compositeModel === 'weighted-100' ? Number(gap).toFixed(1).replace(/\.0$/, '') : gap;
 
   return {
     subject: subject.name,
@@ -220,7 +370,7 @@ export function calculateScore(slug, inputs = {}) {
     confidence: subject.confidence,
     riskNote: subject.riskNote,
     nextAction: nextTarget
-      ? `You may need about ${needed[nextTarget]} more estimated composite points to reach a ${nextTarget}.`
+      ? `You may need about ${gapText} more estimated composite points to reach a ${nextTarget}.`
       : 'You are in the estimated 5 range. Keep reviewing weak sections.'
   };
 }

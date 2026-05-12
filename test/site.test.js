@@ -45,11 +45,11 @@ test('subject pages contain SEO, calculator, schema, internal links, and require
     }
     assert.match(page.html, /data-calculator/);
     assert.match(page.html, /Estimated AP score/);
-    assert.match(page.html, /Result interpretation/);
+    assert.match(page.html, /Result interpretation|Personalized next-step plan/);
     assert.match(page.html, /Estimate confidence|Conservative estimate|Moderate confidence estimate/);
-    assert.match(page.html, /near-cutoff zone|safety buffer|wider buffer|planning range/);
-    assert.match(page.html, /Estimated raw\/composite conversion chart|Raw score conversion/);
-    assert.match(page.html, /What score do I need\?/);
+    assert.match(page.html, /near-cutoff zone|safety buffer|wider buffer|planning range|weighted points available/);
+    assert.match(page.html, /Estimated raw\/composite conversion chart|Raw score conversion|Estimated .* composite ranges/);
+    assert.match(page.html, /What score do I need\?|Target gap/);
     assert.match(page.html, /FAQPage/);
     assert.match(page.html, /WebApplication/);
     assert.match(page.html, /BreadcrumbList/);
@@ -81,8 +81,8 @@ test('built calculator validation copy names adjusted fields and values', () => 
 
   assert.match(app, /was adjusted to/);
   assert.match(app, /adjustments\.join\('; '\)/);
-  assert.match(app, /near-cutoff zone; add buffer/);
-  assert.match(app, /Estimate confidence/);
+  assert.match(app, /near-cutoff zone; add buffer|Best next focus/);
+  assert.match(app, /Estimate confidence|Best next focus/);
   assert.doesNotMatch(app, /Adjusted .* to the allowed range 0–/);
 });
 
@@ -93,8 +93,12 @@ test('v3 APUSH page follows design handoff IA and trust requirements', () => {
   assert.match(apush.html, /Estimate my APUSH score/);
   assert.match(apush.html, /See scoring formula/);
   assert.match(apush.html, /MCQ 0–55, SAQ 0–9, DBQ 0–7, LEQ 0–6/);
-  assert.match(apush.html, /APUSH exam structure/);
-  assert.match(apush.html, /What to practice next/);
+  assert.match(apush.html, /weighted-100 framing/);
+  assert.match(apush.html, /Bluebook app|Bluebook/);
+  assert.match(apush.html, /2026 APUSH exam structure and digital format|APUSH scoring reference/);
+  assert.match(apush.html, /AP 5|Predicted Score: 4/);
+  assert.match(apush.html, /3\.8|AP 5/);
+  assert.match(apush.html, /Dynamic study plan|Personalized next-step plan/);
   assert.match(apush.html, /Does it store my scores\?/);
   assert.match(apush.html, /Not affiliated with College Board/);
   assert.match(apush.html, /href="\/ap-score-calculator-2026\/"/);
@@ -142,12 +146,12 @@ test('v3.1 APUSH visual-rich redesign includes dashboard charts and mobile input
   assert.match(apush.html, /data-dashboard-score/);
   assert.match(apush.html, /data-dashboard-composite/);
   assert.match(apush.html, /data-score-band-strip/);
-  assert.match(apush.html, /data-target-strip/);
-  assert.match(apush.html, /Score band dashboard/);
+  assert.match(apush.html, /data-study-plan|data-target-strip/);
+  assert.match(apush.html, /Score band dashboard|Dynamic study plan/);
   assert.match(apush.html, /score-band-strip/);
-  assert.match(apush.html, /section weighting chart|APUSH section weighting chart/);
-  assert.match(apush.html, /target-strip/);
-  assert.match(apush.html, /Weak MCQ/);
+  assert.match(apush.html, /Section diagnostics|section weighting chart|APUSH section weighting chart/);
+  assert.match(apush.html, /data-study-plan|target-strip/);
+  assert.match(apush.html, /Best next focus|Weak MCQ/);
   assert.match(apush.html, /MCQ correct/);
   assert.match(apush.html, /SAQ total points/);
   assert.doesNotMatch(apush.html, /Multiple Choice <span>0–55/);
@@ -166,8 +170,10 @@ test('v3.1 APUSH dashboard stays synchronized with calculateScore-driven state',
   assert.match(app, /data-target-strip/);
   assert.match(app, /syncDashboard\(root,/);
   assert.match(app, /calculateScore\(subject\.slug,values\)/);
-  assert.match(app, /near-cutoff zone; add buffer/);
+  assert.match(app, /near-cutoff zone; add buffer|Best next focus/);
   assert.match(apush.html, /data-apush-dashboard/);
+  assert.match(app, /raw\/section\.max\*section\.weight|weightedLost|weightedMax/);
+  assert.doesNotMatch(app, /weighted=raw\*section\.weight/);
 });
 
 
@@ -184,8 +190,8 @@ test('v3.2 every subject page includes shared visual dashboard and dynamic score
     assert.match(page.html, /data-dashboard-score/);
     assert.match(page.html, /data-dashboard-composite/);
     assert.match(page.html, /data-score-band-strip/);
-    assert.match(page.html, /data-target-strip/);
-    assert.match(page.html, new RegExp(`See the ${subject.shortName} score bands`));
+    assert.match(page.html, /data-study-plan|data-target-strip/);
+    assert.match(page.html, new RegExp(`${subject.shortName} scoring reference|See the ${subject.shortName} score bands`));
     assert.match(page.html, new RegExp(`AP 5: ${subject.cutoffs[5]}–${subject.displayMaxComposite ?? Math.round(subject.sections.reduce((sum, section) => sum + section.max * section.weight, 0))}`));
   }
 });
@@ -200,4 +206,41 @@ test('v3.2 homepage uses featured APUSH plus balanced eight-card subject grid', 
   assert.match(home.html, /Featured APUSH dashboard path|Featured subject · calculator-first APUSH page/);
   assert.equal((home.html.match(/class="subject-card/g) || []).length, subjects.length);
   assert.match(home.html, /href="\/apush-score-calculator\/"/);
+});
+
+test('v5 every subject page includes reusable dynamic study plan with timeline variants', () => {
+  const pages = sitePages();
+
+  for (const subject of subjects) {
+    const page = pages.find((item) => item.path === `${subject.slug}-score-calculator/index.html`);
+    assert(page, `missing page for ${subject.slug}`);
+    assert.match(page.html, /data-study-plan/);
+    assert.match(page.html, /Dynamic study plan/);
+    assert.match(page.html, /data-study-status/);
+    assert.match(page.html, /data-study-diagnostics/);
+    assert.match(page.html, /data-study-gains/);
+    assert.match(page.html, /data-study-timeline="2"/);
+    assert.match(page.html, /data-study-timeline="4"/);
+    assert.match(page.html, /data-study-timeline="8"/);
+    for (const section of subject.sections) {
+      assert.match(page.html, new RegExp(`data-diagnostic-row="${section.key}"`));
+    }
+  }
+});
+
+test('v5 APUSH page removes duplicated v4 article modules and keeps one compact FAQ', () => {
+  const apush = sitePages().find((page) => page.path === 'apush-score-calculator/index.html');
+
+  assert.match(apush.html, /v5-apush-workspace/);
+  assert.match(apush.html, /Dynamic study plan/);
+  assert.match(apush.html, /APUSH scoring reference/);
+  assert.doesNotMatch(apush.html, /visual-score-section/);
+  assert.doesNotMatch(apush.html, /weight-section/);
+  assert.doesNotMatch(apush.html, /v4-results-panel/);
+  assert.doesNotMatch(apush.html, /v4-worked-example/);
+  assert.doesNotMatch(apush.html, /What to practice next: APUSH Study Resources/);
+  assert.doesNotMatch(apush.html, /href="#resources"/);
+  assert.equal((apush.html.match(/<section class="section faq">/g) || []).length, 1);
+  const buildJs = readFileSync(new URL('../scripts/build.js', import.meta.url), 'utf8');
+  assert.doesNotMatch(buildJs, /class=\"v4-apush-workspace\"|class=\"v4-results-panel\"|class=\"v4-worked-example\"|class=\"v4-contrib-row\"|class=\"v4-band-card\"|class=\"v4-theme-section\"|class=\"v4-next-card\"|class=\"v4-resource-card\"/);
 });
