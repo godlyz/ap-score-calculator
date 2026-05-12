@@ -29,15 +29,16 @@ function pageShell({ title, description, path, body, schema = [], nav = 'default
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}">
   <link rel="canonical" href="${escapeHtml(canonical)}">
-  <link rel="stylesheet" href="/assets/styles.css?v=v5-theme-toggle-hotfix">
+  <link rel="stylesheet" href="/assets/styles.css?v=v5-theme-inline-click">
+  <script>(function(){var d=document.documentElement;var prefers=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;var saved=null;try{saved=localStorage.getItem('theme')}catch(e){}var t=saved==='dark'||saved==='light'?saved:(prefers?'dark':'light');d.dataset.theme=t;window.__apApplyTheme=function(next){next=next==='dark'||next==='light'?next:(d.dataset.theme==='dark'?'light':'dark');d.dataset.theme=next;try{localStorage.setItem('theme',next)}catch(e){}var b=document.querySelector('[data-theme-toggle]');var l=document.querySelector('[data-theme-label]');var i=document.querySelector('[data-theme-icon]');if(l)l.textContent=next==='dark'?'Dark':'Light';if(i)i.textContent=next==='dark'?'☾':'☀';if(b){b.setAttribute('aria-label',next==='dark'?'Switch to light mode':'Switch to dark mode');b.setAttribute('aria-pressed',next==='dark'?'true':'false');b.dataset.themeBound='true';}};window.__apToggleTheme=function(){window.__apApplyTheme(d.dataset.theme==='dark'?'light':'dark');return false;};})();</script>
   ${schemaTags}
 </head>
 <body>
   ${siteHeader(nav, path)}
   <main>${body}</main>
   ${siteFooter()}
-  <script>window.__apThemeToggleFallback=function(){const btn=document.querySelector('[data-theme-toggle]');const label=document.querySelector('[data-theme-label]');const icon=document.querySelector('[data-theme-icon]');const prefersDark=()=>window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;const normalize=(mode)=>mode==='dark'||mode==='light'?mode:(prefersDark()?'dark':'light');const apply=(mode)=>{const next=normalize(mode);document.documentElement.dataset.theme=next;try{localStorage.setItem('theme',next);}catch(e){}if(label)label.textContent=next==='dark'?'Dark':'Light';if(icon)icon.textContent=next==='dark'?'☾':'☀';if(btn){btn.setAttribute('aria-label',next==='dark'?'Switch to light mode':'Switch to dark mode');btn.setAttribute('aria-pressed',next==='dark'?'true':'false');}};apply(normalize((()=>{try{return localStorage.getItem('theme')}catch(e){return null}})()));if(btn&&!btn.dataset.themeBound){btn.dataset.themeBound='true';btn.addEventListener('click',()=>apply(document.documentElement.dataset.theme==='dark'?'light':'dark'));}};window.__apThemeToggleFallback();</script>
-  <script type="module" src="/assets/app.js?v=v5-theme-toggle-hotfix"></script>
+  <script>window.__apThemeToggleFallback=function(){if(window.__apApplyTheme){window.__apApplyTheme(document.documentElement.dataset.theme);return;}const btn=document.querySelector('[data-theme-toggle]');if(btn&&!btn.dataset.themeBound){btn.dataset.themeBound='true';btn.addEventListener('click',()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';});}};window.__apThemeToggleFallback();</script>
+  <script type="module" src="/assets/app.js?v=v5-theme-inline-click"></script>
 </body>
 </html>`;
 }
@@ -60,7 +61,7 @@ function siteHeader(nav, currentPath) {
   return `<header class="site-header">
     <a class="brand" href="/" aria-label="AP Score Calculator 2026 home"><span class="brand-mark" aria-hidden="true">▦</span><span>AP Score Calculator 2026</span></a>
     <nav aria-label="Primary navigation">${primary}</nav>
-    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme"><span data-theme-icon>☀</span><em data-theme-label>Light</em></button>
+    <button class="theme-toggle" type="button" data-theme-toggle onclick="return window.__apToggleTheme ? window.__apToggleTheme() : false" aria-label="Switch to dark mode" aria-pressed="false"><span data-theme-icon>☀</span><em data-theme-label>Light</em></button>
   </header>`;
 }
 
