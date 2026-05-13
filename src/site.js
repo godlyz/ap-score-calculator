@@ -28,7 +28,7 @@ function pageShell({ title, description, path, body, schema = [], nav = 'default
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}">
   <link rel="canonical" href="${escapeHtml(canonical)}">
-  <link rel="stylesheet" href="/assets/styles.css?v=v6-ga4-csp-fix-20260513">
+  <link rel="stylesheet" href="/assets/styles.css?v=v6-3-seo-only-20260513">
   ${schemaTags}
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-8YKL96LGT4"></script>
 </head>
@@ -36,7 +36,7 @@ function pageShell({ title, description, path, body, schema = [], nav = 'default
   ${siteHeader(nav, path)}
   <main>${body}</main>
   ${siteFooter()}
-  <script type="module" src="/assets/app.js?v=v6-ga4-csp-fix-20260513"></script>
+  <script type="module" src="/assets/app.js?v=v6-3-seo-only-20260513"></script>
 </body>
 </html>`;
 }
@@ -373,6 +373,141 @@ function hubFaqs() {
   ];
 }
 
+
+const subjectSeoProfiles = {
+  apush: {
+    searchIntent: 'Students usually land here after a full APUSH practice exam and need to translate MCQ, SAQ, DBQ, and LEQ points into a usable study decision.',
+    practiceUse: 'Use it after timed Bluebook-style APUSH practice, DBQ rubric review, or a weekly content-unit checkpoint.',
+    improvementAngle: 'Because MCQ is 40% and DBQ is 25%, the fastest route is usually a missed-period MCQ drill or a rubric-point DBQ rewrite rather than broad rereading.',
+    description: 'Free APUSH score calculator for 2026. Enter MCQ, SAQ, DBQ, and LEQ points to estimate your AP US History score, target gap, and next study focus.'
+  },
+  'ap-lang': {
+    searchIntent: 'AP Lang users usually compare MCQ accuracy with three essay rubric scores and need a conservative read near the 4/5 boundary.',
+    practiceUse: 'Use it after a synthesis, rhetorical analysis, or argument essay set to see whether rubric gains matter more than MCQ gains.',
+    improvementAngle: 'If the estimate is close, improve the lowest essay rubric row first; one extra point across multiple essays can move the composite quickly.',
+    description: 'Free AP Lang score calculator for 2026. Estimate AP English Language results from MCQ and essay rubric points with conservative cutoff guidance.'
+  },
+  'ap-lit': {
+    searchIntent: 'AP Lit students need to combine MCQ performance with poetry, prose, and literary argument rubric scores without overtrusting one practice prompt.',
+    practiceUse: 'Use it after a full MCQ set and three timed essays to compare rubric-point gains against the AP score band you want.',
+    improvementAngle: 'Reader variation is real, so build a wider buffer by raising thesis, evidence, and commentary consistency across all three essays.',
+    description: 'Free AP Lit score calculator for 2026. Estimate AP English Literature results from MCQ and three essay rubric scores with near-cutoff caution.'
+  },
+  'ap-chemistry': {
+    searchIntent: 'AP Chemistry users usually have raw MCQ and FRQ points and want a quick estimate before deciding which units or FRQ skills to repair.',
+    practiceUse: 'Use it after a released-style practice set to test whether stoichiometry, equilibrium, kinetics, or lab-analysis misses are holding down the estimate.',
+    improvementAngle: 'FRQ partial credit can lift the estimate even when MCQ accuracy is flat, so review shown work and scoring-language misses first.',
+    description: 'Free AP Chemistry score calculator for 2026. Estimate your AP Chem score from MCQ and FRQ points with raw score and target-gap guidance.'
+  },
+  'ap-calculus-ab': {
+    searchIntent: 'AP Calculus AB users want to combine MCQ and FRQ practice points into a fast score estimate without splitting every calculator/no-calculator part.',
+    practiceUse: 'Use it after a mixed derivative, integral, and applications practice exam to decide whether MCQ accuracy or FRQ setup work is the bottleneck.',
+    improvementAngle: 'FRQ setup, units, and justification points can be efficient gains near a cutoff, especially when algebra mistakes are already under control.',
+    description: 'Free AP Calculus AB score calculator for 2026. Estimate AP Calc AB score from MCQ and FRQ points with composite and gap-to-5 guidance.'
+  },
+  'ap-biology': {
+    searchIntent: 'AP Biology users often know total MCQ and FRQ practice points and need a quick read on whether content recall or explanation points matter next.',
+    practiceUse: 'Use it after a unit-mixed practice exam to compare MCQ misses with FRQ claim-evidence-reasoning weaknesses.',
+    improvementAngle: 'If FRQ is weak, prioritize graph interpretation, experimental design, and concise biological reasoning before adding more memorization.',
+    description: 'Free AP Biology score calculator for 2026. Estimate AP Bio score from MCQ and FRQ points with composite range and study-gap guidance.'
+  },
+  'ap-gov': {
+    searchIntent: 'AP Government users need a fast estimate from MCQ and FRQ points, especially after practicing concept application, SCOTUS, and argument tasks.',
+    practiceUse: 'Use it after a practice exam to see whether content recall, document use, or argument evidence should drive the next review block.',
+    improvementAngle: 'Because FRQ tasks vary, raise the weakest task type first: concept application, quantitative analysis, SCOTUS comparison, or argument essay.',
+    description: 'Free AP Government score calculator for 2026. Estimate AP Gov score from MCQ and FRQ points with target gap and cutoff caution.'
+  },
+  'ap-statistics': {
+    searchIntent: 'AP Statistics users usually need to translate MCQ and FRQ points into a score estimate and identify whether interpretation or calculation is limiting.',
+    practiceUse: 'Use it after mixed inference, probability, regression, and investigative-task practice to see how far the estimate is from your target.',
+    improvementAngle: 'FRQ communication points can be high-leverage; practice context, conditions, and interpretation language rather than only formulas.',
+    description: 'Free AP Statistics score calculator for 2026. Estimate AP Stats score from MCQ and FRQ points with raw score and target-gap guidance.'
+  },
+  'ap-psychology': {
+    searchIntent: 'AP Psychology users need a conservative estimate while recent exam changes make exact conversions less certain.',
+    practiceUse: 'Use it after a vocabulary-heavy MCQ set and FRQ practice to decide whether definitions, application, or written explanation needs more work.',
+    improvementAngle: 'If the estimate is close, build buffer with applied-definition accuracy and FRQ term usage before assuming the band is secure.',
+    description: 'Free AP Psychology score calculator for 2026. Estimate AP Psych score from MCQ and FRQ points with conservative confidence notes.'
+  }
+};
+
+function subjectSeoProfile(subject) {
+  return subjectSeoProfiles[subject.slug] || {
+    searchIntent: `Use this ${subject.shortName} calculator after a practice test to turn section points into an unofficial score estimate.`,
+    practiceUse: `Enter ${subject.shortName} section points, then use the target gap and weakest section to plan the next study block.`,
+    improvementAngle: 'Focus first on the section with the most realistic point gain, especially when the estimate is close to a cutoff.',
+    description: `Free unofficial ${subject.shortName} score calculator for 2026 AP planning with composite range, target gap, and study guidance.`
+  };
+}
+
+function subjectFaqs(subject) {
+  if (subject.slug === 'apush') {
+    return [
+      { q: 'Is this APUSH score calculator official?', a: 'No. It is an independent, unofficial AP US History planning tool and is not affiliated with or endorsed by College Board.' },
+      { q: 'What APUSH scores should I enter?', a: 'Enter raw practice-test points for MCQ, SAQ, DBQ, and LEQ. The page converts those section points into a weighted-100 composite estimate.' },
+      { q: 'Does the APUSH calculator work for the digital Bluebook exam?', a: 'Yes for planning. The calculator reflects the APUSH section structure and reminds students that APUSH is now fully digital in Bluebook, while official score setting can still vary.' },
+      { q: 'What score do I need for a 5 on APUSH?', a: 'Enter your current MCQ, SAQ, DBQ, and LEQ points to see the estimated gap to a 5. Treat the gap as a study-planning buffer, not an official cutoff.' },
+      { q: 'Which APUSH section should I study first?', a: 'Use the Personalized next-step plan below the calculator. It compares normalized section performance and weighted lost points to suggest the best next focus.' },
+      { q: 'Does it store my scores?', a: 'No. Inputs are processed locally in your browser and are not stored by us.' }
+    ];
+  }
+  const category = subjectCategory(subject);
+  const profile = subjectSeoProfile(subject);
+  const sectionNames = subject.sections.map((section) => section.label).join(', ');
+  return [
+    { q: `Is this ${subject.shortName} calculator official?`, a: `No. This ${subject.shortName} calculator is unofficial and independent. It is designed for practice-test planning, not official College Board score reporting.` },
+    { q: `Which ${subject.shortName} points should I enter?`, a: `Enter raw practice scores for ${sectionNames}. The calculator clamps values to each section range and converts them into an estimated composite.` },
+    { q: `What score do I need for a 5 on ${subject.shortName}?`, a: `Use the gap-to-5 result after entering your section points. The shown gap is a planning estimate, so build extra buffer if you are close to the cutoff.` },
+    { q: `How should I use this ${subject.shortName} estimate?`, a: profile.practiceUse },
+    { q: category === 'English' ? 'Why are essay-heavy estimates conservative?' : `Why can ${subject.shortName} cutoffs vary?`, a: `${confidenceCopy(subject)} ${subject.riskNote}` }
+  ];
+}
+
+function relatedSubjects(subject) {
+  const sameGroup = subjects.filter((item) => item.slug !== subject.slug && subjectCategory(item) === subjectCategory(subject));
+  const featured = subjects.filter((item) => item.slug !== subject.slug && ['apush', 'ap-biology', 'ap-lang'].includes(item.slug));
+  const fallback = subjects.filter((item) => item.slug !== subject.slug);
+  const merged = [...sameGroup, ...featured, ...fallback];
+  const seen = new Set();
+  return merged.filter((item) => {
+    if (seen.has(item.slug)) return false;
+    seen.add(item.slug);
+    return true;
+  }).slice(0, 5);
+}
+
+function relatedCalculatorSection(subject) {
+  const related = relatedSubjects(subject);
+  return `<section class="section links related-calculators" aria-label="Related AP calculators">
+    <div class="section-heading"><p class="eyebrow">Related calculators</p><h2>Keep comparing nearby AP score tools</h2><p>Open a related subject page or return to the full AP calculator hub. These are internal links only; calculator behavior stays unchanged.</p></div>
+    <div class="related-grid">
+      <a class="related-card hub-card" href="/ap-score-calculator-2026/"><span>Hub</span><strong>All AP score calculators</strong><p>Browse STEM, English, and Social Science calculators in one indexable directory.</p></a>
+      ${related.map((item) => { const tone = subjectTone(item); return `<a class="related-card" href="/${item.slug}-score-calculator/"><span>${escapeHtml(item.shortName)}</span><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(tone.focus)}</p></a>`; }).join('')}
+    </div>
+  </section>`;
+}
+
+function subjectSeoSupportSection(subject) {
+  const profile = subjectSeoProfile(subject);
+  const isApush = subject.slug === 'apush';
+  return `<section class="section seo-support ${isApush ? 'apush-seo-support' : ''}">
+    <div class="section-heading"><p class="eyebrow">${isApush ? 'APUSH 2026 practice notes' : `${escapeHtml(subject.shortName)} practice notes`}</p><h2>${isApush ? 'Use the APUSH estimate as a study checkpoint' : `Use the ${escapeHtml(subject.shortName)} estimate as a checkpoint`}</h2><p>${escapeHtml(profile.searchIntent)}</p></div>
+    <div class="seo-support-grid">
+      <article><span>When to use it</span><p>${escapeHtml(profile.practiceUse)}</p></article>
+      <article><span>What to improve next</span><p>${escapeHtml(profile.improvementAngle)}</p></article>
+      <article><span>How to read cutoffs</span><p>${escapeHtml(subject.riskNote)}</p></article>
+    </div>
+  </section>`;
+}
+
+function hubInternalLinksSection() {
+  const lanes = ['STEM', 'English', 'Social Science'].map((group) => {
+    const cards = subjects.filter((subject) => subjectCategory(subject) === group).map((subject) => `<a href="/${subject.slug}-score-calculator/"><strong>${escapeHtml(subject.shortName)}</strong><span>${escapeHtml(subjectTone(subject).promise)}</span></a>`).join('');
+    return `<article class="hub-link-lane"><h3>${group} calculators</h3><div>${cards}</div></article>`;
+  }).join('');
+  return `<section class="section hub-link-clusters" aria-label="AP calculator internal links"><div class="section-heading"><p class="eyebrow">Internal calculator paths</p><h2>Jump by exam family</h2><p>These category links make the hub easier to crawl and easier for students to browse without changing any calculator function.</p></div><div class="hub-link-grid">${lanes}</div></section>`;
+}
+
 function homePage() {
   const faqs = homepageFaqs();
   const body = `
@@ -433,6 +568,7 @@ function homePage() {
   </div>
   ${homepageHubPreview()}
 </section>
+${hubInternalLinksSection()}
 <section class="section two-col" id="methodology">
   <div>
     <p class="eyebrow">Trust</p>
@@ -555,23 +691,10 @@ function subjectPage(subject) {
   const isApush = subject.slug === 'apush';
   const sample = Object.fromEntries(subject.sections.map((section) => [section.key, Math.round(section.max * 0.7)]));
   const sampleResult = calculateScore(subject.slug, sample);
-  const faqs = isApush ? [
-    { q: 'Is this APUSH calculator official?', a: 'No. It is an independent, unofficial planning tool and is not affiliated with or endorsed by College Board.' },
-    { q: 'How accurate is it?', a: 'It is best used as a planning estimate, not a score guarantee. AP cutoffs can vary by year, exam form, and official score-setting process.' },
-    { q: 'What score do I need for a 5?', a: 'Enter MCQ, SAQ, DBQ, and LEQ points to see an estimated gap to a 5. The result is a planning range, not an official cutoff.' },
-    { q: 'Why do results differ from other sites?', a: 'Different calculators may use different assumptions, historical ranges, or conversion logic. This site shows transparent assumptions and a conservative planning approach.' },
-    { q: 'Does it store my scores?', a: 'No. Inputs are processed locally in your browser and are not stored by us.' },
-    { q: 'What if I am close to a cutoff?', a: 'Treat the result as a near-cutoff zone and aim for extra buffer points before test day.' }
-  ] : [
-    { q: `Is this ${subject.shortName} calculator official?`, a: 'No. This calculator is unofficial and is not affiliated with or endorsed by College Board. It uses public exam structures, historical scoring patterns, and transparent assumptions to provide a planning estimate. Your official AP score may differ.' },
-    { q: `What score do I need for a 5 on ${subject.shortName}?`, a: 'Enter your section points in the calculator to see an estimated gap to a 5. The number is not an official cutoff. It is a planning estimate based on the calculator’s conversion assumptions.' },
-    { q: 'How should I use the score-needed result?', a: 'Use it as study guidance. Try adjusting one section at a time to see which extra raw points may move your score fastest.' },
-    { q: 'Are the raw score conversions exact?', a: 'No. This conversion chart is estimated from public exam structure and historical scoring patterns. It is not an official College Board conversion table.' },
-    { q: `How confident is this ${subject.shortName} estimate?`, a: `${confidenceCopy(subject)} ${subject.riskNote}` }
-  ];
+  const faqs = subjectFaqs(subject);
+  const seoProfile = subjectSeoProfile(subject);
   const inputs = subject.sections.map((section) => `<label><span class="field-title">${escapeHtml(isApush ? apushLabel(section) : section.label)}</span><span class="field-range">0–${section.max}</span><input aria-label="${escapeHtml(isApush ? apushLabel(section) : section.label)}" inputmode="numeric" type="number" min="0" max="${section.max}" step="1" data-key="${section.key}" data-max="${section.max}" value=""></label>`).join('\n');
   const rows = conversionRows(subject).map((row) => `<tr><td>${row.apScore}</td><td>${escapeHtml(row.range)}</td><td>${row.apScore === 5 ? 'Estimated high-score range; keep reviewing misses.' : row.apScore >= 3 ? 'May be college-credit relevant, but policies vary by school.' : 'Use as a diagnostic baseline for study planning.'}</td></tr>`).join('\n');
-  const related = subjects.filter((item) => item.slug !== subject.slug).slice(0, 4).map((item) => `<a href="/${item.slug}-score-calculator/">${escapeHtml(item.shortName)} calculator</a>`).join('');
   const data = escapeHtml(JSON.stringify(subject));
   const body = `
 <section class="hero calculator-hero">
@@ -610,6 +733,7 @@ function subjectPage(subject) {
     </div>
   </div>
 </section>
+${subjectSeoSupportSection(subject)}
 <section class="section faq">
   <div class="section-heading">
     <p class="eyebrow">FAQ</p>
@@ -617,15 +741,12 @@ function subjectPage(subject) {
   </div>
   ${faqs.map((qa) => `<details><summary>${escapeHtml(qa.q)}</summary><p>${escapeHtml(qa.a)}</p></details>`).join('\n')}
 </section>
-<section class="section links">
-  <h2>Related AP calculators</h2>
-  <a href="/ap-score-calculator-2026/">All AP score calculators</a>${related}
-</section>`;
+${relatedCalculatorSection(subject)}`;
   return pageShell({
     title: ['ap-lang', 'ap-lit'].includes(subject.slug)
       ? subject.title
-      : `${subject.title} | Raw Score & Gap to 5`,
-    description: `Free unofficial ${subject.shortName} score calculator for 2026 AP planning. Estimate your score, confidence level, composite range, and gap to 3/4/5.`,
+      : `${subject.title} | 2026 Guide`,
+    description: seoProfile.description,
     path: `/${subject.slug}-score-calculator/`,
     body,
     nav: 'subject',
@@ -657,25 +778,25 @@ export function sitePages() {
     ...subjects.map((subject) => ({ path: `${subject.slug}-score-calculator/index.html`, html: subjectPage(subject) })),
     { path: 'privacy.html', html: policyPage({
       title: 'Privacy Policy | AP Score Calculator 2026',
-      description: 'Privacy policy for the static AP Score Calculator 2026 calculator site.',
+      description: 'Privacy policy for AP Score Calculator 2026, covering local calculator inputs, analytics, hosting logs, and student data safeguards.',
       path: '/privacy.html',
       body: '<p>This static site does not require accounts and does not store calculator inputs. Calculator values are processed locally in your browser.</p><p>Hosting or CDN providers may process standard technical logs such as IP address, user agent, page path, and timestamp for security and delivery. If privacy-friendly analytics are added later, they should avoid collecting precise score inputs, names, school information, or official account details.</p><p>AP® and Advanced Placement® are trademarks registered by College Board. College Board is not affiliated with, and does not endorse, this website or calculator.</p>'
     }) },
     { path: 'terms.html', html: policyPage({
       title: 'Terms of Use | AP Score Calculator 2026 Site',
-      description: 'Terms of use for AP Score Calculator 2026 unofficial educational estimates.',
+      description: 'Terms of use for AP Score Calculator 2026, including unofficial estimate limits, educational use, and no guarantee of AP results.',
       path: '/terms.html',
       body: '<p>Use this site for informational study planning only. The calculators provide unofficial estimates and do not guarantee any AP exam result, college credit, or placement outcome.</p><p>Do not rely on this site as a substitute for official College Board score reports, teacher guidance, or college credit policies.</p>'
     }) },
     { path: 'disclaimer.html', html: policyPage({
       title: 'Disclaimer | AP Score Calculator 2026 Site',
-      description: 'Unofficial AP score estimate disclaimer and trademark notice.',
+      description: 'Unofficial AP score estimate disclaimer for AP Score Calculator 2026, including College Board trademark notice and scoring limits.',
       path: '/disclaimer.html',
       body: `<p>${trademarkNotice}</p><p>All conversions and score-needed figures are transparent estimates based on public exam structure and historical patterns. Actual scoring may vary by year, exam form, and official process.</p>`
     }) },
     { path: 'contact.html', html: policyPage({
       title: 'Contact Us | AP Score Calculator 2026 Site',
-      description: 'Contact AP Score Calculator 2026 for corrections and feedback.',
+      description: 'Contact AP Score Calculator 2026 for corrections, accessibility feedback, calculator questions, and responsible content updates.',
       path: '/contact.html',
       body: '<p>For corrections, accessibility feedback, or content questions, email <a href="mailto:hello@apscorecalculator.store">hello@apscorecalculator.store</a>.</p><p>Please do not send official score reports, student IDs, school records, AP numbers, or private College Board account information.</p>'
     }) }
