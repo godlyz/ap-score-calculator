@@ -28,14 +28,16 @@ function pageShell({ title, description, path, body, schema = [], nav = 'default
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}">
   <link rel="canonical" href="${escapeHtml(canonical)}">
-  <link rel="stylesheet" href="/assets/styles.css?v=v5-theme-system-mode-fix">
+  <link rel="stylesheet" href="/assets/styles.css?v=v6-ga4-20260513">
   ${schemaTags}
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8YKL96LGT4"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-8YKL96LGT4');</script>
 </head>
 <body>
   ${siteHeader(nav, path)}
   <main>${body}</main>
   ${siteFooter()}
-  <script type="module" src="/assets/app.js?v=v5-theme-system-mode-fix"></script>
+  <script type="module" src="/assets/app.js?v=v6-ga4-20260513"></script>
 </body>
 </html>`;
 }
@@ -136,6 +138,38 @@ function confidenceCopy(subject) {
     return 'Leave a larger buffer around cutoffs for essay-heavy or reader-dependent scoring.';
   }
   return 'Useful for planning; yearly equating and section scoring can shift official boundaries.';
+}
+
+function subjectTone(subject) {
+  if (subject.slug === 'apush') return {
+    lane: 'Featured APUSH dashboard path',
+    promise: 'MCQ, SAQ, DBQ, and LEQ inputs with target-gap guidance.',
+    focus: 'Best for checking whether practice-test points are on track for a 3, 4, or 5.',
+    proof: 'Weighted-100 APUSH model · digital Bluebook reminders'
+  };
+  if (subjectCategory(subject) === 'STEM') return {
+    lane: 'STEM calculator',
+    promise: 'Raw section points converted into an estimated composite and AP band.',
+    focus: 'Best for quick practice-test checks after MCQ/FRQ review.',
+    proof: 'Section points · target gap · conservative cutoff note'
+  };
+  if (subjectCategory(subject) === 'English') return {
+    lane: 'Essay-rubric calculator',
+    promise: 'MCQ plus essay rubric points with wider near-cutoff caution.',
+    focus: 'Best for comparing essay gains against the score band you want.',
+    proof: 'Rubric-aware inputs · reader-variation warning'
+  };
+  return {
+    lane: 'Social science calculator',
+    promise: 'Practice section points mapped to an unofficial AP estimate.',
+    focus: 'Best for deciding whether content recall or written response points matter more next.',
+    proof: 'Subject-specific structure · gap to 3/4/5'
+  };
+}
+
+function subjectCardMeta(subject) {
+  const tone = subjectTone(subject);
+  return `${tone.lane} · ${subject.sections.length} inputs · gap to 3/4/5`;
 }
 
 
@@ -285,47 +319,58 @@ function homepageSubjectCards() {
   const others = subjects.filter((subject) => subject.slug !== 'apush');
   const renderCard = (subject) => {
     const featured = subject.slug === 'apush' ? ' featured' : '';
-    const line = subject.slug === 'apush'
-      ? 'Featured subject · calculator-first APUSH page'
-      : 'Free score estimate · gap to target';
+    const tone = subjectTone(subject);
     return `
       <a class="subject-card${featured}" href="/${subject.slug}-score-calculator/">
         <span>${escapeHtml(subject.shortName)}</span>
         <strong>${escapeHtml(subject.title)}</strong>
-        <p>${escapeHtml(subject.slug === 'apush' ? 'Single-subject clarity, score gap guidance, and APUSH exam support.' : subject.description)}</p>
-        <em>${line}</em>
+        <p>${escapeHtml(tone.promise)}</p>
+        <em>${escapeHtml(subjectCardMeta(subject))}</em>
       </a>`;
   };
   return `
-    <div class="featured-subject-row">${renderCard(apush)}</div>
+    <div class="subject-showcase featured-subject-row">
+      <div class="subject-showcase-copy">
+        <p class="eyebrow">Primary route</p>
+        <h3>Start with the strongest single-subject page</h3>
+        <p>APUSH has the most complete calculator flow: score estimate, target gap, study plan, reference drawer, and exam-format support. The rest of the hub stays nearby for students comparing multiple AP exams.</p>
+      </div>
+      ${renderCard(apush)}
+    </div>
     <div class="subject-grid-balanced">${others.map(renderCard).join('')}</div>`;
 }
-
 function homepageHubPreview() {
   return `
   <div class="mini-hub-grid">
     ${['STEM', 'English', 'Social Science'].map((group) => {
-      const sample = subjects.filter((subject) => subjectCategory(subject) === group).slice(0, 3).map((subject) => `<a href="/${subject.slug}-score-calculator/">${escapeHtml(subject.shortName)}</a>`).join('');
-      return `<section class="mini-hub-card"><h3>${group}</h3><p>${group === 'STEM' ? 'Math and science calculators for quick score planning.' : group === 'English' ? 'Writing-heavy subjects with rubric-aware guidance.' : 'APUSH leads this group, with AP Gov and AP Psychology nearby.'}</p><div class="mini-hub-links">${sample}</div></section>`;
+      const groupSubjects = subjects.filter((subject) => subjectCategory(subject) === group);
+      const sample = groupSubjects.slice(0, 3).map((subject) => `<a href="/${subject.slug}-score-calculator/">${escapeHtml(subject.shortName)}</a>`).join('');
+      const copy = group === 'STEM'
+        ? 'Calculator-first pages for math and science practice tests with MCQ/FRQ inputs.'
+        : group === 'English'
+          ? 'Essay-heavy pages keep confidence conservative and make rubric variation visible.'
+          : 'APUSH is the featured route, with AP Gov and AP Psychology kept close for social science browsing.';
+      return `<section class="mini-hub-card"><div><h3>${group}</h3><p>${copy}</p></div><div class="mini-hub-links">${sample}</div></section>`;
     }).join('')}
   </div>`;
 }
-
 function homepageFaqs() {
   return [
-    { q: 'Is this official?', a: 'No. This is an independent, unofficial AP planning tool and is not affiliated with College Board.' },
-    { q: 'Does it save my inputs?', a: 'No. Calculator inputs are processed locally in your browser and are not stored by us.' },
-    { q: 'What if I am near a cutoff?', a: 'Treat the estimate as a range and add buffer points before test day.' },
-    { q: 'Where should I start?', a: 'Choose the AP subject you are studying for, or open APUSH if you want the strongest single-subject tool page.' }
+    { q: 'Is this AP score calculator official?', a: 'No. This is an independent, unofficial AP planning tool and is not affiliated with or endorsed by College Board.' },
+    { q: 'Which calculator should I open first?', a: 'Open the subject you are actively practicing. APUSH is the featured route because it has the most complete score dashboard, study plan, and scoring reference flow.' },
+    { q: 'Does the site save my score inputs?', a: 'No. Calculator inputs are processed locally in your browser and are not stored by us.' },
+    { q: 'How should I read a near-cutoff estimate?', a: 'Treat any near-cutoff result as a range, not a guarantee. Build extra buffer points before exam day because official score setting can shift.' },
+    { q: 'Why are subjects grouped by category?', a: 'The hub groups STEM, English, and Social Science calculators so students can browse related AP exams without losing the primary calculator path.' }
   ];
 }
 
 function hubFaqs() {
   return [
-    { q: 'Why use a hub instead of only one calculator page?', a: 'The hub helps students browse all AP calculators quickly and jump straight to the right subject page.' },
-    { q: 'How do I find APUSH?', a: 'APUSH is highlighted under Social Science and is also linked in the main navigation.' },
-    { q: 'Do all calculators use the same assumptions?', a: 'No. Each subject uses its own section structure, cutoffs, and confidence language.' },
-    { q: 'Does the site store score inputs?', a: 'No. The calculators are browser-local and do not store your values.' }
+    { q: 'What is the AP Score Calculator 2026 hub?', a: 'It is a directory of free, unofficial AP subject calculators. Each subject page estimates an AP score from practice-test section points and shows the gap to 3, 4, and 5.' },
+    { q: 'How do I find the APUSH score calculator?', a: 'APUSH is highlighted under Social Science, linked from the main navigation, and promoted as the strongest single-subject route on the homepage.' },
+    { q: 'Do all calculators use the same formula?', a: 'No. Each calculator uses its own subject structure, cutoffs, section labels, confidence language, and risk note.' },
+    { q: 'Are essay-heavy subjects less certain?', a: 'Yes. AP Lang, AP Lit, and other writing-heavy calculators use conservative confidence language because rubric scoring can vary by prompt and reader.' },
+    { q: 'Does the hub store score inputs?', a: 'No. The calculators run in the browser and do not store score values.' }
   ];
 }
 
@@ -335,8 +380,8 @@ function homePage() {
 <section class="hero home-hero home-system">
   <div class="hero-copy-block">
     <p class="eyebrow">Free AP score calculators for 2026 planning</p>
-    <h1>Plan your AP score with a clearer calculator path.</h1>
-    <p class="hero-copy">Enter section points, see an estimated AP score, and check the gap to your next target before test day. APUSH is the featured single-subject experience, with the hub ready when you want every calculator.</p>
+    <h1>AP Score Calculator 2026</h1>
+    <p class="hero-copy">Choose a subject, enter practice-test section points, and see an unofficial AP score estimate with the gap to your next target. Start with APUSH for the most complete calculator flow, or browse the full hub by category.</p>
     <div class="cta-row">
       <a class="button" href="/apush-score-calculator/">Start with APUSH</a>
       <a class="button secondary" href="/ap-score-calculator-2026/">Browse the hub</a>
@@ -360,15 +405,15 @@ function homePage() {
 <section id="subjects" class="section">
   <div class="section-heading">
     <p class="eyebrow">Featured subject matrix</p>
-    <h2>Choose the AP subject you are practicing for</h2>
-    <p>APUSH is visually featured as the highest-priority single-subject page. Every card routes to the rebuilt calculator pages with correct links.</p>
+    <h2>Choose your AP calculator</h2>
+    <p>APUSH is visually featured as the strongest route, then a balanced grid keeps the rest of the subject family easy to compare. Each card explains what makes that calculator different.</p>
   </div>
   <div class="subject-matrix subject-matrix-home">${homepageSubjectCards()}</div>
 </section>
 <section class="section two-col">
   <div>
     <p class="eyebrow">How it works</p>
-    <h2>Simple score planning, not an official report</h2>
+    <h2>How the calculators work</h2>
     <ol class="steps">
       <li>Enter the section points you earned on a practice test.</li>
       <li>Review the estimated AP score, composite range, and gap to 3, 4, or 5.</li>
@@ -376,7 +421,7 @@ function homePage() {
     </ol>
   </div>
   <aside class="note">
-    <h2>Why students use it</h2>
+    <h2>When the estimate helps</h2>
     <p>It is a fast way to check whether your current practice score is on track and where a realistic gain is most likely.</p>
     <p>When you are near a cutoff, treat the estimate as a range and leave extra buffer points.</p>
   </aside>
@@ -384,15 +429,15 @@ function homePage() {
 <section class="section" id="hub-preview">
   <div class="section-heading">
     <p class="eyebrow">Hub preview</p>
-    <h2>Browse calculators by category</h2>
-    <p>Use the hub when you want a clean directory of all AP calculators. It keeps APUSH easy to find under Social Science.</p>
+    <h2>Hub preview</h2>
+    <p>The hub is the browse mode: STEM, English, and Social Science lanes with APUSH still easy to find.</p>
   </div>
   ${homepageHubPreview()}
 </section>
 <section class="section two-col" id="methodology">
   <div>
-    <p class="eyebrow">Methodology / trust</p>
-    <h2>Transparent assumptions without official claims</h2>
+    <p class="eyebrow">Trust</p>
+    <h2>Transparent, unofficial assumptions</h2>
     <ol class="steps">
       <li>Calculator inputs are mapped through public exam structures and subject-specific cutoff assumptions.</li>
       <li>The result is a planning estimate, not a score guarantee.</li>
@@ -408,8 +453,8 @@ function homePage() {
 </section>
 <section class="section faq">
   <div class="section-heading">
-    <p class="eyebrow">FAQ preview</p>
-    <h2>Questions students ask before they start</h2>
+    <p class="eyebrow">FAQ</p>
+    <h2>Before you start</h2>
   </div>
   ${faqs.map((qa) => `<details><summary>${escapeHtml(qa.q)}</summary><p>${escapeHtml(qa.a)}</p></details>`).join('\n')}
 </section>
@@ -421,7 +466,7 @@ function homePage() {
   <a class="button" href="#subjects">Choose a calculator</a>
 </section>`;
   return pageShell({
-    title: 'AP Score Calculator 2026 | Free Unofficial AP Score Estimates',
+    title: 'AP Score Calculator 2026 | Free AP Score Estimates',
     description: 'Free AP score calculators for 2026 planning with APUSH featured, browser-local estimates, gap-to-target guidance, and transparent unofficial assumptions.',
     path: '/',
     body,
@@ -436,8 +481,8 @@ function hubPage() {
 <section class="hero hub-hero">
   <div class="hero-copy-block">
     <p class="eyebrow">Browse every AP calculator in one place</p>
-    <h1>Browse every AP calculator in one place</h1>
-    <p class="hero-copy">Choose the AP subject you are practicing for, enter section points, and get a fast unofficial estimate with a clear gap to target. APUSH is highlighted under Social Science and sits one click away from the main hub.</p>
+    <h1>AP Score Calculator Hub</h1>
+    <p class="hero-copy">Browse every AP calculator in one place. Each subject keeps its own section structure, confidence note, target gap, and internal links so the hub feels like a connected product instead of a list of duplicates.</p>
     <div class="cta-row">
       <a class="button" href="#calculator-start">Browse subjects</a>
       <a class="button secondary" href="#methodology">See methodology</a>
@@ -446,37 +491,37 @@ function hubPage() {
   </div>
   <aside class="hero-panel preview-card" aria-label="Hub preview">
     <span class="preview-label">Category view</span>
-    <strong>APUSH is easy to find</strong>
+    <strong>Subject paths stay clear</strong>
     <div class="preview-score">3 groups</div>
-    <p>STEM, English, and Social Science make browsing simple. Each card links to the current redesigned calculator page.</p>
+    <p>STEM, English, and Social Science lanes keep browsing predictable. APUSH is highlighted under Social Science, and Browse-first routing remains simple.</p>
     <ul>
-      <li>Cleaner browse-first routing</li>
-      <li>APUSH highlighted under Social Science</li>
-      <li>All subject links updated</li>
+      <li>Category-first browsing</li>
+      <li>Subject-specific calculator copy</li>
+      <li>FAQ and schema coverage</li>
       <li>SEO and legal pages preserved</li>
     </ul>
   </aside>
 </section>
 <section id="calculator-start" class="section intro-strip">
-  <p>Subject categories</p>
+  <p>Subject matrix</p>
   <div class="quick-links"><a href="#stem">STEM</a><a href="#english">English</a><a href="#social-science">Social Science</a><a href="/apush-score-calculator/">APUSH</a></div>
 </section>
 <section id="subjects" class="section hub-directory">
   <div class="section-heading">
     <p class="eyebrow">Subject matrix</p>
-    <h2>Pick the AP exam you are practicing for</h2>
-    <p>Each category is a clear browsing lane. APUSH gets special visibility so students can jump into the primary single-subject page quickly.</p>
+    <h2>Pick an AP exam</h2>
+    <p>Each lane uses subject-specific copy instead of repeating the same generic promise. APUSH stays visually featured without overpowering the rest of the hub.</p>
   </div>
   <div class="hub-grid">
-    <section class="matrix-group" id="stem"><h3>STEM</h3><div class="matrix-grid">${subjects.filter((subject) => subjectCategory(subject) === 'STEM').map((subject) => `<a class="matrix-card" href="/${subject.slug}-score-calculator/"><span>${escapeHtml(subject.shortName)}</span><strong>${escapeHtml(subject.title)}</strong><em>Free score estimate · gap to target · 2026 planning</em></a>`).join('')}</div></section>
-    <section class="matrix-group" id="english"><h3>English</h3><div class="matrix-grid">${subjects.filter((subject) => subjectCategory(subject) === 'English').map((subject) => `<a class="matrix-card" href="/${subject.slug}-score-calculator/"><span>${escapeHtml(subject.shortName)}</span><strong>${escapeHtml(subject.title)}</strong><em>Rubric-aware estimate · gap to 3/4/5 · browser-local</em></a>`).join('')}</div></section>
-    <section class="matrix-group" id="social-science"><h3>Social Science</h3><div class="matrix-grid">${subjects.filter((subject) => subjectCategory(subject) === 'Social Science').map((subject) => `<a class="matrix-card${subject.slug === 'apush' ? ' featured' : ''}" href="/${subject.slug}-score-calculator/"><span>${escapeHtml(subject.shortName)}</span><strong>${escapeHtml(subject.title)}</strong><em>${subject.slug === 'apush' ? 'Featured APUSH route · calculator-first page' : 'Free score estimate · gap to target'}</em></a>`).join('')}</div></section>
+    <section class="matrix-group" id="stem"><h3>STEM</h3><div class="matrix-grid">${subjects.filter((subject) => subjectCategory(subject) === 'STEM').map((subject) => { const tone = subjectTone(subject); return `<a class="matrix-card" href="/${subject.slug}-score-calculator/"><span>${escapeHtml(subject.shortName)}</span><strong>${escapeHtml(subject.title)}</strong><p>${escapeHtml(tone.focus)}</p><em>${escapeHtml(tone.proof)}</em></a>`; }).join('')}</div></section>
+    <section class="matrix-group" id="english"><h3>English</h3><div class="matrix-grid">${subjects.filter((subject) => subjectCategory(subject) === 'English').map((subject) => { const tone = subjectTone(subject); return `<a class="matrix-card" href="/${subject.slug}-score-calculator/"><span>${escapeHtml(subject.shortName)}</span><strong>${escapeHtml(subject.title)}</strong><p>${escapeHtml(tone.focus)}</p><em>${escapeHtml(tone.proof)}</em></a>`; }).join('')}</div></section>
+    <section class="matrix-group" id="social-science"><h3>Social Science</h3><div class="matrix-grid">${subjects.filter((subject) => subjectCategory(subject) === 'Social Science').map((subject) => { const tone = subjectTone(subject); return `<a class="matrix-card${subject.slug === 'apush' ? ' featured' : ''}" href="/${subject.slug}-score-calculator/"><span>${escapeHtml(subject.shortName)}</span><strong>${escapeHtml(subject.title)}</strong><p>${escapeHtml(tone.focus)}</p><em>${escapeHtml(tone.proof)}</em></a>`; }).join('')}</div></section>
   </div>
 </section>
 <section class="section two-col" id="methodology">
   <div>
     <p class="eyebrow">What each calculator shows</p>
-    <h2>Fast estimates with the same trust language across the site</h2>
+    <h2>What each calculator shows</h2>
     <ol class="steps">
       <li>Estimated AP score</li>
       <li>Estimated composite range</li>
@@ -498,7 +543,7 @@ function hubPage() {
   ${faqs.map((qa) => `<details><summary>${escapeHtml(qa.q)}</summary><p>${escapeHtml(qa.a)}</p></details>`).join('\n')}
 </section>`;
   return pageShell({
-    title: 'AP Score Calculator Hub 2026 | Browse All Free AP Calculators',
+    title: 'AP Calculator Hub 2026 | All Free Score Tools',
     description: 'Browse all free AP score calculators for 2026 planning. Find APUSH, AP Lang, AP Lit, AP Gov, AP Biology, AP Chemistry, AP Calculus AB, AP Statistics, and more.',
     path: '/ap-score-calculator-2026/',
     body,
@@ -557,9 +602,9 @@ function subjectPage(subject) {
     </div>
   </div>
 </section>
-<section class="section v5-apush-followup">
+  <section class="section v5-apush-followup">
   <div class="v5-followup-shell">
-    <div class="section-heading v5-followup-heading"><p class="eyebrow">${isApush ? 'Dynamic plan with scoring reference' : 'Dynamic plan with scoring reference'}</p><h2>${isApush ? 'Next-step plan' : 'Next-step plan'}</h2><p>${isApush ? 'Update your scores above, then use this plan first. Open the scoring reference only when you need the cutoff math.' : 'Update your scores above, then use this plan first. Open the scoring reference only when you need the cutoff math.'}</p></div>
+    <div class="section-heading v5-followup-heading"><p class="eyebrow">Plan first, reference second</p><h2>Next-step plan</h2><p>Update your scores above, then read the plan first. Open the reference drawer only when you need the cutoff math.</p></div>
     <div class="v5-followup-grid">
       <div class="v5-followup-primary">${studyPlanPanel(subject, sample)}</div>
       <div class="v5-followup-secondary">${referenceAccordions(subject, rows)}</div>
@@ -578,7 +623,9 @@ function subjectPage(subject) {
   <a href="/ap-score-calculator-2026/">All AP score calculators</a>${related}
 </section>`;
   return pageShell({
-    title: `${subject.title} | Raw Score Estimate & Gap to 5`,
+    title: ['ap-lang', 'ap-lit'].includes(subject.slug)
+      ? subject.title
+      : `${subject.title} | Raw Score & Gap to 5`,
     description: `Free unofficial ${subject.shortName} score calculator for 2026 AP planning. Estimate your score, confidence level, composite range, and gap to 3/4/5.`,
     path: `/${subject.slug}-score-calculator/`,
     body,
@@ -616,19 +663,19 @@ export function sitePages() {
       body: '<p>This static site does not require accounts and does not store calculator inputs. Calculator values are processed locally in your browser.</p><p>Hosting or CDN providers may process standard technical logs such as IP address, user agent, page path, and timestamp for security and delivery. If privacy-friendly analytics are added later, they should avoid collecting precise score inputs, names, school information, or official account details.</p><p>AP® and Advanced Placement® are trademarks registered by College Board. College Board is not affiliated with, and does not endorse, this website or calculator.</p>'
     }) },
     { path: 'terms.html', html: policyPage({
-      title: 'Terms of Use | AP Score Calculator 2026',
+      title: 'Terms of Use | AP Score Calculator 2026 Site',
       description: 'Terms of use for AP Score Calculator 2026 unofficial educational estimates.',
       path: '/terms.html',
       body: '<p>Use this site for informational study planning only. The calculators provide unofficial estimates and do not guarantee any AP exam result, college credit, or placement outcome.</p><p>Do not rely on this site as a substitute for official College Board score reports, teacher guidance, or college credit policies.</p>'
     }) },
     { path: 'disclaimer.html', html: policyPage({
-      title: 'Disclaimer | AP Score Calculator 2026',
+      title: 'Disclaimer | AP Score Calculator 2026 Site',
       description: 'Unofficial AP score estimate disclaimer and trademark notice.',
       path: '/disclaimer.html',
       body: `<p>${trademarkNotice}</p><p>All conversions and score-needed figures are transparent estimates based on public exam structure and historical patterns. Actual scoring may vary by year, exam form, and official process.</p>`
     }) },
     { path: 'contact.html', html: policyPage({
-      title: 'Contact | AP Score Calculator 2026',
+      title: 'Contact Us | AP Score Calculator 2026 Site',
       description: 'Contact AP Score Calculator 2026 for corrections and feedback.',
       path: '/contact.html',
       body: '<p>For corrections, accessibility feedback, or content questions, email <a href="mailto:hello@apscorecalculator.store">hello@apscorecalculator.store</a>.</p><p>Please do not send official score reports, student IDs, school records, AP numbers, or private College Board account information.</p>'
