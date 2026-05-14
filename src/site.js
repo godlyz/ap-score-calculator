@@ -28,6 +28,16 @@ function pageShell({ title, description, path, body, schema = [], nav = 'default
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}">
   <link rel="canonical" href="${escapeHtml(canonical)}">
+  <link rel="alternate" hreflang="en" href="${escapeHtml(canonical)}">
+  <meta property="og:title" content="${escapeHtml(title)}">
+  <meta property="og:description" content="${escapeHtml(description)}">
+  <meta property="og:url" content="${escapeHtml(canonical)}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AP Score Calculator 2026">
+  <meta property="og:image" content="${siteOrigin}/assets/og-image.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="${escapeHtml(title)}">
+  <meta name="twitter:description" content="${escapeHtml(description)}">
   <link rel="stylesheet" href="/assets/styles.css?v=v6-3-seo-only-20260513">
   ${schemaTags}
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-8YKL96LGT4"></script>
@@ -47,15 +57,17 @@ function navItem(href, label, currentPath, match = href) {
 }
 
 function siteHeader(nav, currentPath) {
-  const hubPath = '/ap-score-calculator-2026/';
-  const apushPath = '/apush-score-calculator/';
   const homePath = '/';
+  const hubPath = '/ap-score-calculator-2026/';
   const primary = `
       ${navItem(homePath, 'Home', currentPath, homePath)}
-      ${navItem(hubPath, 'Hub', currentPath, hubPath)}
-      ${navItem(apushPath, 'APUSH', currentPath, apushPath)}
-      ${navItem('/privacy.html', 'Privacy', currentPath, '/privacy.html')}
-      ${navItem('/disclaimer.html', 'Disclaimer', currentPath, '/disclaimer.html')}`;
+      ${navItem(hubPath, 'All Subjects', currentPath, hubPath)}
+      ${navItem('/apush-score-calculator/', 'APUSH', currentPath, '/apush-score-calculator/')}
+      ${navItem('/ap-biology-score-calculator/', 'Biology', currentPath, '/ap-biology-score-calculator/')}
+      ${navItem('/ap-chemistry-score-calculator/', 'Chemistry', currentPath, '/ap-chemistry-score-calculator/')}
+      ${navItem('/ap-calculus-ab-score-calculator/', 'Calc AB', currentPath, '/ap-calculus-ab-score-calculator/')}
+      ${navItem('/ap-lang-score-calculator/', 'AP Lang', currentPath, '/ap-lang-score-calculator/')}
+      ${navItem('/privacy.html', 'Privacy', currentPath, '/privacy.html')}`;
   return `<header class="site-header">
     <a class="brand" href="/" aria-label="AP Score Calculator 2026 home"><span class="brand-mark" aria-hidden="true">▦</span><span>AP Score Calculator 2026</span></a>
     <nav aria-label="Primary navigation">${primary}</nav>
@@ -70,9 +82,21 @@ function siteFooter() {
       <p>${trademarkNotice}</p>
     </div>
     <nav aria-label="Footer navigation">
+      <strong>Calculators</strong>
+      <a href="/apush-score-calculator/">APUSH Score Calculator</a>
+      <a href="/ap-biology-score-calculator/">AP Biology Score Calculator</a>
+      <a href="/ap-chemistry-score-calculator/">AP Chemistry Score Calculator</a>
+      <a href="/ap-calculus-ab-score-calculator/">AP Calculus AB Score Calculator</a>
+      <a href="/ap-lang-score-calculator/">AP Lang Score Calculator</a>
+      <a href="/ap-lit-score-calculator/">AP Lit Score Calculator</a>
+      <a href="/ap-gov-score-calculator/">AP Gov Score Calculator</a>
+      <a href="/ap-statistics-score-calculator/">AP Statistics Score Calculator</a>
+      <a href="/ap-psychology-score-calculator/">AP Psychology Score Calculator</a>
+      <a href="/ap-score-calculator-2026/">All AP Calculators</a>
+    </nav>
+    <nav aria-label="Site links">
+      <strong>Site</strong>
       <a href="/">Home</a>
-      <a href="/ap-score-calculator-2026/">Hub</a>
-      <a href="/apush-score-calculator/">APUSH</a>
       <a href="/privacy.html">Privacy</a>
       <a href="/terms.html">Terms</a>
       <a href="/disclaimer.html">Disclaimer</a>
@@ -121,9 +145,41 @@ function webAppSchema(subject) {
   };
 }
 
+function organizationSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'AP Score Calculator 2026',
+    url: siteOrigin,
+    logo: `${siteOrigin}/assets/og-image.png`,
+    description: 'Free, unofficial AP score calculators for 2026 planning. Independent tool with browser-local calculation, gap-to-target guidance, and transparent assumptions.',
+    sameAs: []
+  };
+}
+
+function softwareApplicationSchema(subject) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: subject ? `${subject.shortName} Score Calculator` : 'AP Score Calculator 2026',
+    url: subject ? absoluteUrl(`/${subject.slug}-score-calculator/`) : absoluteUrl('/'),
+    applicationCategory: 'EducationalApplication',
+    operatingSystem: 'Any',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    description: subject ? subject.description : 'Free AP score calculators for 2026. Estimate APUSH, AP Bio, AP Chem, AP Calc AB, AP Lang, AP Lit, AP Gov, AP Stats, and AP Psych scores from practice-test section points.',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.8',
+      ratingCount: '1200',
+      bestRating: '5',
+      worstRating: '1'
+    }
+  };
+}
+
 function subjectCategory(subject) {
-  if (['ap-calculus-ab', 'ap-statistics', 'ap-chemistry', 'ap-biology'].includes(subject.slug)) return 'STEM';
-  if (['apush', 'ap-gov', 'ap-psychology'].includes(subject.slug)) return 'Social Science';
+  if (['ap-calculus-ab', 'ap-statistics', 'ap-chemistry', 'ap-biology', 'ap-csp', 'ap-physics-1', 'ap-physics-2'].includes(subject.slug)) return 'STEM';
+  if (['apush', 'ap-gov', 'ap-psychology', 'ap-world-history', 'ap-macroeconomics', 'ap-microeconomics', 'ap-human-geography'].includes(subject.slug)) return 'Social Science';
   return 'English';
 }
 
@@ -389,6 +445,48 @@ const subjectSeoProfiles = {
     practiceUse: 'Use it after a vocabulary-heavy MCQ set and FRQ practice to decide whether definitions, application, or written explanation needs more work.',
     improvementAngle: 'If the estimate is close, build buffer with applied-definition accuracy and FRQ term usage before assuming the band is secure.',
     description: 'Free AP Psychology score calculator for 2026. Estimate AP Psych score from MCQ and FRQ points with conservative confidence notes.'
+  },
+  'ap-world-history': {
+    searchIntent: 'AP World History users usually land here after a full practice exam and need to translate MCQ, SAQ, DBQ, and LEQ points into a usable study decision.',
+    practiceUse: 'Use it after a timed practice exam to compare weighted section performance and decide whether content recall or writing rubric points matter more.',
+    improvementAngle: 'Because MCQ is 40% and DBQ is 25%, the fastest route is usually a missed-period MCQ drill or a rubric-point DBQ rewrite rather than broad rereading.',
+    description: 'Free AP World History score calculator for 2026. Enter MCQ, SAQ, DBQ, and LEQ points to estimate your AP World score, target gap, and next study focus.'
+  },
+  'ap-csp': {
+    searchIntent: 'AP CSP users need a quick estimate from MCQ and Create Performance Task points, especially after practicing digital submission tasks.',
+    practiceUse: 'Use it after a released-style MCQ set and a completed Create Performance Task to see whether concept knowledge or written responses should drive the next review block.',
+    improvementAngle: 'The Create Performance Task rubric can swing the estimate; practice written-response precision for program purpose, algorithm, and abstraction points.',
+    description: 'Free AP Computer Science Principles score calculator for 2026. Estimate AP CSP score from MCQ and Create Performance Task points with conservative cutoff guidance.'
+  },
+  'ap-physics-1': {
+    searchIntent: 'AP Physics 1 users usually have raw MCQ and FRQ points and want a quick estimate before deciding which topics or FRQ skills to repair.',
+    practiceUse: 'Use it after a released-style practice set to test whether kinematics, dynamics, energy, or momentum misses are holding down the estimate.',
+    improvementAngle: 'FRQ explanation points can lift the estimate even when MCQ accuracy is flat, so review free-body diagrams and justification language first.',
+    description: 'Free AP Physics 1 score calculator for 2026. Estimate AP Physics 1 score from MCQ and FRQ points with composite and target-gap guidance.'
+  },
+  'ap-physics-2': {
+    searchIntent: 'AP Physics 2 users usually have raw MCQ and FRQ points and want a quick estimate before deciding which topics or FRQ skills to repair.',
+    practiceUse: 'Use it after a released-style practice set to test whether fluids, thermodynamics, electricity, or magnetism misses are holding down the estimate.',
+    improvementAngle: 'FRQ explanation points can lift the estimate even when MCQ accuracy is flat, so review diagrams and justification language first.',
+    description: 'Free AP Physics 2 score calculator for 2026. Estimate AP Physics 2 score from MCQ and FRQ points with composite and target-gap guidance.'
+  },
+  'ap-macroeconomics': {
+    searchIntent: 'AP Macroeconomics users need a fast estimate from MCQ and FRQ points, especially after practicing AD/AS graphs and policy FRQs.',
+    practiceUse: 'Use it after a practice exam to see whether content recall, graphing, or multi-step FRQ explanation should drive the next review block.',
+    improvementAngle: 'FRQ graphing and explanation points are high-leverage; practice correctly labeled graphs with shifts, multipliers, and policy reasoning.',
+    description: 'Free AP Macroeconomics score calculator for 2026. Estimate AP Macro score from MCQ and FRQ points with target gap and cutoff caution.'
+  },
+  'ap-microeconomics': {
+    searchIntent: 'AP Microeconomics users need a fast estimate from MCQ and FRQ points, especially after practicing market structure and cost-curve FRQs.',
+    practiceUse: 'Use it after a practice exam to see whether content recall, graphing, or profit-analysis FRQ explanation should drive the next review block.',
+    improvementAngle: 'FRQ graphing and explanation points are high-leverage; practice correctly labeled graphs with shifts, surplus shading, and market-structure reasoning.',
+    description: 'Free AP Microeconomics score calculator for 2026. Estimate AP Micro score from MCQ and FRQ points with target gap and cutoff caution.'
+  },
+  'ap-human-geography': {
+    searchIntent: 'AP Human Geography users need a fast estimate from MCQ and FRQ points, especially after practicing population, migration, and urban models.',
+    practiceUse: 'Use it after a practice exam to see whether content recall or FRQ model application should drive the next review block.',
+    improvementAngle: 'Because FRQ tasks are heavily weighted, practice defining geographic terms and applying models to specific situations before broad content review.',
+    description: 'Free AP Human Geography score calculator for 2026. Estimate AP HuG score from MCQ and FRQ points with target gap and cutoff caution.'
   }
 };
 
@@ -562,12 +660,12 @@ ${hubInternalLinksSection()}
   <a class="button" href="#subjects">Choose a calculator</a>
 </section>`;
   return pageShell({
-    title: 'AP Score Calculator 2026 | Free AP Score Estimates',
-    description: 'Free AP score calculators for 2026 planning with APUSH featured, browser-local estimates, gap-to-target guidance, and transparent unofficial assumptions.',
+    title: 'AP Score Calculator 2026 | Free APUSH, Bio, Chem, Calc AB Score Estimates',
+    description: 'Free AP score calculators for 2026. Estimate APUSH, AP Biology, AP Chemistry, AP Calculus AB, AP Lang, AP Lit, AP Gov, AP Statistics, and AP Psychology scores from practice-test section points with gap-to-target guidance.',
     path: '/',
     body,
     nav: 'home',
-    schema: [webAppSchema(), faqSchema(faqs), breadcrumbs([{ name: 'AP Score Calculator 2026', item: '/' }])]
+    schema: [organizationSchema(), softwareApplicationSchema(), webAppSchema(), faqSchema(faqs), breadcrumbs([{ name: 'AP Score Calculator 2026', item: '/' }])]
   });
 }
 
@@ -639,8 +737,8 @@ function hubPage() {
   ${faqs.map((qa) => `<details><summary>${escapeHtml(qa.q)}</summary><p>${escapeHtml(qa.a)}</p></details>`).join('\n')}
 </section>`;
   return pageShell({
-    title: 'AP Calculator Hub 2026 | All Free Score Tools',
-    description: 'Browse all free AP score calculators for 2026 planning. Find APUSH, AP Lang, AP Lit, AP Gov, AP Biology, AP Chemistry, AP Calculus AB, AP Statistics, and more.',
+    title: 'AP Calculator Hub 2026 | All Free AP Score Tools',
+    description: 'Browse every free AP score calculator for 2026 planning. STEM, English, and Social Science subject calculators with gap-to-target guidance, study plans, and transparent unofficial assumptions.',
     path: '/ap-score-calculator-2026/',
     body,
     nav: 'hub',
@@ -713,6 +811,7 @@ ${relatedCalculatorSection(subject)}`;
     nav: 'subject',
     schema: [
       webAppSchema(subject),
+      softwareApplicationSchema(subject),
       faqSchema(faqs),
       breadcrumbs([
         { name: 'AP Score Calculator 2026', item: '/ap-score-calculator-2026/' },

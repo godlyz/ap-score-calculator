@@ -38,18 +38,14 @@ test('calculator clamps invalid and out-of-range inputs instead of producing imp
   assert.equal(high.predictedScore, 5);
 });
 
-test('MVP exposes exactly the PRD first-page matrix: hub plus nine subject calculators', () => {
-  assert.deepEqual(subjectSlugs(), [
-    'apush',
-    'ap-lang',
-    'ap-chemistry',
-    'ap-calculus-ab',
-    'ap-biology',
-    'ap-gov',
-    'ap-statistics',
-    'ap-psychology',
-    'ap-lit'
-  ]);
+test('MVP exposes the full subject matrix: hub plus all subject calculators', () => {
+  const slugs = subjectSlugs();
+  assert.ok(slugs.length >= 16, `expected at least 16 subjects, got ${slugs.length}`);
+  assert.ok(slugs.includes('apush'));
+  assert.ok(slugs.includes('ap-world-history'));
+  assert.ok(slugs.includes('ap-physics-1'));
+  assert.ok(slugs.includes('ap-macroeconomics'));
+  assert.ok(slugs.includes('ap-human-geography'));
 });
 
 test('v5 APUSH 45/7/5/4 dynamic study plan targets AP 5 gap with DBQ gain options', () => {

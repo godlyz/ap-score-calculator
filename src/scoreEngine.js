@@ -150,6 +150,122 @@ export const subjects = [
     riskNote: 'Three essay scores make this estimate especially reader-dependent; build a larger buffer before treating a 4/5 estimate as secure.',
     structure: 'AP Literature combines multiple choice with three essay responses. Essay points are rubric-style estimates.',
     assumptions: 'Essay results are especially approximate and depend on official scoring.'
+  },
+  {
+    slug: 'ap-world-history',
+    name: 'AP World History',
+    shortName: 'AP World',
+    title: 'AP World History Score Calculator 2026',
+    description: 'Estimate your AP World History score from MCQ, SAQ, DBQ, and LEQ points with transparent 2026 assumptions.',
+    sections: [
+      { key: 'mcq', label: 'Multiple Choice', max: 55, weight: 40 },
+      { key: 'saq', label: 'Short Answer', max: 9, weight: 20 },
+      { key: 'dbq', label: 'DBQ', max: 7, weight: 25 },
+      { key: 'leq', label: 'LEQ', max: 6, weight: 15 }
+    ],
+    displayMaxComposite: 100,
+    compositeModel: 'weighted-100',
+    cutoffs: { 1: 0, 2: 28, 3: 42, 4: 62, 5: 78 },
+    confidence: 'medium',
+    riskNote: 'DBQ/LEQ rubric scoring and yearly score-setting can shift boundaries; treat the gap as a conservative planning range rather than a fixed cutoff.',
+    structure: 'AP World History uses a weighted-100 framing: MCQ contributes 40%, SAQ 20%, DBQ 25%, and LEQ 15%. The calculator converts each section into its weighted share before mapping the total to an estimated AP score.',
+    assumptions: 'Estimated from public exam structure and historical scoring patterns; not an official College Board conversion.'
+  },
+  {
+    slug: 'ap-csp',
+    name: 'AP Computer Science Principles',
+    shortName: 'AP CSP',
+    title: 'AP Computer Science Principles Score Calculator 2026',
+    description: 'Estimate your AP Computer Science Principles score from MCQ and Create task points with transparent 2026 assumptions.',
+    sections: [
+      { key: 'mcq', label: 'Multiple Choice', max: 70, weight: 1 },
+      { key: 'create', label: 'Create task + written responses (estimated)', max: 30, weight: 1 }
+    ],
+    cutoffs: { 1: 0, 2: 35, 3: 52, 4: 70, 5: 85 },
+    confidence: 'low',
+    riskNote: 'The Create task includes submitted work plus exam-day written responses, and official scoring can move boundaries significantly; use a wider buffer before assuming you are safely in the next band.',
+    structure: 'AP CSP combines a multiple-choice section with Create task scoring that includes submitted work and written responses. This calculator uses 70 MCQ points plus an estimated 30-point Create component, then maps the total to an estimated AP score.',
+    assumptions: 'Cutoffs are estimated ranges based on historical scoring patterns and public exam structure; not an official College Board conversion.'
+  },
+  {
+    slug: 'ap-physics-1',
+    name: 'AP Physics 1',
+    shortName: 'AP Physics 1',
+    title: 'AP Physics 1 Score Calculator 2026',
+    description: 'Estimate your AP Physics 1 score from MCQ and FRQ points with transparent 2026 assumptions and target-gap guidance.',
+    sections: [
+      { key: 'mcq', label: 'Multiple Choice', max: 40, weight: 1.25 },
+      { key: 'frq', label: 'Free Response', max: 40, weight: 1.25 }
+    ],
+    cutoffs: { 1: 0, 2: 28, 3: 45, 4: 62, 5: 78 },
+    confidence: 'medium',
+    riskNote: 'FRQ partial credit and exam-form difficulty can shift boundaries, especially near the 3/4 and 4/5 edges.',
+    structure: 'AP Physics 1 uses 40 multiple-choice questions and 4 free-response questions, with each section worth about 50% of the exam score. This calculator scales each section to an estimated 50-point share before mapping the total to an AP score estimate.',
+    assumptions: 'Cutoffs are estimated ranges based on historical scoring patterns and public exam structure.'
+  },
+  {
+    slug: 'ap-physics-2',
+    name: 'AP Physics 2',
+    shortName: 'AP Physics 2',
+    title: 'AP Physics 2 Score Calculator 2026',
+    description: 'Estimate your AP Physics 2 score from MCQ and FRQ points with transparent 2026 assumptions and target-gap guidance.',
+    sections: [
+      { key: 'mcq', label: 'Multiple Choice', max: 40, weight: 1.25 },
+      { key: 'frq', label: 'Free Response', max: 40, weight: 1.25 }
+    ],
+    cutoffs: { 1: 0, 2: 30, 3: 48, 4: 65, 5: 80 },
+    confidence: 'medium',
+    riskNote: 'FRQ partial credit and exam-form difficulty can shift boundaries, especially near the 3/4 and 4/5 edges.',
+    structure: 'AP Physics 2 uses 40 multiple-choice questions and 4 free-response questions, with each section worth about 50% of the exam score. This calculator scales each section to an estimated 50-point share before mapping the total to an AP score estimate.',
+    assumptions: 'Cutoffs are estimated ranges based on historical scoring patterns and public exam structure.'
+  },
+  {
+    slug: 'ap-macroeconomics',
+    name: 'AP Macroeconomics',
+    shortName: 'AP Macro',
+    title: 'AP Macroeconomics Score Calculator 2026',
+    description: 'Estimate your AP Macroeconomics score from MCQ and FRQ points with transparent 2026 assumptions and target-gap guidance.',
+    sections: [
+      { key: 'mcq', label: 'Multiple Choice', max: 60, weight: 1.11 },
+      { key: 'frq', label: 'Free Response (scaled)', max: 30, weight: 1 }
+    ],
+    cutoffs: { 1: 0, 2: 32, 3: 50, 4: 66, 5: 80 },
+    confidence: 'medium',
+    riskNote: 'FRQ scoring details and yearly equating can change the practical boundary; use the estimate to prioritize weak topics.',
+    structure: 'AP Macroeconomics combines 60 multiple-choice questions with 3 free-response questions. This calculator uses MCQ points plus a scaled 30-point FRQ input, then maps the composite to an estimated AP score.',
+    assumptions: 'Cutoffs are estimated ranges based on historical scoring patterns and public exam structure.'
+  },
+  {
+    slug: 'ap-microeconomics',
+    name: 'AP Microeconomics',
+    shortName: 'AP Micro',
+    title: 'AP Microeconomics Score Calculator 2026',
+    description: 'Estimate your AP Microeconomics score from MCQ and FRQ points with transparent 2026 assumptions and target-gap guidance.',
+    sections: [
+      { key: 'mcq', label: 'Multiple Choice', max: 60, weight: 1.11 },
+      { key: 'frq', label: 'Free Response (scaled)', max: 30, weight: 1 }
+    ],
+    cutoffs: { 1: 0, 2: 34, 3: 52, 4: 68, 5: 82 },
+    confidence: 'medium',
+    riskNote: 'FRQ scoring details and yearly equating can change the practical boundary; use the estimate to prioritize weak topics.',
+    structure: 'AP Microeconomics combines 60 multiple-choice questions with 3 free-response questions. This calculator uses MCQ points plus a scaled 30-point FRQ input, then maps the composite to an estimated AP score.',
+    assumptions: 'Cutoffs are estimated ranges based on historical scoring patterns and public exam structure.'
+  },
+  {
+    slug: 'ap-human-geography',
+    name: 'AP Human Geography',
+    shortName: 'AP HuG',
+    title: 'AP Human Geography Score Calculator 2026',
+    description: 'Estimate your AP Human Geography score from MCQ and FRQ points with transparent 2026 assumptions and target-gap guidance.',
+    sections: [
+      { key: 'mcq', label: 'Multiple Choice', max: 60, weight: 1 },
+      { key: 'frq', label: 'Free Response', max: 21, weight: 2.86 }
+    ],
+    cutoffs: { 1: 0, 2: 34, 3: 52, 4: 70, 5: 86 },
+    confidence: 'medium',
+    riskNote: 'FRQ task variation and yearly equating can shift boundaries, especially near the 3/4 and 4/5 edges.',
+    structure: 'AP Human Geography combines 60 multiple-choice questions with 3 free-response questions. Each section is worth about 50% of the exam score, so the calculator scales 21 FRQ rubric points to a 60-point equivalent before estimating the AP score.',
+    assumptions: 'Cutoffs are estimated ranges based on historical scoring patterns and public exam structure.'
   }
 ];
 
@@ -292,6 +408,36 @@ const sectionAdvice = {
     poetry: ['poetry essay commentary', 'annotate speaker, shift, imagery, and line-level evidence'],
     prose: ['prose essay evidence', 'connect narration, characterization, and detail to a defensible claim'],
     argument: ['literary argument evidence', 'prepare flexible works and topic sentences for common themes']
+  },
+  'ap-world-history': {
+    mcq: ['stimulus-based MCQ pacing', 'drill missed time periods and explain why each distractor is wrong'],
+    saq: ['SAQ evidence precision', 'write 3-part SAQs with one named fact per point'],
+    dbq: ['DBQ rubric points', 'practice thesis, sourcing, outside evidence, and complexity on one document set'],
+    leq: ['LEQ argument structure', 'outline thesis, topic sentences, and evidence before writing']
+  },
+  'ap-csp': {
+    mcq: ['CSP concept fluency', 'redo missed MCQs by topic: algorithms, data, internet, impact'],
+    create: ['Create Performance Task rubric', 'practice written responses for program purpose, algorithm, and abstraction']
+  },
+  'ap-physics-1': {
+    mcq: ['physics MCQ accuracy', 'sort misses by kinematics, dynamics, energy, and momentum topics'],
+    frq: ['FRQ setup and explanation', 'practice showing work, free-body diagrams, and justification points on released FRQs']
+  },
+  'ap-physics-2': {
+    mcq: ['physics MCQ accuracy', 'sort misses by fluids, thermodynamics, electricity, and magnetism topics'],
+    frq: ['FRQ setup and explanation', 'practice showing work, diagrams, and justification points on released FRQs']
+  },
+  'ap-macroeconomics': {
+    mcq: ['macro MCQ accuracy', 'review missed AD/AS, fiscal policy, monetary policy, and trade questions'],
+    frq: ['FRQ graphing and explanation', 'practice drawing correctly labeled graphs with shifts and multi-step reasoning']
+  },
+  'ap-microeconomics': {
+    mcq: ['micro MCQ accuracy', 'review missed supply/demand, market structures, and cost curve questions'],
+    frq: ['FRQ graphing and explanation', 'practice drawing correctly labeled graphs with shifts, surplus, and profit analysis']
+  },
+  'ap-human-geography': {
+    mcq: ['HuG MCQ accuracy', 'review missed population, migration, urban, and political geography questions'],
+    frq: ['FRQ application points', 'practice defining geographic terms and applying models to the prompt situation']
   }
 };
 
