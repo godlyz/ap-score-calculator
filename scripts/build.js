@@ -83,6 +83,18 @@ await writeFile(join(dist, '_headers'), `/*
 /*.html
   Cache-Control: public, max-age=300, must-revalidate
 
+/privacy/*
+  Cache-Control: public, max-age=300, must-revalidate
+
+/terms/*
+  Cache-Control: public, max-age=300, must-revalidate
+
+/disclaimer/*
+  Cache-Control: public, max-age=300, must-revalidate
+
+/contact/*
+  Cache-Control: public, max-age=300, must-revalidate
+
 /robots.txt
   Cache-Control: public, max-age=3600
 
@@ -95,5 +107,11 @@ await writeFile(join(dist, '_redirects'), `# Cloudflare Pages redirects for AP S
 # Do not add a / <-> /ap-score-calculator-2026/ redirect until Search Console / analytics data confirms it will not hurt UX or campaigns.
 # If Cloudflare Pages exposes a *.pages.dev preview host publicly, prefer a dashboard-level custom-domain redirect
 # or add a host-aware redirect rule there so apscorecalculator.store remains the only indexed production host.
+
+# 301: old .html policy pages → clean directory URLs (fixes GSC "page redirects" issue)
+/privacy.html  /privacy/  301
+/terms.html  /terms/  301
+/disclaimer.html  /disclaimer/  301
+/contact.html  /contact/  301
 `);
 console.log(`Built ${pages.length} HTML pages into ${dist}`);

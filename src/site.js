@@ -67,7 +67,7 @@ function siteHeader(nav, currentPath) {
       ${navItem('/ap-chemistry-score-calculator/', 'Chemistry', currentPath, '/ap-chemistry-score-calculator/')}
       ${navItem('/ap-calculus-ab-score-calculator/', 'Calc AB', currentPath, '/ap-calculus-ab-score-calculator/')}
       ${navItem('/ap-lang-score-calculator/', 'AP Lang', currentPath, '/ap-lang-score-calculator/')}
-      ${navItem('/privacy.html', 'Privacy', currentPath, '/privacy.html')}`;
+      ${navItem('/privacy/', 'Privacy', currentPath, '/privacy/')}`;
   return `<header class="site-header">
     <a class="brand" href="/" aria-label="AP Score Calculator 2026 home"><span class="brand-mark" aria-hidden="true">▦</span><span>AP Score Calculator 2026</span></a>
     <nav aria-label="Primary navigation">${primary}</nav>
@@ -97,10 +97,10 @@ function siteFooter() {
     <nav aria-label="Site links">
       <strong>Site</strong>
       <a href="/">Home</a>
-      <a href="/privacy.html">Privacy</a>
-      <a href="/terms.html">Terms</a>
-      <a href="/disclaimer.html">Disclaimer</a>
-      <a href="/contact.html">Contact</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+      <a href="/disclaimer/">Disclaimer</a>
+      <a href="/contact/">Contact</a>
     </nav>
     <p class="fine-print">Calculator inputs are processed locally in your browser and are not stored by us. Please do not send score reports, student IDs, or College Board account details.</p>
   </footer>`;
@@ -836,28 +836,28 @@ export function sitePages() {
     { path: 'index.html', html: homePage() },
     { path: 'ap-score-calculator-2026/index.html', html: hubPage() },
     ...subjects.map((subject) => ({ path: `${subject.slug}-score-calculator/index.html`, html: subjectPage(subject) })),
-    { path: 'privacy.html', html: policyPage({
+    { path: 'privacy/index.html', html: policyPage({
       title: 'Privacy Policy | AP Score Calculator 2026',
       description: 'Privacy policy for AP Score Calculator 2026, covering local calculator inputs, analytics, hosting logs, and student data safeguards.',
-      path: '/privacy.html',
+      path: '/privacy/',
       body: '<p>This static site does not require accounts and does not store calculator inputs. Calculator values are processed locally in your browser.</p><p>Hosting or CDN providers may process standard technical logs such as IP address, user agent, page path, and timestamp for security and delivery. If privacy-friendly analytics are added later, they should avoid collecting precise score inputs, names, school information, or official account details.</p><p>AP® and Advanced Placement® are trademarks registered by College Board. College Board is not affiliated with, and does not endorse, this website or calculator.</p>'
     }) },
-    { path: 'terms.html', html: policyPage({
+    { path: 'terms/index.html', html: policyPage({
       title: 'Terms of Use | AP Score Calculator 2026 Site',
       description: 'Terms of use for AP Score Calculator 2026, including unofficial estimate limits, educational use, and no guarantee of AP results.',
-      path: '/terms.html',
+      path: '/terms/',
       body: '<p>Use this site for informational study planning only. The calculators provide unofficial estimates and do not guarantee any AP exam result, college credit, or placement outcome.</p><p>Do not rely on this site as a substitute for official College Board score reports, teacher guidance, or college credit policies.</p>'
     }) },
-    { path: 'disclaimer.html', html: policyPage({
+    { path: 'disclaimer/index.html', html: policyPage({
       title: 'Disclaimer | AP Score Calculator 2026 Site',
       description: 'Unofficial AP score estimate disclaimer for AP Score Calculator 2026, including College Board trademark notice and scoring limits.',
-      path: '/disclaimer.html',
+      path: '/disclaimer/',
       body: `<p>${trademarkNotice}</p><p>All conversions and score-needed figures are transparent estimates based on public exam structure and historical patterns. Actual scoring may vary by year, exam form, and official process.</p>`
     }) },
-    { path: 'contact.html', html: policyPage({
+    { path: 'contact/index.html', html: policyPage({
       title: 'Contact Us | AP Score Calculator 2026 Site',
       description: 'Contact AP Score Calculator 2026 for corrections, accessibility feedback, calculator questions, and responsible content updates.',
-      path: '/contact.html',
+      path: '/contact/',
       body: '<p>For corrections, accessibility feedback, or content questions, email <a href="mailto:hello@apscorecalculator.store">hello@apscorecalculator.store</a>.</p><p>Please do not send official score reports, student IDs, school records, AP numbers, or private College Board account information.</p>'
     }) }
   ];

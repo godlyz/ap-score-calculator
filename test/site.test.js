@@ -8,10 +8,10 @@ test('static site renders hub plus all nine subject pages and legal/contact page
   const paths = sitePages().map((page) => page.path).sort();
 
   assert(paths.includes('ap-score-calculator-2026/index.html'));
-  assert(paths.includes('privacy.html'));
-  assert(paths.includes('terms.html'));
-  assert(paths.includes('disclaimer.html'));
-  assert(paths.includes('contact.html'));
+  assert(paths.includes('privacy/index.html'));
+  assert(paths.includes('terms/index.html'));
+  assert(paths.includes('disclaimer/index.html'));
+  assert(paths.includes('contact/index.html'));
   for (const subject of subjects) {
     assert(paths.includes(`${subject.slug}-score-calculator/index.html`));
   }
