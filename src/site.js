@@ -38,7 +38,7 @@ function pageShell({ title, description, path, body, schema = [], nav = 'default
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="${escapeHtml(title)}">
   <meta name="twitter:description" content="${escapeHtml(description)}">
-  <link rel="stylesheet" href="/assets/styles.css?v=v6-3-seo-only-20260513">
+  <link rel="stylesheet" href="/assets/styles.css?v=v7-growth-seo-c331a27">
   ${schemaTags}
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-8YKL96LGT4"></script>
 </head>
@@ -46,7 +46,7 @@ function pageShell({ title, description, path, body, schema = [], nav = 'default
   ${siteHeader(nav, path)}
   <main>${body}</main>
   ${siteFooter()}
-  <script type="module" src="/assets/app.js?v=v6-3-seo-only-20260513"></script>
+  <script type="module" src="/assets/app.js?v=v7-growth-seo-c331a27"></script>
 </body>
 </html>`;
 }
