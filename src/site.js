@@ -178,6 +178,12 @@ function softwareApplicationSchema(subject) {
 }
 
 function subjectCategory(subject) {
+  const groupLabels = {
+    stem: 'STEM',
+    english: 'English',
+    'social-science': 'Social Science'
+  };
+  if (subject.group && groupLabels[subject.group]) return groupLabels[subject.group];
   if (['ap-calculus-ab', 'ap-statistics', 'ap-chemistry', 'ap-biology', 'ap-csp', 'ap-physics-1', 'ap-physics-2'].includes(subject.slug)) return 'STEM';
   if (['apush', 'ap-gov', 'ap-psychology', 'ap-world-history', 'ap-macroeconomics', 'ap-microeconomics', 'ap-human-geography'].includes(subject.slug)) return 'Social Science';
   return 'English';
@@ -225,6 +231,80 @@ function subjectTone(subject) {
 function subjectCardMeta(subject) {
   const tone = subjectTone(subject);
   return `${tone.lane} · ${subject.sections.length} inputs · gap to 3/4/5`;
+}
+
+function prioritySubjectLabel(subject) {
+  const labels = {
+    'ap-psychology': 'AP Psych',
+    'ap-gov': 'AP Gov',
+    'ap-lang': 'AP Lang',
+    apush: 'APUSH',
+    'ap-biology': 'AP Bio',
+    'ap-chemistry': 'AP Chem',
+    'ap-calculus-ab': 'AP Calc AB',
+    'ap-statistics': 'AP Stats'
+  };
+  return labels[subject.slug] || subject.shortName;
+}
+
+function subjectPriorityReason(subject) {
+  if (subject.priorityReason) return subject.priorityReason;
+  if (subject.slug === 'apush') return 'High-volume history entry with the most complete dashboard and study-plan flow.';
+  if (['ap-biology', 'ap-chemistry', 'ap-calculus-ab', 'ap-statistics'].includes(subject.slug)) {
+    return 'High-volume calculator subject with quick MCQ/FRQ practice-test inputs.';
+  }
+  return subjectTone(subject).focus;
+}
+
+function renderSubjectFinder({ includeApushShowcase = false } = {}) {
+  const apush = subjects.find((subject) => subject.slug === 'apush');
+  const prioritySlugs = ['ap-psychology', 'ap-gov', 'ap-lang', 'apush', 'ap-biology', 'ap-chemistry', 'ap-calculus-ab', 'ap-statistics'];
+  const prioritySubjects = prioritySlugs
+    .map((slug) => subjects.find((subject) => subject.slug === slug))
+    .filter(Boolean);
+  const renderCard = (subject) => {
+    const featured = subject.slug === 'apush' ? ' featured' : '';
+    const tone = subjectTone(subject);
+    return `
+      <a class="subject-card${featured}" href="/${subject.slug}-score-calculator/">
+        <span>${escapeHtml(prioritySubjectLabel(subject))}</span>
+        <strong>${escapeHtml(subject.title)}</strong>
+        <p>${escapeHtml(tone.promise)}</p>
+        <em>${escapeHtml(subjectCardMeta(subject))}</em>
+      </a>`;
+  };
+  const priorityCards = prioritySubjects.map((subject) => `
+    <a class="priority-card" href="/${subject.slug}-score-calculator/">
+      <span>${escapeHtml(prioritySubjectLabel(subject))}</span>
+      <strong>${escapeHtml(subject.shortName)} calculator</strong>
+      <p>${escapeHtml(subjectPriorityReason(subject))}</p>
+    </a>`).join('');
+  const groupedCards = ['STEM', 'English', 'Social Science'].map((group) => {
+    const groupSubjects = subjects.filter((subject) => subjectCategory(subject) === group && (!includeApushShowcase || subject.slug !== 'apush'));
+    return `<section class="matrix-group" data-home-group="${group.toLowerCase().replaceAll(' ', '-')}">
+      <h3>${group}</h3>
+      <div class="matrix-grid">${groupSubjects.map(renderCard).join('')}</div>
+    </section>`;
+  }).join('');
+  const showcase = includeApushShowcase && apush ? `
+    <div class="subject-showcase featured-subject-row">
+      <div class="subject-showcase-copy">
+        <p class="eyebrow">Primary route</p>
+        <h3>Start with the strongest single-subject page</h3>
+        <p>APUSH is visually featured as a complete calculator flow: score estimate, target gap, study plan, reference drawer, and exam-format support. The rest of the homepage stays broad so students can compare every AP calculator.</p>
+      </div>
+      ${renderCard(apush)}
+    </div>` : '';
+  return `
+    <div class="subject-finder-summary">
+      <p class="eyebrow">Find your AP subject calculator</p>
+      <h2>Find your AP subject calculator</h2>
+      <p>${subjects.length} AP calculators are linked here as crawlable subject pages, with priority paths for AP Psych, AP Gov, AP Lang, APUSH, AP Bio, AP Chem, AP Calc AB, and AP Stats.</p>
+      <a href="/ap-score-calculator-2026/">Open the full 2026 AP calculator hub</a>
+    </div>
+    <div class="priority-subjects" aria-label="Priority AP calculator links">${priorityCards}</div>
+    ${showcase}
+    <div class="subject-grid-balanced grouped-subject-finder">${groupedCards}</div>`;
 }
 
 
@@ -282,12 +362,18 @@ function studyPlanPanel(subject, values = {}) {
   const plan = buildStudyPlan(subject.slug, values);
   const diagnostics = plan.diagnostics.map((item) => `<div class="diagnostic-row" data-diagnostic-row="${item.key}"><div><strong>${escapeHtml(item.label)}</strong><span>${item.accuracyPct}% accuracy · ${item.weightedLost.toFixed(1)} weighted points available</span></div><div class="diagnostic-track"><i data-diagnostic-bar="${item.key}" style="width:${Math.max(4, Math.min(100, item.accuracyPct))}%"></i></div><em data-diagnostic-value="${item.key}">${item.weightedEarned.toFixed(1)}/${item.weightedMax.toFixed(1)}</em></div>`).join('');
   const gainOptions = plan.gainOptions.map((option) => `<li><strong>${escapeHtml(option.label)}</strong><span>${escapeHtml(option.description)}</span></li>`).join('');
-  const timelines = plan.timelines.map((timeline) => `<article class="timeline-card" data-study-timeline="${timeline.weeks}"><span>${timeline.weeks} weeks</span><h4>${escapeHtml(timeline.title)}</h4><ul>${timeline.actions.map((action) => `<li>${escapeHtml(action)}</li>`).join('')}</ul></article>`).join('');
+  const timelines = plan.timelines.map((timeline) => `<article class="timeline-card" data-study-timeline="${timeline.weeks}"><span>${timeline.weeks}-week plan</span><h4>${escapeHtml(timeline.title)}</h4><ul>${timeline.actions.map((action) => `<li>${escapeHtml(action)}</li>`).join('')}</ul></article>`).join('');
+  const actionCards = [
+    ['Target gap', plan.targetLabel, plan.gapText],
+    ['Weakest section', plan.weakest.label, plan.focus],
+    ['Next drill', plan.weakestSkill, plan.weakestDrill]
+  ].map(([label, title, copy]) => `<article class="result-action-card"><span>${escapeHtml(label)}</span><strong>${escapeHtml(title)}</strong><p>${escapeHtml(copy)}</p></article>`).join('');
   return `<section class="study-plan-panel" data-study-plan aria-label="Dynamic study plan">
     <div class="study-plan-head"><p class="eyebrow">Dynamic study plan</p><h2>Personalized next-step plan</h2><p data-study-status>${escapeHtml(plan.status)}</p></div>
+    <div class="result-action-grid" data-result-action-cards>${actionCards}</div>
     <div class="study-plan-grid">
       <article class="study-insight"><span>Target gap</span><strong data-study-gap>${escapeHtml(plan.targetLabel)}</strong><p data-study-gap-copy>${escapeHtml(plan.gapText)}</p></article>
-      <article class="study-insight"><span>Best next focus</span><strong data-study-focus-title>${escapeHtml(plan.weakest.label)}</strong><p data-study-focus>${escapeHtml(plan.focus)}</p></article>
+      <article class="study-insight"><span>Best next focus · weakest section</span><strong data-study-focus-title>${escapeHtml(plan.weakest.label)}</strong><p data-study-focus>${escapeHtml(plan.focus)}</p></article>
     </div>
     <div class="diagnostics-block"><h3>Section diagnostics</h3><div data-study-diagnostics>${diagnostics}</div></div>
     <div class="gain-options"><h3>Fastest improvement options</h3><ul data-study-gains>${gainOptions}</ul></div>
@@ -331,29 +417,7 @@ function subjectMatrix() {
 }
 
 function homepageSubjectCards() {
-  const apush = subjects.find((subject) => subject.slug === 'apush');
-  const others = subjects.filter((subject) => subject.slug !== 'apush');
-  const renderCard = (subject) => {
-    const featured = subject.slug === 'apush' ? ' featured' : '';
-    const tone = subjectTone(subject);
-    return `
-      <a class="subject-card${featured}" href="/${subject.slug}-score-calculator/">
-        <span>${escapeHtml(subject.shortName)}</span>
-        <strong>${escapeHtml(subject.title)}</strong>
-        <p>${escapeHtml(tone.promise)}</p>
-        <em>${escapeHtml(subjectCardMeta(subject))}</em>
-      </a>`;
-  };
-  return `
-    <div class="subject-showcase featured-subject-row">
-      <div class="subject-showcase-copy">
-        <p class="eyebrow">Primary route</p>
-        <h3>Start with the strongest single-subject page</h3>
-        <p>APUSH has the most complete calculator flow: score estimate, target gap, study plan, reference drawer, and exam-format support. The rest of the hub stays nearby for students comparing multiple AP exams.</p>
-      </div>
-      ${renderCard(apush)}
-    </div>
-    <div class="subject-grid-balanced">${others.map(renderCard).join('')}</div>`;
+  return renderSubjectFinder({ includeApushShowcase: true });
 }
 function homepageHubPreview() {
   return `
@@ -567,6 +631,58 @@ function hubInternalLinksSection() {
   return `<section class="section hub-link-clusters" aria-label="AP calculator internal links"><div class="section-heading"><p class="eyebrow">Internal calculator paths</p><h2>Jump by exam family</h2><p>These category links make the hub easier to crawl and easier for students to browse without changing any calculator function.</p></div><div class="hub-link-grid">${lanes}</div></section>`;
 }
 
+function hubAliasLine(subject) {
+  if (!subject.aliases?.length) return 'Aliases: subject-specific AP calculator page';
+  return `Aliases: ${subject.aliases.join(', ')}`;
+}
+
+function hubSubjectMatrix() {
+  const groups = ['STEM', 'English', 'Social Science'];
+  return groups.map((group) => {
+    const cards = subjects.filter((subject) => subjectCategory(subject) === group).map((subject) => {
+      const tone = subjectTone(subject);
+      return `<a class="matrix-card${subject.slug === 'apush' ? ' featured' : ''}" href="/${subject.slug}-score-calculator/">
+        <span>${escapeHtml(subject.shortName)}</span>
+        <strong>${escapeHtml(subject.title)}</strong>
+        <p>${escapeHtml(tone.focus)}</p>
+        <em>${escapeHtml(tone.proof)}</em>
+        <small>${escapeHtml(hubAliasLine(subject))}</small>
+      </a>`;
+    }).join('');
+    return `<section class="matrix-group" id="${group.toLowerCase().replaceAll(' ', '-')}"><h3>${group}</h3><div class="matrix-grid">${cards}</div></section>`;
+  }).join('');
+}
+
+function hubPlanningSupportSection() {
+  return `<section class="section hub-support" id="planning-support">
+  <div class="section-heading">
+    <p class="eyebrow">Planning context</p>
+    <h2>Use estimates alongside official AP planning resources</h2>
+    <p>This AP exam calculator hub supports practice-score planning, but AP exam schedule details, AP score distribution summaries, and score release timing should be verified from official sources before you make calendar, credit, or placement decisions.</p>
+  </div>
+  <div class="seo-support-grid">
+    <article><span>AP exam schedule</span><p>Use the calculators after practice exams, then verify actual exam windows, late-testing details, and school instructions from official sources.</p></article>
+    <article><span>AP score distribution</span><p>Distribution data can help set expectations, but this site does not publish official score distributions or use them as fixed cutoffs.</p></article>
+    <article><span>score release</span><p>Score release timing can change by year, account, or region, so verify release dates and access steps from official sources.</p></article>
+  </div>
+</section>`;
+}
+
+function hubTargetPlannerPreview() {
+  return `<section class="section target-planner-preview" id="target-planner-preview">
+  <div class="section-heading">
+    <p class="eyebrow">Target score planner preview</p>
+    <h2>Target score planner preview</h2>
+    <p>Every subject calculator turns practice-test points into an estimated AP score, then shows how much buffer you may need for the next target band.</p>
+  </div>
+  <div class="target-strip" aria-label="Target score planner preview">
+    <div class="target-card target-3"><span>Target 3</span><strong>Credit check</strong><p>See whether the current estimate clears an introductory passing range.</p><em>Build buffer near cutoffs</em></div>
+    <div class="target-card target-4"><span>Target 4</span><strong>Strong pass</strong><p>Compare section gains against the next estimated score band.</p><em>Prioritize weakest section</em></div>
+    <div class="target-card target-5"><span>Target 5</span><strong>Top band</strong><p>Use gap-to-5 guidance as study planning, not as an official promise.</p><em>Protect margin</em></div>
+  </div>
+</section>`;
+}
+
 function homePage() {
   const faqs = homepageFaqs();
   const body = `
@@ -675,13 +791,13 @@ function hubPage() {
 <section class="hero hub-hero">
   <div class="hero-copy-block">
     <p class="eyebrow">Browse every AP calculator in one place</p>
-    <h1>AP Score Calculator Hub</h1>
-    <p class="hero-copy">Browse every AP calculator in one place. Each subject keeps its own section structure, confidence note, target gap, and internal links so the hub feels like a connected product instead of a list of duplicates.</p>
+    <h1>AP Score Calculator 2026 Hub</h1>
+    <p class="hero-copy">Use this AP score calculator directory as the generic AP calculator entry point for 2026 planning. Pick a subject-specific AP exam calculator, enter practice-test section points, and compare the unofficial estimate with target-score gaps.</p>
     <div class="cta-row">
       <a class="button" href="#calculator-start">Browse subjects</a>
-      <a class="button secondary" href="#methodology">See methodology</a>
+      <a class="button secondary" href="#target-planner-preview">Preview target planner</a>
     </div>
-    <p class="hero-disclaimer">Free to use. Browser-local. No signup. Not affiliated with College Board.</p>
+    <p class="hero-disclaimer">Free to use. Browser-local. No signup. Independent and unofficial; verify AP exam schedule, score release, and AP score distribution data from official sources.</p>
   </div>
   <aside class="hero-panel preview-card" aria-label="Hub preview">
     <span class="preview-label">Category view</span>
@@ -698,20 +814,20 @@ function hubPage() {
 </section>
 <section id="calculator-start" class="section intro-strip">
   <p>Subject matrix</p>
-  <div class="quick-links"><a href="#stem">STEM</a><a href="#english">English</a><a href="#social-science">Social Science</a><a href="/apush-score-calculator/">APUSH</a></div>
+  <div class="quick-links"><a href="#stem">STEM</a><a href="#english">English</a><a href="#social-science">Social Science</a><a href="#planning-support">Planning context</a><a href="/apush-score-calculator/">APUSH</a></div>
 </section>
 <section id="subjects" class="section hub-directory">
   <div class="section-heading">
-    <p class="eyebrow">Subject matrix</p>
+    <p class="eyebrow">All-subject matrix</p>
     <h2>Pick an AP exam</h2>
-    <p>Each lane uses subject-specific copy instead of repeating the same generic promise. APUSH stays visually featured without overpowering the rest of the hub.</p>
+    <p>The All-subject matrix keeps all ${subjects.length} AP calculators in one crawlable hub, including aliases where metadata exists for high-priority search paths.</p>
   </div>
   <div class="hub-grid">
-    <section class="matrix-group" id="stem"><h3>STEM</h3><div class="matrix-grid">${subjects.filter((subject) => subjectCategory(subject) === 'STEM').map((subject) => { const tone = subjectTone(subject); return `<a class="matrix-card" href="/${subject.slug}-score-calculator/"><span>${escapeHtml(subject.shortName)}</span><strong>${escapeHtml(subject.title)}</strong><p>${escapeHtml(tone.focus)}</p><em>${escapeHtml(tone.proof)}</em></a>`; }).join('')}</div></section>
-    <section class="matrix-group" id="english"><h3>English</h3><div class="matrix-grid">${subjects.filter((subject) => subjectCategory(subject) === 'English').map((subject) => { const tone = subjectTone(subject); return `<a class="matrix-card" href="/${subject.slug}-score-calculator/"><span>${escapeHtml(subject.shortName)}</span><strong>${escapeHtml(subject.title)}</strong><p>${escapeHtml(tone.focus)}</p><em>${escapeHtml(tone.proof)}</em></a>`; }).join('')}</div></section>
-    <section class="matrix-group" id="social-science"><h3>Social Science</h3><div class="matrix-grid">${subjects.filter((subject) => subjectCategory(subject) === 'Social Science').map((subject) => { const tone = subjectTone(subject); return `<a class="matrix-card${subject.slug === 'apush' ? ' featured' : ''}" href="/${subject.slug}-score-calculator/"><span>${escapeHtml(subject.shortName)}</span><strong>${escapeHtml(subject.title)}</strong><p>${escapeHtml(tone.focus)}</p><em>${escapeHtml(tone.proof)}</em></a>`; }).join('')}</div></section>
+    ${hubSubjectMatrix()}
   </div>
 </section>
+${hubTargetPlannerPreview()}
+${hubPlanningSupportSection()}
 <section class="section two-col" id="methodology">
   <div>
     <p class="eyebrow">What each calculator shows</p>
@@ -726,7 +842,7 @@ function hubPage() {
   <aside class="note">
     <h2>Browse-first direction</h2>
     <p>The hub is a product directory, not a duplicate homepage. It keeps the subject family connected and makes APUSH obvious under Social Science.</p>
-    <p>Last updated: ${lastUpdated}. The same unofficial and browser-local messaging stays consistent across every page.</p>
+    <p>Last updated: ${lastUpdated}. The same unofficial and browser-local messaging stays consistent across every page, and schedule/date/distribution claims should be verified from official sources.</p>
   </aside>
 </section>
 <section class="section faq">

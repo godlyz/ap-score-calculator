@@ -91,3 +91,23 @@ test('v5 balanced study-plan copy avoids strongest/weakest contradiction', () =>
   assert.match(plan.focus, /balanced current section|best next focus/);
   assert.doesNotMatch(plan.focus, /Your strongest current section is .*most balanced current section/);
 });
+
+test('study plans vary by predicted score band while preserving subject-specific module advice', () => {
+  const foundation = buildStudyPlan('apush', { mcq: 14, saq: 2, dbq: 2, leq: 2 });
+  const cutoff = buildStudyPlan('apush', { mcq: 37, saq: 6, dbq: 4, leq: 4 });
+  const polish = buildStudyPlan('apush', { mcq: 45, saq: 7, dbq: 5, leq: 4 });
+  const protect = buildStudyPlan('ap-calculus-ab', { mcq: 45, frq: 54 });
+
+  assert.equal(foundation.performanceTier, 'foundation');
+  assert.equal(cutoff.performanceTier, 'cutoff');
+  assert.equal(polish.performanceTier, 'polish');
+  assert.equal(protect.performanceTier, 'protect');
+  assert.match(foundation.focus, /Foundation rebuild/);
+  assert.match(cutoff.focus, /Cutoff push/);
+  assert.match(polish.focus, /AP 5 polish/);
+  assert.match(protect.focus, /Buffer protection/);
+  assert.match(foundation.timelines[0].actions[0], /Rebuild .* from fundamentals/);
+  assert.match(cutoff.timelines[0].actions[0], /Prioritize .*/);
+  assert.match(polish.timelines[0].actions[0], /Polish .*/);
+  assert.match(protect.timelines[0].actions[0], /Protect your buffer with calculus MCQ accuracy and pacing/);
+});

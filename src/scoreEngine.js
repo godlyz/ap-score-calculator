@@ -25,6 +25,11 @@ export const subjects = [
     shortName: 'AP Lang',
     title: 'AP English Language Score Calculator 2026',
     description: 'Use this calculator to estimate your AP English Language score using MCQ and essay rubric points.',
+    aliases: ['ap lang score calculator', 'ap language and composition score calculator'],
+    group: 'english',
+    priorityReason: 'Semrush-backed alias target for AP English Language calculator searches.',
+    relatedSlugs: ['ap-lit'],
+    faqKeywords: ['ap lang score calculator', 'ap language and composition score calculator', 'ap lang score estimate'],
     sections: [
       { key: 'mcq', label: 'Multiple Choice', max: 45, weight: 1 },
       { key: 'synthesis', label: 'Synthesis Essay', max: 6, weight: 3 },
@@ -91,6 +96,11 @@ export const subjects = [
     shortName: 'AP Gov',
     title: 'AP Government Score Calculator 2026',
     description: 'Estimate your AP US Government score from MCQ and FRQ section points.',
+    aliases: ['ap gov calculator', 'ap us gov score calculator', 'ap gov curve', 'ap gov scoring calculator'],
+    group: 'social-science',
+    priorityReason: 'Semrush-backed alias target for AP US Government calculator and scoring searches.',
+    relatedSlugs: ['apush', 'ap-psychology', 'ap-human-geography'],
+    faqKeywords: ['ap gov calculator', 'ap us gov score calculator', 'ap gov curve', 'ap gov scoring calculator'],
     sections: [
       { key: 'mcq', label: 'Multiple Choice', max: 55, weight: 1 },
       { key: 'frq', label: 'Free Response', max: 20, weight: 2.25 }
@@ -123,6 +133,11 @@ export const subjects = [
     shortName: 'AP Psych',
     title: 'AP Psychology Score Calculator 2026',
     description: 'Use this calculator to estimate your AP Psychology score from multiple choice and free-response performance.',
+    aliases: ['ap psych calculator', 'ap psychology score calculator'],
+    group: 'social-science',
+    priorityReason: 'Semrush-backed alias target for AP Psychology calculator searches.',
+    relatedSlugs: ['ap-gov', 'ap-human-geography'],
+    faqKeywords: ['ap psych calculator', 'ap psychology score calculator', 'ap psych score estimate'],
     sections: [
       { key: 'mcq', label: 'Multiple Choice', max: 75, weight: 1 },
       { key: 'frq', label: 'Free Response', max: 14, weight: 2 }
@@ -464,7 +479,45 @@ export function buildStudyPlan(slug, inputs = {}) {
   const buffer = confidenceBuffers[subject.confidence] ?? 4;
   const bufferGoal = round1(gap + buffer);
   const [weakestSkill, weakestDrill] = adviceFor(subject, weakest.key);
-  const [secondarySkill, secondaryDrill] = adviceFor(subject, secondary.key);
+  const [secondarySkill] = adviceFor(subject, secondary.key);
+  const performanceTier = result.predictedScore >= 5 ? 'protect'
+    : result.predictedScore >= 4 ? 'polish'
+    : result.predictedScore >= 3 ? 'cutoff'
+    : 'foundation';
+  const bandStrategy = {
+    foundation: {
+      label: 'Foundation rebuild',
+      summary: `First stabilize ${weakest.label} basics before chasing AP ${targetScore} cutoff points.`,
+      sprintLead: `Rebuild ${weakestSkill} from fundamentals: ${weakestDrill}.`,
+      retest: `Use short untimed ${weakest.label} checks first, then add timing once accuracy improves.`,
+      buildLead: `Weeks 1–2: repair prerequisite misses in ${weakest.label} and log repeated error types.`,
+      simulate: `Weeks 7–8: move from topic drills into mixed practice only after ${weakest.label} accuracy is stable.`
+    },
+    cutoff: {
+      label: 'Cutoff push',
+      summary: `You are near a passing/stronger band, so prioritize the fastest weighted points in ${weakest.label}.`,
+      sprintLead: `Prioritize ${weakestSkill}: ${weakestDrill}.`,
+      retest: `Run one timed ${weakest.label} drill, then re-enter scores to check the new target gap.`,
+      buildLead: `Weeks 1–2: fix ${weakest.label} misses with targeted review and cutoff-focused retesting.`,
+      simulate: `Weeks 7–8: simulate exam pacing and protect ${strength.label} while closing the AP ${targetScore} gap.`
+    },
+    polish: {
+      label: 'AP 5 polish',
+      summary: `You are already in a strong band; use ${weakest.label} to close the AP 5 margin without weakening ${strength.label}.`,
+      sprintLead: `Polish ${weakestSkill}: ${weakestDrill}.`,
+      retest: `Run one timed high-difficulty ${weakest.label} set, then check whether the AP 5 buffer improves.`,
+      buildLead: `Weeks 1–2: convert preventable ${weakest.label} misses into reliable rubric/accuracy points.`,
+      simulate: `Weeks 7–8: run full mixed simulations and protect ${strength.label} under time pressure.`
+    },
+    protect: {
+      label: 'Buffer protection',
+      summary: `No higher AP band exists, so reduce preventable ${weakest.label} misses and keep ${strength.label} consistent.`,
+      sprintLead: `Protect your buffer with ${weakestSkill}: ${weakestDrill}.`,
+      retest: `Use one timed ${weakest.label} maintenance drill and review only the misses that could cost the buffer.`,
+      buildLead: `Weeks 1–2: maintain ${weakest.label} accuracy with light targeted review instead of broad relearning.`,
+      simulate: `Weeks 7–8: simulate exam pacing, avoid careless misses, and keep ${strength.label} stable.`
+    }
+  }[performanceTier];
   const singleGain = weakest.pointValue;
   const gainOptions = [
     {
@@ -486,14 +539,14 @@ export function buildStudyPlan(slug, inputs = {}) {
     ? 'No higher AP band exists. Maintain your buffer and reduce preventable misses.'
     : `Your next target is ${targetLabel}. You need about ${gap.toFixed(1).replace(/\.0$/, '')} more estimated composite points, or about ${bufferGoal.toFixed(1).replace(/\.0$/, '')} with buffer.`;
   const focus = strength.key === weakest.key
-    ? `${weakest.label} is the most balanced current section (${weakest.accuracyPct}% accuracy, ${weakest.weightedLost.toFixed(1)} weighted points still available). Keep it stable while you lift the next-biggest gap.`
-    : `${weakest.label} is the best next focus (${weakest.accuracyPct}% accuracy, ${weakest.weightedLost.toFixed(1)} weighted points still available). Your strongest current section is ${strength.label}.`;
+    ? `${bandStrategy.label}: ${bandStrategy.summary} ${weakest.label} is the most balanced current section (${weakest.accuracyPct}% accuracy, ${weakest.weightedLost.toFixed(1)} weighted points still available). Keep it stable while you lift the next-biggest gap.`
+    : `${bandStrategy.label}: ${bandStrategy.summary} ${weakest.label} is the best next focus (${weakest.accuracyPct}% accuracy, ${weakest.weightedLost.toFixed(1)} weighted points still available). Your strongest current section is ${strength.label}.`;
   const timelines = [
-    { weeks: 2, title: '2-week sprint', actions: [`Prioritize ${weakestSkill}: ${weakestDrill}.`, `Run one timed ${weakest.label} drill, then retest and re-enter scores.`, `If the gap remains, add ${secondarySkill} practice.`] },
-    { weeks: 4, title: '4-week build', actions: [`Weeks 1–2: fix ${weakest.label} misses with targeted review.`, `Week 3: combine ${weakest.label} with ${secondary.label} practice.`, `Week 4: take a mixed timed set and compare the new target gap.`] },
-    { weeks: 8, title: '8-week plan', actions: [`Weeks 1–3: rebuild the weakest skill through short drills.`, `Weeks 4–6: rotate ${weakest.label}, ${secondary.label}, and full-section timing.`, `Weeks 7–8: simulate exam pacing and protect ${strength.label}.`] }
+    { weeks: 2, title: '2-week plan', actions: [bandStrategy.sprintLead, bandStrategy.retest, `If the gap remains, add ${secondarySkill} practice.`] },
+    { weeks: 4, title: '4-week plan', actions: [bandStrategy.buildLead, `Week 3: combine ${weakest.label} with ${secondary.label} practice.`, `Week 4: take a mixed timed set and compare the new target gap.`] },
+    { weeks: 8, title: '8-week plan', actions: [bandStrategy.buildLead.replace('Weeks 1–2', 'Weeks 1–3'), `Weeks 4–6: rotate ${weakest.label}, ${secondary.label}, and full-section timing.`, bandStrategy.simulate] }
   ];
-  return { subject: subject.name, shortName: subject.shortName, result, diagnostics, weakest, secondary, strength, targetScore, targetLabel, gap, bufferGoal, status, focus, gapText, weakestSkill, weakestDrill, gainOptions, timelines };
+  return { subject: subject.name, shortName: subject.shortName, result, diagnostics, weakest, secondary, strength, targetScore, targetLabel, gap, bufferGoal, status, focus, gapText, performanceTier, bandStrategy: bandStrategy.label, weakestSkill, weakestDrill, gainOptions, timelines };
 }
 
 export function calculateScore(slug, inputs = {}) {
