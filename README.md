@@ -2,6 +2,20 @@
 
 This repository contains the static AP Score Calculator site and planning documents.
 
+## Live site
+
+Free AP Score Calculator 2026: https://apscorecalculator.store/
+
+Use the live calculators to estimate AP scores from section-level inputs. No login or email is required.
+
+Priority calculators:
+
+- AP Score Calculator 2026 hub: https://apscorecalculator.store/ap-score-calculator-2026/
+- AP Lang Score Calculator: https://apscorecalculator.store/ap-lang-score-calculator/
+- AP Calculus AB Score Calculator: https://apscorecalculator.store/ap-calculus-ab-score-calculator/
+- AP World History Score Calculator: https://apscorecalculator.store/ap-world-history-score-calculator/
+- AP Physics 1 Score Calculator: https://apscorecalculator.store/ap-physics-1-score-calculator/
+
 ## Current planning / research gates
 
 - [v8 competitor gap growth brief](docs/research/ap-score-calculator-v8-competitor-gap-growth-brief.md)
