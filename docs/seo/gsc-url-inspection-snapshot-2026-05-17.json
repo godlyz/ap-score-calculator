@@ -1,0 +1,655 @@
+{
+  "summary": {
+    "total": 22,
+    "indexed": 13,
+    "crawled_not_indexed": 2,
+    "unknown": 7,
+    "coverage_counts": {
+      "Submitted and indexed": 13,
+      "Crawled - currently not indexed": 2,
+      "URL is unknown to Google": 7
+    }
+  },
+  "rows": [
+    {
+      "url": "https://apscorecalculator.store/",
+      "verdict": "PASS",
+      "coverage": "Submitted and indexed",
+      "last_crawl": "2026-05-16T02:24:49Z",
+      "google_canonical": "https://apscorecalculator.store/",
+      "user_canonical": "https://apscorecalculator.store/",
+      "page_fetch": "SUCCESSFUL",
+      "robots": "ALLOWED",
+      "indexing": "INDEXING_ALLOWED",
+      "clicks": 1,
+      "impressions": 4,
+      "top_queries": "ap psych score calculator 2026 (1), ap score calculator (1), ap us history score calculator (1)"
+    },
+    {
+      "url": "https://apscorecalculator.store/ap-score-calculator-2026/",
+      "verdict": "PASS",
+      "coverage": "Submitted and indexed",
+      "last_crawl": "2026-05-15T15:18:42Z",
+      "google_canonical": "https://apscorecalculator.store/ap-score-calculator-2026/",
+      "user_canonical": "https://apscorecalculator.store/ap-score-calculator-2026/",
+      "page_fetch": "SUCCESSFUL",
+      "robots": "ALLOWED",
+      "indexing": "INDEXING_ALLOWED",
+      "clicks": 0,
+      "impressions": 4,
+      "top_queries": "ap bio calculator 2026 (1), ap gov raw score conversion (1), ap language and composition score calculator (1)"
+    },
+    {
+      "url": "https://apscorecalculator.store/apush-score-calculator/",
+      "verdict": "PASS",
+      "coverage": "Submitted and indexed",
+      "last_crawl": "2026-05-09T17:27:26Z",
+      "google_canonical": "https://apscorecalculator.store/apush-score-calculator/",
+      "user_canonical": "https://apscorecalculator.store/apush-score-calculator/",
+      "page_fetch": "SUCCESSFUL",
+      "robots": "ALLOWED",
+      "indexing": "INDEXING_ALLOWED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/ap-lang-score-calculator/",
+      "verdict": "NEUTRAL",
+      "coverage": "Crawled - currently not indexed",
+      "last_crawl": "2026-05-14T06:47:57Z",
+      "google_canonical": "https://apscorecalculator.store/ap-lang-score-calculator/",
+      "user_canonical": "https://apscorecalculator.store/ap-lang-score-calculator/",
+      "page_fetch": "SUCCESSFUL",
+      "robots": "ALLOWED",
+      "indexing": "INDEXING_ALLOWED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/ap-chemistry-score-calculator/",
+      "verdict": "PASS",
+      "coverage": "Submitted and indexed",
+      "last_crawl": "2026-05-15T10:21:45Z",
+      "google_canonical": "https://apscorecalculator.store/ap-chemistry-score-calculator/",
+      "user_canonical": "https://apscorecalculator.store/ap-chemistry-score-calculator/",
+      "page_fetch": "SUCCESSFUL",
+      "robots": "ALLOWED",
+      "indexing": "INDEXING_ALLOWED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/ap-calculus-ab-score-calculator/",
+      "verdict": "NEUTRAL",
+      "coverage": "Crawled - currently not indexed",
+      "last_crawl": "2026-05-13T14:26:18Z",
+      "google_canonical": "https://apscorecalculator.store/ap-calculus-ab-score-calculator/",
+      "user_canonical": "https://apscorecalculator.store/ap-calculus-ab-score-calculator/",
+      "page_fetch": "SUCCESSFUL",
+      "robots": "ALLOWED",
+      "indexing": "INDEXING_ALLOWED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/ap-biology-score-calculator/",
+      "verdict": "PASS",
+      "coverage": "Submitted and indexed",
+      "last_crawl": "2026-05-09T17:25:25Z",
+      "google_canonical": "https://apscorecalculator.store/ap-biology-score-calculator/",
+      "user_canonical": "https://apscorecalculator.store/ap-biology-score-calculator/",
+      "page_fetch": "SUCCESSFUL",
+      "robots": "ALLOWED",
+      "indexing": "INDEXING_ALLOWED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/ap-gov-score-calculator/",
+      "verdict": "PASS",
+      "coverage": "Submitted and indexed",
+      "last_crawl": "2026-05-15T07:45:42Z",
+      "google_canonical": "https://apscorecalculator.store/ap-gov-score-calculator/",
+      "user_canonical": "https://apscorecalculator.store/ap-gov-score-calculator/",
+      "page_fetch": "SUCCESSFUL",
+      "robots": "ALLOWED",
+      "indexing": "INDEXING_ALLOWED",
+      "clicks": 0,
+      "impressions": 22,
+      "top_queries": "ap gov calculator (3), ap gov score calculator (3), ap gov scoring calculator (3)"
+    },
+    {
+      "url": "https://apscorecalculator.store/ap-statistics-score-calculator/",
+      "verdict": "PASS",
+      "coverage": "Submitted and indexed",
+      "last_crawl": "2026-05-09T17:25:25Z",
+      "google_canonical": "https://apscorecalculator.store/ap-statistics-score-calculator/",
+      "user_canonical": "https://apscorecalculator.store/ap-statistics-score-calculator/",
+      "page_fetch": "SUCCESSFUL",
+      "robots": "ALLOWED",
+      "indexing": "INDEXING_ALLOWED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/ap-psychology-score-calculator/",
+      "verdict": "PASS",
+      "coverage": "Submitted and indexed",
+      "last_crawl": "2026-05-14T22:46:45Z",
+      "google_canonical": "https://apscorecalculator.store/ap-psychology-score-calculator/",
+      "user_canonical": "https://apscorecalculator.store/ap-psychology-score-calculator/",
+      "page_fetch": "SUCCESSFUL",
+      "robots": "ALLOWED",
+      "indexing": "INDEXING_ALLOWED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/ap-lit-score-calculator/",
+      "verdict": "PASS",
+      "coverage": "Submitted and indexed",
+      "last_crawl": "2026-05-15T11:46:12Z",
+      "google_canonical": "https://apscorecalculator.store/ap-lit-score-calculator/",
+      "user_canonical": "https://apscorecalculator.store/ap-lit-score-calculator/",
+      "page_fetch": "SUCCESSFUL",
+      "robots": "ALLOWED",
+      "indexing": "INDEXING_ALLOWED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/ap-world-history-score-calculator/",
+      "verdict": "NEUTRAL",
+      "coverage": "URL is unknown to Google",
+      "last_crawl": "N/A",
+      "google_canonical": "N/A",
+      "user_canonical": "N/A",
+      "page_fetch": "PAGE_FETCH_STATE_UNSPECIFIED",
+      "robots": "ROBOTS_TXT_STATE_UNSPECIFIED",
+      "indexing": "INDEXING_STATE_UNSPECIFIED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/ap-csp-score-calculator/",
+      "verdict": "NEUTRAL",
+      "coverage": "URL is unknown to Google",
+      "last_crawl": "N/A",
+      "google_canonical": "N/A",
+      "user_canonical": "N/A",
+      "page_fetch": "PAGE_FETCH_STATE_UNSPECIFIED",
+      "robots": "ROBOTS_TXT_STATE_UNSPECIFIED",
+      "indexing": "INDEXING_STATE_UNSPECIFIED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/ap-physics-1-score-calculator/",
+      "verdict": "NEUTRAL",
+      "coverage": "URL is unknown to Google",
+      "last_crawl": "N/A",
+      "google_canonical": "N/A",
+      "user_canonical": "N/A",
+      "page_fetch": "PAGE_FETCH_STATE_UNSPECIFIED",
+      "robots": "ROBOTS_TXT_STATE_UNSPECIFIED",
+      "indexing": "INDEXING_STATE_UNSPECIFIED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/ap-physics-2-score-calculator/",
+      "verdict": "NEUTRAL",
+      "coverage": "URL is unknown to Google",
+      "last_crawl": "N/A",
+      "google_canonical": "N/A",
+      "user_canonical": "N/A",
+      "page_fetch": "PAGE_FETCH_STATE_UNSPECIFIED",
+      "robots": "ROBOTS_TXT_STATE_UNSPECIFIED",
+      "indexing": "INDEXING_STATE_UNSPECIFIED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/ap-macroeconomics-score-calculator/",
+      "verdict": "PASS",
+      "coverage": "Submitted and indexed",
+      "last_crawl": "2026-05-15T11:08:42Z",
+      "google_canonical": "https://apscorecalculator.store/ap-macroeconomics-score-calculator/",
+      "user_canonical": "https://apscorecalculator.store/ap-macroeconomics-score-calculator/",
+      "page_fetch": "SUCCESSFUL",
+      "robots": "ALLOWED",
+      "indexing": "INDEXING_ALLOWED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/ap-microeconomics-score-calculator/",
+      "verdict": "PASS",
+      "coverage": "Submitted and indexed",
+      "last_crawl": "2026-05-16T07:53:06Z",
+      "google_canonical": "https://apscorecalculator.store/ap-microeconomics-score-calculator/",
+      "user_canonical": "https://apscorecalculator.store/ap-microeconomics-score-calculator/",
+      "page_fetch": "SUCCESSFUL",
+      "robots": "ALLOWED",
+      "indexing": "INDEXING_ALLOWED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/ap-human-geography-score-calculator/",
+      "verdict": "PASS",
+      "coverage": "Submitted and indexed",
+      "last_crawl": "2026-05-16T05:32:44Z",
+      "google_canonical": "https://apscorecalculator.store/ap-human-geography-score-calculator/",
+      "user_canonical": "https://apscorecalculator.store/ap-human-geography-score-calculator/",
+      "page_fetch": "SUCCESSFUL",
+      "robots": "ALLOWED",
+      "indexing": "INDEXING_ALLOWED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/privacy/",
+      "verdict": "NEUTRAL",
+      "coverage": "URL is unknown to Google",
+      "last_crawl": "N/A",
+      "google_canonical": "N/A",
+      "user_canonical": "N/A",
+      "page_fetch": "PAGE_FETCH_STATE_UNSPECIFIED",
+      "robots": "ROBOTS_TXT_STATE_UNSPECIFIED",
+      "indexing": "INDEXING_STATE_UNSPECIFIED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/terms/",
+      "verdict": "NEUTRAL",
+      "coverage": "URL is unknown to Google",
+      "last_crawl": "N/A",
+      "google_canonical": "N/A",
+      "user_canonical": "N/A",
+      "page_fetch": "PAGE_FETCH_STATE_UNSPECIFIED",
+      "robots": "ROBOTS_TXT_STATE_UNSPECIFIED",
+      "indexing": "INDEXING_STATE_UNSPECIFIED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/disclaimer/",
+      "verdict": "PASS",
+      "coverage": "Submitted and indexed",
+      "last_crawl": "2026-05-16T23:36:06Z",
+      "google_canonical": "https://apscorecalculator.store/disclaimer/",
+      "user_canonical": "https://apscorecalculator.store/disclaimer/",
+      "page_fetch": "SUCCESSFUL",
+      "robots": "ALLOWED",
+      "indexing": "INDEXING_ALLOWED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    },
+    {
+      "url": "https://apscorecalculator.store/contact/",
+      "verdict": "NEUTRAL",
+      "coverage": "URL is unknown to Google",
+      "last_crawl": "N/A",
+      "google_canonical": "N/A",
+      "user_canonical": "N/A",
+      "page_fetch": "PAGE_FETCH_STATE_UNSPECIFIED",
+      "robots": "ROBOTS_TXT_STATE_UNSPECIFIED",
+      "indexing": "INDEXING_STATE_UNSPECIFIED",
+      "clicks": 0,
+      "impressions": 0,
+      "top_queries": "none"
+    }
+  ],
+  "performance_rows": [
+    {
+      "keys": [
+        "https://apscorecalculator.store/",
+        "ap psych score calculator 2026"
+      ],
+      "clicks": 1,
+      "impressions": 1,
+      "ctr": 1,
+      "position": 17
+    },
+    {
+      "keys": [
+        "http://www.apscorecalculator.store/",
+        "ap drawing score calculator"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 58
+    },
+    {
+      "keys": [
+        "http://www.apscorecalculator.store/",
+        "ap us history score calculator"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 89
+    },
+    {
+      "keys": [
+        "http://www.apscorecalculator.store/",
+        "apush calculator"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 53
+    },
+    {
+      "keys": [
+        "http://www.apscorecalculator.store/",
+        "apush exam score calculator"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 51
+    },
+    {
+      "keys": [
+        "http://www.apscorecalculator.store/",
+        "apush score calc"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 51
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/",
+        "ap score calculator"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 87
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/",
+        "ap us history score calculator"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 99
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/",
+        "apcalculator"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 13
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-gov-score-calculator/",
+        "ap cogo score calculator"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 59
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-gov-score-calculator/",
+        "ap comparative gov score calculator"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 81
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-gov-score-calculator/",
+        "ap gov 2026 calculator"
+      ],
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 23.5
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-gov-score-calculator/",
+        "ap gov calculator"
+      ],
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 92.33333333333333
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-gov-score-calculator/",
+        "ap gov calculator score"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 43
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-gov-score-calculator/",
+        "ap gov curve"
+      ],
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "position": 71
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-gov-score-calculator/",
+        "ap gov exam calc"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 75
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-gov-score-calculator/",
+        "ap gov exam score calculator"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 46
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-gov-score-calculator/",
+        "ap gov grade calculator"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 68
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-gov-score-calculator/",
+        "ap gov score"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 96
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-gov-score-calculator/",
+        "ap gov score calculator"
+      ],
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 71.66666666666667
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-gov-score-calculator/",
+        "ap gov scoring calculator"
+      ],
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "position": 64.33333333333334
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-gov-score-calculator/",
+        "ap score calculator gov"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 34
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-gov-score-calculator/",
+        "ap us gov score calculator"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 53
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-score-calculator-2026/",
+        "ap bio calculator 2026"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 25
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-score-calculator-2026/",
+        "ap gov raw score conversion"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 30
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-score-calculator-2026/",
+        "ap language and composition score calculator"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 76
+    },
+    {
+      "keys": [
+        "https://apscorecalculator.store/ap-score-calculator-2026/",
+        "ap score calculator 2026"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 4
+    },
+    {
+      "keys": [
+        "https://www.apscorecalculator.store/",
+        "ap calculator"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 59
+    },
+    {
+      "keys": [
+        "https://www.apscorecalculator.store/",
+        "ap lang score calculator 2024"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 60
+    },
+    {
+      "keys": [
+        "https://www.apscorecalculator.store/",
+        "ap psych calculator"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 85
+    },
+    {
+      "keys": [
+        "https://www.apscorecalculator.store/",
+        "ap psychology calculator"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 91
+    },
+    {
+      "keys": [
+        "https://www.apscorecalculator.store/",
+        "ap score predictor"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 100
+    },
+    {
+      "keys": [
+        "https://www.apscorecalculator.store/",
+        "apush ap test calculator"
+      ],
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "position": 55
+    }
+  ]
+}

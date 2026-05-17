@@ -43,6 +43,7 @@ html[data-theme=dark] .priority-card{background:color-mix(in srgb,var(--surface)
 @media(max-width:980px){.priority-subjects{grid-template-columns:repeat(2,minmax(0,1fr))}.mini-hub-grid{grid-template-columns:1fr 1fr}.grouped-subject-finder .matrix-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){.priority-subjects,.mini-hub-grid,.grouped-subject-finder .matrix-grid{grid-template-columns:1fr!important}.priority-card{min-height:auto}}
 
+.target-score-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:0;padding:0;list-style:none}.target-score-list li{display:grid;gap:7px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 14px 34px rgba(20,32,51,.07)}.target-score-list strong{font-size:1.15rem}.target-score-list span{color:var(--muted)}.target-score-list em{font-style:normal;color:var(--teal);font-weight:900;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em}.subject-method .seo-support-grid,.target-score-copy .target-score-list,.discovery-boost .related-grid{margin-top:12px}html[data-theme=dark] .target-score-list li{background:color-mix(in srgb,var(--surface) 90%,#020617);box-shadow:0 18px 44px rgba(0,0,0,.25)}@media(max-width:760px){.target-score-list{grid-template-columns:1fr}}
 /* v7 hub-page layout repair */
 .hub-hero{grid-template-columns:minmax(0,1.05fr) minmax(300px,.72fr);gap:24px;align-items:center;padding-top:clamp(34px,5vw,64px);padding-bottom:clamp(28px,4vw,52px)}
 .hub-hero .hero-copy-block{max-width:780px}.hub-hero .hero-copy-block h1{max-width:11.5ch}.hub-hero .hero-copy-block p{max-width:68ch}
@@ -54,6 +55,11 @@ html[data-theme=dark] .priority-card{background:color-mix(in srgb,var(--surface)
 @media(max-width:1120px){.hub-directory .matrix-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}.hub-hero{grid-template-columns:1fr}.hub-hero .hero-copy-block h1{max-width:14ch}.hub-hero .hero-panel{max-width:520px}}
 @media(max-width:760px){.hub-directory .matrix-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.intro-strip{display:grid!important}.intro-strip .pill-row{justify-content:flex-start}.hub-directory .matrix-card{min-height:auto}.hub-hero .hero-copy-block h1{max-width:none}}
 @media(max-width:520px){.hub-directory .matrix-grid{grid-template-columns:1fr!important}.hub-hero{padding-top:28px}.hub-hero .hero-panel strong{font-size:3rem}}
+
+/* v8 preview readability: make action-card label/title/copy block-level so text does not visually concatenate */
+.result-action-card span{display:block;color:var(--muted);font-weight:900;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em}
+.result-action-card strong{display:block;margin:5px 0;font-size:1.05rem;line-height:1.25}
+.result-action-card p{margin:0;color:var(--muted);line-height:1.55}
 
 
 `;

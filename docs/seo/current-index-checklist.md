@@ -1,376 +1,315 @@
 # AP Score Calculator Current Index Checklist
 
-> Status: **filled with available GSC Pages + Performance data; URL Inspection canonical still not exported**  
+> Status: **closed for V8 P0/P1 planning with GSC API Performance + URL Inspection data**  
 > Production domain: `https://apscorecalculator.store`  
 > Sitemap: `https://apscorecalculator.store/sitemap.xml`  
 > Robots: `https://apscorecalculator.store/robots.txt`  
 > Canonical host policy: all canonical URLs should point to `https://apscorecalculator.store` clean URLs.  
-> Last public verification: 2026-05-16 via `curl -A Mozilla/5.0` from server; sitemap returned 22 URLs.  
-> Last GSC access: 2026-05-16 via VNC Chrome account `haresrosli2@gmail.com`, property `sc-domain:apscorecalculator.store`.  
+> Last public verification: 2026-05-17 via live sitemap fetch with browser User-Agent; sitemap returned 22 URLs.  
+> Last GSC API access: 2026-05-17 via OAuth refresh token, property `sc-domain:apscorecalculator.store`.  
 > Rule: **GSC is authoritative for index/crawl/performance status. Public `site:` search, local build success, sitemap generation, and HTTP 200 are supporting evidence only.**
 
-## GSC evidence captured on 2026-05-16
+## GSC evidence captured on 2026-05-17
 
-### Overview / Performance
+### API snapshot files
 
-- Search type: Web
-- Visible report window: current GSC 3-month report; chart dates shown `2026/5/8` to `2026/5/13`
-- Last updated: 4 hours before capture
-- Total clicks: `2`
-- Total impressions: `80`
-- Average CTR: `2.5%`
-- Average position: `26.4`
+- Markdown: `docs/seo/gsc-url-inspection-snapshot-2026-05-17.md`
+- Normalized JSON: `docs/seo/gsc-url-inspection-snapshot-2026-05-17.json`
+- Source API commands: `/root/.hermes/scripts/gsc_api.py performance ...` and `/root/.hermes/scripts/gsc_api.py inspect-file ...`
 
-### Top visible queries
+### URL Inspection summary
 
-- `ap psych score calculator 2026` — clicks `1`, impressions `1`
-- `ap gov scoring calculator` — clicks `0`, impressions `3`
-- `ap gov 2026 calculator` — clicks `0`, impressions `2`
-- `ap gov curve` — clicks `0`, impressions `2`
-- `ap score calculator 2026` — clicks `0`, impressions `1`
-- `ap bio calculator 2026` — clicks `0`, impressions `1`
-- `ap gov raw score conversion` — clicks `0`, impressions `1`
-- `ap score calculator gov` — clicks `0`, impressions `1`
-- `ap gov calculator score` — clicks `0`, impressions `1`
-- `ap us gov score calculator` — clicks `0`, impressions `1`
+- Sitemap URLs inspected: `22`
+- Submitted and indexed / PASS: `13`
+- Crawled but not indexed: `2`
+- URL unknown to Google: `7`
+- Canonical conflicts found: `0` for crawled URLs with canonical data
+- Robots/indexing blockers found: `0` on crawled URLs
 
-### Performance by page
+### Current indexed URLs
 
-- `https://apscorecalculator.store/ap-gov-score-calculator/` — clicks `1`, impressions `29`
-- `https://apscorecalculator.store/` — clicks `1`, impressions `10`
-- `https://apscorecalculator.store/ap-score-calculator-2026/` — clicks `0`, impressions `51`
-- `https://apscorecalculator.store/apush-score-calculator/` — clicks `0`, impressions `9`
-- `https://apscorecalculator.store/ap-psychology-score-calculator/` — clicks `0`, impressions `8`
-- `https://apscorecalculator.store/ap-lang-score-calculator/` — clicks `0`, impressions `8`
-- `https://apscorecalculator.store/ap-chemistry-score-calculator/` — clicks `0`, impressions `7`
-- `https://apscorecalculator.store/ap-biology-score-calculator/` — clicks `0`, impressions `6`
-- `https://apscorecalculator.store/ap-statistics-score-calculator/` — clicks `0`, impressions `6`
-- `https://apscorecalculator.store/ap-lit-score-calculator/` — clicks `0`, impressions `6`
-- `https://www.apscorecalculator.store/` — clicks `0`, impressions `6`
-- `http://www.apscorecalculator.store/` — clicks `0`, impressions `1`
+- `https://apscorecalculator.store/` — `Submitted and indexed`, last crawl `2026-05-16T02:24:49Z`, Google canonical `https://apscorecalculator.store/`, clicks/impressions `1`/`4`
+- `https://apscorecalculator.store/ap-score-calculator-2026/` — `Submitted and indexed`, last crawl `2026-05-15T15:18:42Z`, Google canonical `https://apscorecalculator.store/ap-score-calculator-2026/`, clicks/impressions `0`/`4`
+- `https://apscorecalculator.store/apush-score-calculator/` — `Submitted and indexed`, last crawl `2026-05-09T17:27:26Z`, Google canonical `https://apscorecalculator.store/apush-score-calculator/`, clicks/impressions `0`/`0`
+- `https://apscorecalculator.store/ap-chemistry-score-calculator/` — `Submitted and indexed`, last crawl `2026-05-15T10:21:45Z`, Google canonical `https://apscorecalculator.store/ap-chemistry-score-calculator/`, clicks/impressions `0`/`0`
+- `https://apscorecalculator.store/ap-biology-score-calculator/` — `Submitted and indexed`, last crawl `2026-05-09T17:25:25Z`, Google canonical `https://apscorecalculator.store/ap-biology-score-calculator/`, clicks/impressions `0`/`0`
+- `https://apscorecalculator.store/ap-gov-score-calculator/` — `Submitted and indexed`, last crawl `2026-05-15T07:45:42Z`, Google canonical `https://apscorecalculator.store/ap-gov-score-calculator/`, clicks/impressions `0`/`22`
+- `https://apscorecalculator.store/ap-statistics-score-calculator/` — `Submitted and indexed`, last crawl `2026-05-09T17:25:25Z`, Google canonical `https://apscorecalculator.store/ap-statistics-score-calculator/`, clicks/impressions `0`/`0`
+- `https://apscorecalculator.store/ap-psychology-score-calculator/` — `Submitted and indexed`, last crawl `2026-05-14T22:46:45Z`, Google canonical `https://apscorecalculator.store/ap-psychology-score-calculator/`, clicks/impressions `0`/`0`
+- `https://apscorecalculator.store/ap-lit-score-calculator/` — `Submitted and indexed`, last crawl `2026-05-15T11:46:12Z`, Google canonical `https://apscorecalculator.store/ap-lit-score-calculator/`, clicks/impressions `0`/`0`
+- `https://apscorecalculator.store/ap-macroeconomics-score-calculator/` — `Submitted and indexed`, last crawl `2026-05-15T11:08:42Z`, Google canonical `https://apscorecalculator.store/ap-macroeconomics-score-calculator/`, clicks/impressions `0`/`0`
+- `https://apscorecalculator.store/ap-microeconomics-score-calculator/` — `Submitted and indexed`, last crawl `2026-05-16T07:53:06Z`, Google canonical `https://apscorecalculator.store/ap-microeconomics-score-calculator/`, clicks/impressions `0`/`0`
+- `https://apscorecalculator.store/ap-human-geography-score-calculator/` — `Submitted and indexed`, last crawl `2026-05-16T05:32:44Z`, Google canonical `https://apscorecalculator.store/ap-human-geography-score-calculator/`, clicks/impressions `0`/`0`
+- `https://apscorecalculator.store/disclaimer/` — `Submitted and indexed`, last crawl `2026-05-16T23:36:06Z`, Google canonical `https://apscorecalculator.store/disclaimer/`, clicks/impressions `0`/`0`
 
-### Indexing → Pages
+### Current non-indexed / unknown URLs
 
-- Filter: `https://apscorecalculator.store/sitemap.xml`
-- Sitemap last updated in GSC: `2026/5/11`
-- Indexed pages count: `12`
-- Not indexed count: `6`
-- Not indexed reasons:
-  - `网页会自动重定向` / page with redirect: `1`
-  - `已发现 - 尚未编入索引` / discovered currently not indexed: `4`
-  - `已抓取 - 尚未编入索引` / crawled currently not indexed: `1`
-  - `备用网页（有适当的规范标记）` / alternate page with proper canonical: `0`
+- `https://apscorecalculator.store/ap-lang-score-calculator/` — `Crawled - currently not indexed`, last crawl `2026-05-14T06:47:57Z`, Google canonical `https://apscorecalculator.store/ap-lang-score-calculator/`, clicks/impressions `0`/`0`
+- `https://apscorecalculator.store/ap-calculus-ab-score-calculator/` — `Crawled - currently not indexed`, last crawl `2026-05-13T14:26:18Z`, Google canonical `https://apscorecalculator.store/ap-calculus-ab-score-calculator/`, clicks/impressions `0`/`0`
+- `https://apscorecalculator.store/ap-world-history-score-calculator/` — `URL is unknown to Google`, last crawl `N/A`, Google canonical `N/A`, clicks/impressions `0`/`0`
+- `https://apscorecalculator.store/ap-csp-score-calculator/` — `URL is unknown to Google`, last crawl `N/A`, Google canonical `N/A`, clicks/impressions `0`/`0`
+- `https://apscorecalculator.store/ap-physics-1-score-calculator/` — `URL is unknown to Google`, last crawl `N/A`, Google canonical `N/A`, clicks/impressions `0`/`0`
+- `https://apscorecalculator.store/ap-physics-2-score-calculator/` — `URL is unknown to Google`, last crawl `N/A`, Google canonical `N/A`, clicks/impressions `0`/`0`
+- `https://apscorecalculator.store/privacy/` — `URL is unknown to Google`, last crawl `N/A`, Google canonical `N/A`, clicks/impressions `0`/`0`
+- `https://apscorecalculator.store/terms/` — `URL is unknown to Google`, last crawl `N/A`, Google canonical `N/A`, clicks/impressions `0`/`0`
+- `https://apscorecalculator.store/contact/` — `URL is unknown to Google`, last crawl `N/A`, Google canonical `N/A`, clicks/impressions `0`/`0`
 
-### Indexed examples
+## Key corrections from URL Inspection
 
-- `http://www.apscorecalculator.store/` — last crawl `2026-05-12`
-- `https://www.apscorecalculator.store/` — last crawl `2026-05-12`
-- `https://apscorecalculator.store/ap-psychology-score-calculator/` — last crawl `2026-05-10`
-- `https://apscorecalculator.store/ap-gov-score-calculator/` — last crawl `2026-05-10`
-- `https://apscorecalculator.store/ap-lit-score-calculator/` — last crawl `2026-05-10`
-- `https://apscorecalculator.store/apush-score-calculator/` — last crawl `2026-05-10`
-- `https://apscorecalculator.store/ap-lang-score-calculator/` — last crawl `2026-05-10`
-- `https://apscorecalculator.store/ap-biology-score-calculator/` — last crawl `2026-05-10`
-- `https://apscorecalculator.store/ap-statistics-score-calculator/` — last crawl `2026-05-10`
-- `https://apscorecalculator.store/ap-calculus-ab-score-calculator/` — last crawl `2026-05-10`
-- `https://apscorecalculator.store/ap-chemistry-score-calculator/` — last crawl `2026-05-10`
-- `https://apscorecalculator.store/ap-score-calculator-2026/` — last crawl `2026-05-10`
+- Homepage conflict resolved: `https://apscorecalculator.store/` is `Submitted and indexed`; Google-selected canonical equals user canonical.
+- The old UI-only statement that homepage exact URL was crawled-not-indexed is superseded by the API snapshot.
+- AP Lang and AP Calculus AB are crawled and technically valid, but currently not indexed. This is a content/quality/internal-link follow-up, not a canonical/robots bug.
+- Newer expansion pages AP World History, AP CSP, Physics 1/2 are unknown to Google. Macro, Micro, Human Geography are already indexed.
+- Legal/support: Disclaimer is indexed; Privacy, Terms, Contact are unknown to Google.
 
-### Not-indexed / excluded examples
+## Priority next actions
 
-- `http://apscorecalculator.store/` — reason `page with redirect / 网页会自动重定向`, last crawl `2026-05-12`
-- `https://apscorecalculator.store/contact.html` — reason `discovered - currently not indexed / 已发现 - 尚未编入索引`, last crawl `N/A`
-- `https://apscorecalculator.store/disclaimer.html` — reason `discovered - currently not indexed / 已发现 - 尚未编入索引`, last crawl `N/A`
-- `https://apscorecalculator.store/privacy.html` — reason `discovered - currently not indexed / 已发现 - 尚未编入索引`, last crawl `N/A`
-- `https://apscorecalculator.store/terms.html` — reason `discovered - currently not indexed / 已发现 - 尚未编入索引`, last crawl `N/A`
-- `https://apscorecalculator.store/` — reason `crawled - currently not indexed / 已抓取 - 尚未编入索引`, last crawl `2026-05-12`
+1. Request indexing / strengthen internal links for AP Lang and AP Calculus AB after content refresh if needed.
+2. Prioritize discovery/indexing for AP World History, AP CSP, AP Physics 1, AP Physics 2 if these remain in the V8 target set.
+3. Keep Privacy, Terms, Contact in sitemap and footer; request indexing only if trust/compliance visibility becomes important.
+4. Use `gsc-url-inspection-snapshot-2026-05-17.json` as the baseline for the next SEO iteration and compare future snapshots against it.
 
-## Public technical checks already verified
+## Per-URL checklist
 
-- `/` → 200, canonical `https://apscorecalculator.store/`
-- `/ap-score-calculator-2026/` → 200, canonical `https://apscorecalculator.store/ap-score-calculator-2026/`
-- `/sitemap.xml` → 200, 22 URLs
-- `/robots.txt` → 200
-- Clean legal/support URLs are present: `/privacy/`, `/terms/`, `/disclaimer/`, `/contact/`
+### https://apscorecalculator.store/
+- GSC indexed status: `Submitted and indexed` / verdict `PASS`
+- Last crawl date: `2026-05-16T02:24:49Z`
+- Query impressions: `4`
+- Clicks: `1`
+- Exclusion reason, if any: `none`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `https://apscorecalculator.store/`
+- User canonical: `https://apscorecalculator.store/`
+- Top page queries: ap psych score calculator 2026 (1), ap score calculator (1), ap us history score calculator (1)
 
-## URL checklist
+### https://apscorecalculator.store/ap-score-calculator-2026/
+- GSC indexed status: `Submitted and indexed` / verdict `PASS`
+- Last crawl date: `2026-05-15T15:18:42Z`
+- Query impressions: `4`
+- Clicks: `0`
+- Exclusion reason, if any: `none`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `https://apscorecalculator.store/ap-score-calculator-2026/`
+- User canonical: `https://apscorecalculator.store/ap-score-calculator-2026/`
+- Top page queries: ap bio calculator 2026 (1), ap gov raw score conversion (1), ap language and composition score calculator (1)
 
-### Core pages
+### https://apscorecalculator.store/apush-score-calculator/
+- GSC indexed status: `Submitted and indexed` / verdict `PASS`
+- Last crawl date: `2026-05-09T17:27:26Z`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `none`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `https://apscorecalculator.store/apush-score-calculator/`
+- User canonical: `https://apscorecalculator.store/apush-score-calculator/`
+- Top page queries: none
 
-#### Home
-- URL: `https://apscorecalculator.store/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: conflicting: canonical home appears in Performance, but GSC Pages also lists exact URL as crawled-not-indexed; www/http variants are indexed
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: 2026-05-12 for exact URL exclusion and www variants
-- Clicks: 1 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 10 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: crawled - currently not indexed for exact canonical home; http root redirects; www variants indexed
-- Next action: run URL Inspection for exact canonical home; confirm canonical/host consolidation; request indexing if Google-selected canonical is correct
+### https://apscorecalculator.store/ap-lang-score-calculator/
+- GSC indexed status: `Crawled - currently not indexed` / verdict `NEUTRAL`
+- Last crawl date: `2026-05-14T06:47:57Z`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `Crawled - currently not indexed`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `https://apscorecalculator.store/ap-lang-score-calculator/`
+- User canonical: `https://apscorecalculator.store/ap-lang-score-calculator/`
+- Top page queries: none
 
-#### AP Calculator Hub 2026
-- URL: `https://apscorecalculator.store/ap-score-calculator-2026/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: yes — GSC Pages → Indexed example
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: 2026-05-10
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 51 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: none in indexed examples
-- Next action: monitor performance; no request-indexing action needed
+### https://apscorecalculator.store/ap-chemistry-score-calculator/
+- GSC indexed status: `Submitted and indexed` / verdict `PASS`
+- Last crawl date: `2026-05-15T10:21:45Z`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `none`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `https://apscorecalculator.store/ap-chemistry-score-calculator/`
+- User canonical: `https://apscorecalculator.store/ap-chemistry-score-calculator/`
+- Top page queries: none
 
-### Subject calculators
+### https://apscorecalculator.store/ap-calculus-ab-score-calculator/
+- GSC indexed status: `Crawled - currently not indexed` / verdict `NEUTRAL`
+- Last crawl date: `2026-05-13T14:26:18Z`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `Crawled - currently not indexed`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `https://apscorecalculator.store/ap-calculus-ab-score-calculator/`
+- User canonical: `https://apscorecalculator.store/ap-calculus-ab-score-calculator/`
+- Top page queries: none
 
-#### APUSH Score Calculator
-- URL: `https://apscorecalculator.store/apush-score-calculator/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: yes — GSC Pages → Indexed example
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: 2026-05-10
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 9 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: none in indexed examples
-- Next action: monitor performance; no request-indexing action needed
+### https://apscorecalculator.store/ap-biology-score-calculator/
+- GSC indexed status: `Submitted and indexed` / verdict `PASS`
+- Last crawl date: `2026-05-09T17:25:25Z`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `none`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `https://apscorecalculator.store/ap-biology-score-calculator/`
+- User canonical: `https://apscorecalculator.store/ap-biology-score-calculator/`
+- Top page queries: none
 
-#### AP Lang Score Calculator
-- URL: `https://apscorecalculator.store/ap-lang-score-calculator/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: yes — GSC Pages → Indexed example
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: 2026-05-10
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 8 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: none in indexed examples
-- Next action: monitor performance; no request-indexing action needed
+### https://apscorecalculator.store/ap-gov-score-calculator/
+- GSC indexed status: `Submitted and indexed` / verdict `PASS`
+- Last crawl date: `2026-05-15T07:45:42Z`
+- Query impressions: `22`
+- Clicks: `0`
+- Exclusion reason, if any: `none`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `https://apscorecalculator.store/ap-gov-score-calculator/`
+- User canonical: `https://apscorecalculator.store/ap-gov-score-calculator/`
+- Top page queries: ap gov calculator (3), ap gov score calculator (3), ap gov scoring calculator (3)
 
-#### AP Chemistry Score Calculator
-- URL: `https://apscorecalculator.store/ap-chemistry-score-calculator/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: yes — GSC Pages → Indexed example
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: 2026-05-10
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 7 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: none in indexed examples
-- Next action: monitor performance; no request-indexing action needed
+### https://apscorecalculator.store/ap-statistics-score-calculator/
+- GSC indexed status: `Submitted and indexed` / verdict `PASS`
+- Last crawl date: `2026-05-09T17:25:25Z`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `none`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `https://apscorecalculator.store/ap-statistics-score-calculator/`
+- User canonical: `https://apscorecalculator.store/ap-statistics-score-calculator/`
+- Top page queries: none
 
-#### AP Calculus AB Score Calculator
-- URL: `https://apscorecalculator.store/ap-calculus-ab-score-calculator/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: yes — GSC Pages → Indexed example
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: 2026-05-10
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: none in indexed examples
-- Next action: monitor performance; no request-indexing action needed
+### https://apscorecalculator.store/ap-psychology-score-calculator/
+- GSC indexed status: `Submitted and indexed` / verdict `PASS`
+- Last crawl date: `2026-05-14T22:46:45Z`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `none`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `https://apscorecalculator.store/ap-psychology-score-calculator/`
+- User canonical: `https://apscorecalculator.store/ap-psychology-score-calculator/`
+- Top page queries: none
 
-#### AP Biology Score Calculator
-- URL: `https://apscorecalculator.store/ap-biology-score-calculator/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: yes — GSC Pages → Indexed example
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: 2026-05-10
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 6 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: none in indexed examples
-- Next action: monitor performance; no request-indexing action needed
+### https://apscorecalculator.store/ap-lit-score-calculator/
+- GSC indexed status: `Submitted and indexed` / verdict `PASS`
+- Last crawl date: `2026-05-15T11:46:12Z`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `none`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `https://apscorecalculator.store/ap-lit-score-calculator/`
+- User canonical: `https://apscorecalculator.store/ap-lit-score-calculator/`
+- Top page queries: none
 
-#### AP Gov Score Calculator
-- URL: `https://apscorecalculator.store/ap-gov-score-calculator/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: yes — GSC Pages → Indexed example
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: 2026-05-10
-- Clicks: 1 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 29 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: none in indexed examples
-- Next action: monitor performance; no request-indexing action needed
+### https://apscorecalculator.store/ap-world-history-score-calculator/
+- GSC indexed status: `URL is unknown to Google` / verdict `NEUTRAL`
+- Last crawl date: `N/A`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `URL is unknown to Google`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `N/A`
+- User canonical: `N/A`
+- Top page queries: none
 
-#### AP Statistics Score Calculator
-- URL: `https://apscorecalculator.store/ap-statistics-score-calculator/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: yes — GSC Pages → Indexed example
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: 2026-05-10
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 6 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: none in indexed examples
-- Next action: monitor performance; no request-indexing action needed
+### https://apscorecalculator.store/ap-csp-score-calculator/
+- GSC indexed status: `URL is unknown to Google` / verdict `NEUTRAL`
+- Last crawl date: `N/A`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `URL is unknown to Google`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `N/A`
+- User canonical: `N/A`
+- Top page queries: none
 
-#### AP Psychology Score Calculator
-- URL: `https://apscorecalculator.store/ap-psychology-score-calculator/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: yes — GSC Pages → Indexed example
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: 2026-05-10
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 8 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: none in indexed examples
-- Next action: monitor performance; no request-indexing action needed
+### https://apscorecalculator.store/ap-physics-1-score-calculator/
+- GSC indexed status: `URL is unknown to Google` / verdict `NEUTRAL`
+- Last crawl date: `N/A`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `URL is unknown to Google`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `N/A`
+- User canonical: `N/A`
+- Top page queries: none
 
-#### AP Lit Score Calculator
-- URL: `https://apscorecalculator.store/ap-lit-score-calculator/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: yes — GSC Pages → Indexed example
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: 2026-05-10
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 6 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: none in indexed examples
-- Next action: monitor performance; no request-indexing action needed
+### https://apscorecalculator.store/ap-physics-2-score-calculator/
+- GSC indexed status: `URL is unknown to Google` / verdict `NEUTRAL`
+- Last crawl date: `N/A`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `URL is unknown to Google`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `N/A`
+- User canonical: `N/A`
+- Top page queries: none
 
-#### AP World History Score Calculator
-- URL: `https://apscorecalculator.store/ap-world-history-score-calculator/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: not confirmed indexed in captured GSC data
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: unknown
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: not present in indexed examples or top Performance pages; no matching exclusion row captured for clean URL
-- Next action: URL Inspection; request indexing if content/canonical are valid
+### https://apscorecalculator.store/ap-macroeconomics-score-calculator/
+- GSC indexed status: `Submitted and indexed` / verdict `PASS`
+- Last crawl date: `2026-05-15T11:08:42Z`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `none`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `https://apscorecalculator.store/ap-macroeconomics-score-calculator/`
+- User canonical: `https://apscorecalculator.store/ap-macroeconomics-score-calculator/`
+- Top page queries: none
 
-#### AP CSP Score Calculator
-- URL: `https://apscorecalculator.store/ap-csp-score-calculator/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: not confirmed indexed in captured GSC data
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: unknown
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: not present in indexed examples or top Performance pages; no matching exclusion row captured for clean URL
-- Next action: URL Inspection; request indexing if content/canonical are valid
+### https://apscorecalculator.store/ap-microeconomics-score-calculator/
+- GSC indexed status: `Submitted and indexed` / verdict `PASS`
+- Last crawl date: `2026-05-16T07:53:06Z`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `none`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `https://apscorecalculator.store/ap-microeconomics-score-calculator/`
+- User canonical: `https://apscorecalculator.store/ap-microeconomics-score-calculator/`
+- Top page queries: none
 
-#### AP Physics 1 Score Calculator
-- URL: `https://apscorecalculator.store/ap-physics-1-score-calculator/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: not confirmed indexed in captured GSC data
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: unknown
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: not present in indexed examples or top Performance pages; no matching exclusion row captured for clean URL
-- Next action: URL Inspection; request indexing if content/canonical are valid
+### https://apscorecalculator.store/ap-human-geography-score-calculator/
+- GSC indexed status: `Submitted and indexed` / verdict `PASS`
+- Last crawl date: `2026-05-16T05:32:44Z`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `none`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `https://apscorecalculator.store/ap-human-geography-score-calculator/`
+- User canonical: `https://apscorecalculator.store/ap-human-geography-score-calculator/`
+- Top page queries: none
 
-#### AP Physics 2 Score Calculator
-- URL: `https://apscorecalculator.store/ap-physics-2-score-calculator/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: not confirmed indexed in captured GSC data
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: unknown
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: not present in indexed examples or top Performance pages; no matching exclusion row captured for clean URL
-- Next action: URL Inspection; request indexing if content/canonical are valid
+### https://apscorecalculator.store/privacy/
+- GSC indexed status: `URL is unknown to Google` / verdict `NEUTRAL`
+- Last crawl date: `N/A`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `URL is unknown to Google`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `N/A`
+- User canonical: `N/A`
+- Top page queries: none
 
-#### AP Macroeconomics Score Calculator
-- URL: `https://apscorecalculator.store/ap-macroeconomics-score-calculator/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: not confirmed indexed in captured GSC data
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: unknown
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: not present in indexed examples or top Performance pages; no matching exclusion row captured for clean URL
-- Next action: URL Inspection; request indexing if content/canonical are valid
+### https://apscorecalculator.store/terms/
+- GSC indexed status: `URL is unknown to Google` / verdict `NEUTRAL`
+- Last crawl date: `N/A`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `URL is unknown to Google`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `N/A`
+- User canonical: `N/A`
+- Top page queries: none
 
-#### AP Microeconomics Score Calculator
-- URL: `https://apscorecalculator.store/ap-microeconomics-score-calculator/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: not confirmed indexed in captured GSC data
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: unknown
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: not present in indexed examples or top Performance pages; no matching exclusion row captured for clean URL
-- Next action: URL Inspection; request indexing if content/canonical are valid
+### https://apscorecalculator.store/disclaimer/
+- GSC indexed status: `Submitted and indexed` / verdict `PASS`
+- Last crawl date: `2026-05-16T23:36:06Z`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `none`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `https://apscorecalculator.store/disclaimer/`
+- User canonical: `https://apscorecalculator.store/disclaimer/`
+- Top page queries: none
 
-#### AP Human Geography Score Calculator
-- URL: `https://apscorecalculator.store/ap-human-geography-score-calculator/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: not confirmed indexed in captured GSC data
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: unknown
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: not present in indexed examples or top Performance pages; no matching exclusion row captured for clean URL
-- Next action: URL Inspection; request indexing if content/canonical are valid
+### https://apscorecalculator.store/contact/
+- GSC indexed status: `URL is unknown to Google` / verdict `NEUTRAL`
+- Last crawl date: `N/A`
+- Query impressions: `0`
+- Clicks: `0`
+- Exclusion reason, if any: `URL is unknown to Google`
+- Sitemap discovered status: present in live sitemap snapshot used for inspection
+- Canonical selected by Google: `N/A`
+- User canonical: `N/A`
+- Top page queries: none
 
-### Legal/support pages
-
-#### Privacy
-- URL: `https://apscorecalculator.store/privacy/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: not confirmed indexed in captured GSC data
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: unknown
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: not present in indexed examples or top Performance pages; no matching exclusion row captured for clean URL
-- Next action: URL Inspection; request indexing if content/canonical are valid
-
-#### Terms
-- URL: `https://apscorecalculator.store/terms/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: not confirmed indexed in captured GSC data
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: unknown
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: not present in indexed examples or top Performance pages; no matching exclusion row captured for clean URL
-- Next action: URL Inspection; request indexing if content/canonical are valid
-
-#### Disclaimer
-- URL: `https://apscorecalculator.store/disclaimer/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: not confirmed indexed in captured GSC data
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: unknown
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: not present in indexed examples or top Performance pages; no matching exclusion row captured for clean URL
-- Next action: URL Inspection; request indexing if content/canonical are valid
-
-#### Contact
-- URL: `https://apscorecalculator.store/contact/`
-- Public HTTP: 200 expected from sitemap
-- GSC indexed: not confirmed indexed in captured GSC data
-- Google-selected canonical: not exported; needs URL Inspection for exact value
-- Last crawl: unknown
-- Clicks: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Impressions: 0 (Search results, current visible 3-month report, last updated 4h before capture)
-- Queries: see Performance query summary below; page-level query mapping not exported
-- Issue/exclusion: not present in indexed examples or top Performance pages; no matching exclusion row captured for clean URL
-- Next action: URL Inspection; request indexing if content/canonical are valid
-
-## Remaining URL Inspection workflow
-
-The checklist now contains GSC Pages and Performance data visible in the UI. The only still-unexported field is **Google-selected canonical per URL**, which normally requires URL Inspection one by one or Search Console URL Inspection API access.
-
-Priority inspection list:
-
-1. `https://apscorecalculator.store/` — resolve conflict between Performance visibility and exact URL exclusion.
-2. Clean legal URLs: `/privacy/`, `/terms/`, `/disclaimer/`, `/contact/` — confirm `.html` discovered URLs are stale and clean URLs are valid.
-3. Newer subject pages with zero impressions and no indexed example: AP World History, AP CSP, Physics 1/2, Macro/Micro, Human Geography.

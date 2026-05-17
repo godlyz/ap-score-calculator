@@ -1,0 +1,185 @@
+# AP Score Calculator V8 SEO Hardening Execution Plan
+
+> Status: approved to start implementation by Ningge on 2026-05-17  
+> Project: AP Score Calculator 2026  
+> Production: `https://apscorecalculator.store`  
+> Scope: post-launch SEO/content/internal-link hardening for the existing static AP calculator site  
+> Source evidence:
+> - `docs/research/ap-score-calculator-v8-competitor-gap-growth-brief.md`
+> - `docs/research/semrush-keyword-gap-summary-2026-05-16.md`
+> - `docs/research/ap-score-expanded-subject-keyword-validation.md`
+> - `docs/research/ap-score-top-competitor-ux-teardown.md`
+> - `docs/research/ap-score-official-source-evidence-pack-2026-05-17.md`
+> - `docs/seo/current-index-checklist.md`
+> - `docs/seo/gsc-url-inspection-snapshot-2026-05-17.md`
+
+## 1. V8 decision
+
+Proceed with a narrow **V8 P0 SEO hardening sprint**.
+
+This is not a new-product sprint and not a broad education-platform expansion. The goal is to improve the existing AP calculator hub and subject pages using the now-closed V8 P0/P1 competitor, Semrush, and GSC evidence baseline.
+
+## 2. Goals
+
+1. Strengthen the hub page for generic calculator intent.
+2. Improve content quality and internal links for pages that are crawled but not indexed.
+3. Add reusable subject-page modules that make each calculator page more useful without changing the approved calculator mechanics.
+4. Help Google discover AP World, AP CSP, AP Physics 1, and AP Physics 2 through stronger hub/subject internal links.
+5. Preserve current static, no-login, no-backend product behavior.
+
+## 3. Non-goals / hard exclusions
+
+Do **not** include these in V8 P0 unless Ningge separately approves a new scope:
+
+- No login, user accounts, dashboard, saved scores, database, or paid API.
+- No Stripe/PayPal/payment work.
+- No SAT/ACT, grade calculator, final grade calculator, or broad practice-test product line.
+- No new heavy content pages such as `/ap-score-distribution/` or `/ap-exam-schedule/` in P0.
+- No major visual redesign before preview review.
+- No production deploy before preview QA and Ningge approval.
+
+## 4. P0 implementation scope
+
+### P0.1 Hub exact-match optimization
+
+Target URL:
+
+- `/ap-score-calculator-2026/`
+
+Target terms:
+
+- `ap score calculator`
+- `ap calculator`
+- `ap exam calculator`
+- `ap test calculator`
+- `ap grade calculator`
+
+Required changes:
+
+- Move or keep subject chooser / calculator selection above the fold.
+- Strengthen H1/title/meta around “AP Score Calculator 2026”.
+- Add natural FAQ variants for generic calculator terms.
+- Add exact-but-natural internal anchors to all subject calculators.
+- Highlight AP Lang and AP Calculus AB as “crawled but needs stronger content” follow-up targets without exposing that internal SEO state to users.
+- Highlight AP World and AP Physics 1 as high-priority discovery targets through normal user-facing copy.
+
+### P0.2 Crawled-not-indexed content quality pass
+
+Target URLs:
+
+- `/ap-lang-score-calculator/`
+- `/ap-calculus-ab-score-calculator/`
+
+GSC state:
+
+- `Crawled - currently not indexed`
+- Google canonical equals user canonical
+- No robots/indexing blocker
+
+Required changes:
+
+- Add “How this AP [subject] score calculator works”.
+- Add “What raw score do I need for a 3, 4, or 5?” guidance.
+- Add scoring assumptions / unofficial disclaimer close to the calculator/result context.
+- Add subject-specific FAQ variants.
+- Add related calculators with useful anchors.
+
+AP Lang keyword coverage:
+
+- `ap lang score calculator`
+- `ap language and composition score calculator`
+- `ap english language score calculator`
+
+AP Calculus AB keyword coverage:
+
+- `ap calc ab score calculator`
+- `ap calculus ab score calculator`
+- `ap calculus ab calculator`
+
+### P0.3 Visible weak / high-demand subject cohort
+
+Target URLs:
+
+- `/ap-gov-score-calculator/`
+- `/ap-psychology-score-calculator/`
+- `/apush-score-calculator/`
+- `/ap-chemistry-score-calculator/`
+- `/ap-biology-score-calculator/`
+- `/ap-statistics-score-calculator/`
+- `/ap-lit-score-calculator/`
+
+Required changes:
+
+- Use the same reusable content modules from P0.2 where safe.
+- Add subject-specific FAQ variants where data already exists.
+- Add related calculator links.
+- Keep calculator above the fold and preserve existing dynamic study-plan behavior.
+
+## 5. P1-light implementation if cheap during template work
+
+Target URLs:
+
+- `/ap-world-history-score-calculator/`
+- `/ap-csp-score-calculator/`
+- `/ap-physics-1-score-calculator/`
+- `/ap-physics-2-score-calculator/`
+- `/ap-macroeconomics-score-calculator/`
+- `/ap-microeconomics-score-calculator/`
+- `/ap-human-geography-score-calculator/`
+
+Current GSC state for AP World/CSP/Physics 1/Physics 2:
+
+- URL unknown to Google
+
+Required changes:
+
+- Ensure these pages remain in sitemap.
+- Strengthen hub and related-calculator links to them.
+- Add reusable “how it works / target score / assumptions / related calculators” sections if generated by the shared subject template.
+- Do not over-promote AP Physics 2 before demand signal improves.
+
+Priority order:
+
+1. AP World History
+2. AP Physics 1
+3. AP CSP
+4. AP Physics 2
+
+## 6. Implementation constraints
+
+- Preserve current static build architecture.
+- Preserve current calculator scoring behavior.
+- Preserve theme toggle, result panel, dynamic study-plan, canonical, sitemap, robots, schema, legal clean URLs.
+- Keep public titles in the preferred 40–60 character range where possible.
+- Avoid keyword stuffing; all keyword variants must appear in natural explanatory copy or FAQ.
+- Use College Board trademark disclaimer language; do not imply official affiliation.
+
+## 7. QA / acceptance criteria
+
+Before showing preview:
+
+- `npm run build` passes.
+- `npm test` passes.
+- Generated title audit passes or exceptions are documented.
+- `/`, `/ap-score-calculator-2026/`, `/ap-lang-score-calculator/`, `/ap-calculus-ab-score-calculator/`, `/ap-world-history-score-calculator/`, `/ap-physics-1-score-calculator/` load in preview.
+- Calculator result panel still updates with representative values.
+- Dynamic study plan still updates after input changes.
+- Theme toggle still works.
+- No horizontal overflow on representative desktop/mobile widths.
+- `/sitemap.xml` and `/robots.txt` exist and include expected public routes.
+- No production deployment before Ningge preview approval.
+
+## 8. Post-preview / post-deploy SEO follow-up
+
+After approval and production deployment:
+
+1. Verify production HTML/CSS/JS asset version with cache-buster.
+2. Run GSC URL Inspection for changed P0 URLs.
+3. Request indexing for:
+   - `/ap-lang-score-calculator/`
+   - `/ap-calculus-ab-score-calculator/`
+   - `/ap-world-history-score-calculator/`
+   - `/ap-csp-score-calculator/`
+   - `/ap-physics-1-score-calculator/`
+   - `/ap-physics-2-score-calculator/`
+4. Refresh GSC snapshot after crawl delay and update `docs/seo/current-index-checklist.md`.

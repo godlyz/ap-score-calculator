@@ -38,7 +38,7 @@ function pageShell({ title, description, path, body, schema = [], nav = 'default
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="${escapeHtml(title)}">
   <meta name="twitter:description" content="${escapeHtml(description)}">
-  <link rel="stylesheet" href="/assets/styles.css?v=v7-growth-seo-c331a27">
+  <link rel="stylesheet" href="/assets/styles.css?v=v8-seo-hardening">
   ${schemaTags}
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-8YKL96LGT4"></script>
 </head>
@@ -46,7 +46,7 @@ function pageShell({ title, description, path, body, schema = [], nav = 'default
   ${siteHeader(nav, path)}
   <main>${body}</main>
   ${siteFooter()}
-  <script type="module" src="/assets/app.js?v=v7-growth-seo-c331a27"></script>
+  <script type="module" src="/assets/app.js?v=v8-seo-hardening"></script>
 </body>
 </html>`;
 }
@@ -447,6 +447,8 @@ function homepageFaqs() {
 function hubFaqs() {
   return [
     { q: 'What is the AP Score Calculator 2026 hub?', a: 'It is a directory of free, unofficial AP subject calculators. Each subject page estimates an AP score from practice-test section points and shows the gap to 3, 4, and 5.' },
+    { q: 'Can I use this as an AP grade calculator?', a: 'Yes for practice planning. AP grade calculator is a common way students describe turning raw AP practice-test points into an estimated 1–5 AP score, but this is not an official grade report.' },
+    { q: 'Is this an AP test calculator or AP exam calculator?', a: 'Yes. Use it after a practice AP test or AP exam-style section set. Pick the subject page, enter raw points, and read the estimated score plus target gap.' },
     { q: 'How do I find the APUSH score calculator?', a: 'APUSH is highlighted under Social Science, linked from the main navigation, and promoted as the strongest single-subject route on the homepage.' },
     { q: 'Do all calculators use the same formula?', a: 'No. Each calculator uses its own subject structure, cutoffs, section labels, confidence language, and risk note.' },
     { q: 'Are essay-heavy subjects less certain?', a: 'Yes. AP Lang, AP Lit, and other writing-heavy calculators use conservative confidence language because rubric scoring can vary by prompt and reader.' },
@@ -466,7 +468,7 @@ const subjectSeoProfiles = {
     searchIntent: 'AP Lang users usually compare MCQ accuracy with three essay rubric scores and need a conservative read near the 4/5 boundary.',
     practiceUse: 'Use it after a synthesis, rhetorical analysis, or argument essay set to see whether rubric gains matter more than MCQ gains.',
     improvementAngle: 'If the estimate is close, improve the lowest essay rubric row first; one extra point across multiple essays can move the composite quickly.',
-    description: 'Free AP Lang score calculator for 2026. Estimate AP English Language results from MCQ and essay rubric points with conservative cutoff guidance.'
+    description: 'Free AP Lang score calculator for 2026. Estimate AP English Language and Composition results from MCQ and essay rubric points with conservative cutoff guidance.'
   },
   'ap-lit': {
     searchIntent: 'AP Lit students need to combine MCQ performance with poetry, prose, and literary argument rubric scores without overtrusting one practice prompt.',
@@ -580,17 +582,22 @@ function subjectFaqs(subject) {
   return [
     { q: `Is this ${subject.shortName} calculator official?`, a: `No. This ${subject.shortName} calculator is unofficial and independent. It is designed for practice-test planning, not official College Board score reporting.` },
     { q: `Which ${subject.shortName} points should I enter?`, a: `Enter raw practice scores for ${sectionNames}. The calculator clamps values to each section range and converts them into an estimated composite.` },
-    { q: `What score do I need for a 5 on ${subject.shortName}?`, a: `Use the gap-to-5 result after entering your section points. The shown gap is a planning estimate, so build extra buffer if you are close to the cutoff.` },
+    { q: `What score do I need for a 3, 4, or 5 on ${subject.shortName}?`, a: `Use the live gap-to-target result after entering your section points, then compare it with the raw score target guide below the calculator. The shown gap is a planning estimate, so build extra buffer if you are close to the cutoff.` },
+    { q: `How does this ${subject.shortName} score calculator work?`, a: `${subject.structure} ${subject.assumptions}` },
     { q: `How should I use this ${subject.shortName} estimate?`, a: profile.practiceUse },
     { q: category === 'English' ? 'Why are essay-heavy estimates conservative?' : `Why can ${subject.shortName} cutoffs vary?`, a: `${confidenceCopy(subject)} ${subject.riskNote}` }
   ];
 }
 
 function relatedSubjects(subject) {
+  const explicit = (subject.relatedSlugs || [])
+    .map((slug) => subjects.find((item) => item.slug === slug))
+    .filter(Boolean)
+    .filter((item) => item.slug !== subject.slug);
   const sameGroup = subjects.filter((item) => item.slug !== subject.slug && subjectCategory(item) === subjectCategory(subject));
-  const featured = subjects.filter((item) => item.slug !== subject.slug && ['apush', 'ap-biology', 'ap-lang'].includes(item.slug));
+  const featured = subjects.filter((item) => item.slug !== subject.slug && ['apush', 'ap-biology', 'ap-lang', 'ap-calculus-ab', 'ap-world-history', 'ap-physics-1'].includes(item.slug));
   const fallback = subjects.filter((item) => item.slug !== subject.slug);
-  const merged = [...sameGroup, ...featured, ...fallback];
+  const merged = [...explicit, ...sameGroup, ...featured, ...fallback];
   const seen = new Set();
   return merged.filter((item) => {
     if (seen.has(item.slug)) return false;
@@ -629,6 +636,61 @@ function hubInternalLinksSection() {
     return `<article class="hub-link-lane"><h3>${group} calculators</h3><div>${cards}</div></article>`;
   }).join('');
   return `<section class="section hub-link-clusters" aria-label="AP calculator internal links"><div class="section-heading"><p class="eyebrow">Internal calculator paths</p><h2>Jump by exam family</h2><p>These category links make the hub easier to crawl and easier for students to browse without changing any calculator function.</p></div><div class="hub-link-grid">${lanes}</div></section>`;
+}
+
+function subjectCalculatorKeyword(subject) {
+  if (subject.slug === 'ap-lang') return 'AP Lang score calculator, AP English Language score calculator, and AP Language and Composition score calculator';
+  if (subject.slug === 'ap-calculus-ab') return 'AP Calc AB score calculator, AP Calculus AB score calculator, and AP Calculus AB calculator';
+  if (subject.aliases?.length) return `${subject.shortName} score calculator plus ${subject.aliases.slice(0, 2).join(' and ')}`;
+  return `${subject.shortName} score calculator`;
+}
+
+function targetScoreCopy(subject) {
+  const rows = [3, 4, 5].map((score) => {
+    const cutoff = subject.cutoffs[score];
+    const max = maxComposite(subject);
+    const label = score === 3 ? 'passing-range check' : score === 4 ? 'strong-score buffer' : 'top-band buffer';
+    return `<li><strong>Target ${score}</strong><span>Plan around about ${cutoff} of ${max} estimated composite points before adding a safety buffer for yearly scoring shifts.</span><em>${label}</em></li>`;
+  }).join('');
+  return `<section class="section target-score-copy" aria-label="${escapeHtml(subject.shortName)} target score guidance">
+    <div class="section-heading"><p class="eyebrow">Raw score target guide</p><h2>What score do I need for a 3, 4, or 5?</h2><p>Use this ${escapeHtml(subject.shortName)} page as a ${escapeHtml(subjectCalculatorKeyword(subject))}. Enter your real practice-test points first, then compare the live gap above with these estimated planning thresholds.</p></div>
+    <ul class="target-score-list">${rows}</ul>
+    <p class="note-inline">These are unofficial planning ranges. Official AP score setting can shift by year, exam form, rubric scoring, and equating.</p>
+  </section>`;
+}
+
+function subjectMethodSection(subject) {
+  const sectionInputs = subject.sections.map((section) => `${subject.slug === 'apush' ? apushLabel(section) : section.label} 0–${section.max}`).join('; ');
+  return `<section class="section subject-method" aria-label="How this AP calculator works">
+    <div class="section-heading"><p class="eyebrow">How this calculator works</p><h2>How this ${escapeHtml(subject.shortName)} score calculator works</h2><p>${escapeHtml(subject.structure)}</p></div>
+    <div class="seo-support-grid">
+      <article><span>Inputs</span><p>Enter ${escapeHtml(sectionInputs)} from a practice test or rubric estimate. The calculator clamps impossible values before estimating a score.</p></article>
+      <article><span>Conversion</span><p>${escapeHtml(subject.assumptions)} The result includes estimated composite, AP band, and gap to target scores.</p></article>
+      <article><span>Use case</span><p>${escapeHtml(subjectSeoProfile(subject).practiceUse)}</p></article>
+    </div>
+  </section>`;
+}
+
+function hubDiscoverySection() {
+  const discover = ['ap-world-history', 'ap-physics-1', 'ap-csp', 'ap-physics-2']
+    .map((slug) => subjects.find((subject) => subject.slug === slug))
+    .filter(Boolean);
+  return `<section class="section discovery-boost" id="newer-calculator-paths">
+    <div class="section-heading"><p class="eyebrow">More 2026 calculator paths</p><h2>Newer AP calculator pages to try next</h2><p>These subject pages are included in the sitemap and linked from the hub so students can find newer AP World History, AP Physics, and AP CSP score calculator paths without guessing URLs.</p></div>
+    <div class="related-grid">${discover.map((subject) => `<a class="related-card" href="/${subject.slug}-score-calculator/"><span>${escapeHtml(subject.shortName)}</span><strong>${escapeHtml(subject.title)}</strong><p>${escapeHtml(subjectTone(subject).focus)}</p></a>`).join('')}</div>
+  </section>`;
+}
+
+function hubGenericFaqsSection() {
+  const faqs = [
+    { q: 'Can I use this as an AP grade calculator?', a: 'Yes for practice planning. Students often say AP grade calculator when they mean an unofficial AP score calculator that turns practice-test points into an estimated 1–5 AP score.' },
+    { q: 'Is this an AP test calculator or AP exam calculator?', a: 'It is an AP test calculator for practice exams, not an official reporting tool. Pick the subject page, enter raw section points, and use the gap to decide what to review next.' },
+    { q: 'Which AP calculator pages should I try after APUSH?', a: 'High-priority next pages include AP Lang, AP Calculus AB, AP World History, AP Physics 1, AP Biology, AP Chemistry, AP Gov, AP Psychology, and AP Statistics.' }
+  ];
+  return `<section class="section faq hub-generic-faqs">
+    <div class="section-heading"><p class="eyebrow">Generic AP calculator FAQ</p><h2>AP calculator questions</h2><p>These answers cover common AP score calculator, AP exam calculator, AP test calculator, and AP grade calculator wording.</p></div>
+    ${faqs.map((qa) => `<details><summary>${escapeHtml(qa.q)}</summary><p>${escapeHtml(qa.a)}</p></details>`).join('\n')}
+  </section>`;
 }
 
 function hubAliasLine(subject) {
@@ -776,7 +838,7 @@ ${hubInternalLinksSection()}
   <a class="button" href="#subjects">Choose a calculator</a>
 </section>`;
   return pageShell({
-    title: 'AP Score Calculator 2026 | Free APUSH, Bio, Chem, Calc AB Score Estimates',
+    title: 'AP Score Calculator 2026 | Free AP Tools',
     description: 'Free AP score calculators for 2026. Estimate APUSH, AP Biology, AP Chemistry, AP Calculus AB, AP Lang, AP Lit, AP Gov, AP Statistics, and AP Psychology scores from practice-test section points with gap-to-target guidance.',
     path: '/',
     body,
@@ -827,6 +889,8 @@ function hubPage() {
   </div>
 </section>
 ${hubTargetPlannerPreview()}
+${hubDiscoverySection()}
+${hubGenericFaqsSection()}
 ${hubPlanningSupportSection()}
 <section class="section two-col" id="methodology">
   <div>
@@ -909,6 +973,8 @@ function subjectPage(subject) {
   </div>
 </section>
 ${subjectSeoSupportSection(subject)}
+${subjectMethodSection(subject)}
+${targetScoreCopy(subject)}
 <section class="section faq">
   <div class="section-heading">
     <p class="eyebrow">FAQ</p>
@@ -918,9 +984,11 @@ ${subjectSeoSupportSection(subject)}
 </section>
 ${relatedCalculatorSection(subject)}`;
   return pageShell({
-    title: ['ap-lang', 'ap-lit'].includes(subject.slug)
-      ? subject.title
-      : `${subject.title} | 2026 Guide`,
+    title: subject.slug === 'ap-csp'
+      ? 'AP CSP Score Calculator 2026 | 2026 Guide'
+      : ['ap-lang', 'ap-lit'].includes(subject.slug)
+        ? subject.title
+        : `${subject.title} | 2026 Guide`,
     description: seoProfile.description,
     path: `/${subject.slug}-score-calculator/`,
     body,

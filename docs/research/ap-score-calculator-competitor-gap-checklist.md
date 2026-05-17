@@ -1,6 +1,6 @@
 # AP Score Calculator Competitor Gap Checklist
 
-> Status: **open / gated**  
+> Status: **closed for V8 P0/P1 planning; GSC API URL Inspection canonical gate closed on 2026-05-17**  
 > Project: AP Score Calculator 2026  
 > Repo: `/root/ap-score-calculator`  
 > Production: `https://apscorecalculator.store`  
@@ -21,12 +21,12 @@
 
 ## Hard gate rule
 
-**No full growth PRD, no aggressive SEO roadmap, and no “竞品分析无遗漏” claim until the remaining GSC/index blocker is closed:**
+**No full growth PRD, no aggressive SEO roadmap, and no “竞品分析无遗漏” claim until the authenticated competitor/index evidence gates are closed. Current state on 2026-05-17: the P0/P1 V8 planning gates are closed; remaining Similarweb/monetization items are P2 strategy follow-ups, not blockers.**
 
 1. **Full Keyword Gap export**: completed 2026-05-16 for `apscorecalculator.store` vs `test-ninjas.com`, `knowt.com`, `gradgpt.com`, `num8ers.com`, `fiveable.me`, `albert.io`; see `semrush-keyword-gap-summary-2026-05-16.md`.
-2. **Current GSC / Google index check** for the live 22-URL production sitemap: completed for Pages indexed/excluded examples and Performance page/query rows on 2026-05-16; remaining URL Inspection canonical detail is follow-up.
+2. **Current GSC / Google index check** for the live 22-URL production sitemap: completed via GSC API URL Inspection + Search Analytics on 2026-05-17; see `docs/seo/current-index-checklist.md` and `docs/seo/gsc-url-inspection-snapshot-2026-05-17.md`.
 
-A limited, competitor-gated iteration PRD may still guide low-risk fixes, but it must be labeled as gated.
+A limited V8 growth PRD may now proceed from the authenticated evidence baseline. Future “no遗漏” claims still need to state the scope: P0/P1 SEO/index/competitor gates closed, while P2 Similarweb and monetization remain open.
 
 ## Current production baseline checked before writing this checklist
 
@@ -70,10 +70,10 @@ This corrects the outdated statement in the Semrush report that “we currently 
 ### Gap 2 — Current GSC / Google index state
 
 - **Owner:** seo / ops
-- **Status:** closed for requested checklist fields available in GSC UI — Pages indexed/excluded examples and Performance clicks/impressions were captured on 2026-05-16 and written to `docs/seo/current-index-checklist.md`. Remaining follow-up: per-URL Google-selected canonical requires URL Inspection/API.
+- **Status:** closed for requested checklist fields via GSC API — URL Inspection canonical, indexed status, crawl state, clicks, impressions, and page-level query rows were captured on 2026-05-17 and written to `docs/seo/current-index-checklist.md` plus `docs/seo/gsc-url-inspection-snapshot-2026-05-17.md`.
 - **Priority:** P0 blocker for “index-ready” claims
 - **Evidence already available:** production sitemap/robots/canonical are reachable; Semrush previously saw a small number of early keywords, but this does not prove current index coverage.
-- **What is missing:** Google Search Console status for all current sitemap URLs.
+- **What is missing:** No P0/P1 authenticated-index fields remain missing for V8 planning. Future follow-ups are operational: compare future snapshots, refresh pages that stay crawled-not-indexed, and request indexing for business-critical unknown URLs.
 - **Required output fields:**
   - URL
   - GSC indexed status
@@ -85,12 +85,12 @@ This corrects the outdated statement in the Semrush report that “we currently 
   - Canonical selected by Google
 - **Fallback if GSC is unavailable:** public `site:` checks can be recorded as weak evidence only; do not treat them as authoritative.
 - **Impact if left open:** cannot know whether poor performance is due to ranking, indexing delay, crawl exclusion, canonical selection, or sitemap issue.
-- **Acceptance criteria:** met for indexed / impressions / clicks / excluded reason fields exposed by GSC Pages + Performance. URL Inspection canonical remains a non-blocking enrichment task.
+- **Acceptance criteria:** met via GSC API on 2026-05-17. URL Inspection inspected all 22 live sitemap URLs and Search Analytics returned 33 page-query rows for the last 28 days. The resulting baseline shows 13 PASS/submitted-and-indexed URLs, 2 crawled-not-indexed URLs, 7 unknown-to-Google URLs, and 0 canonical conflicts among URLs with canonical data.
 
 ### Gap 3 — Top competitor UX teardown for current 16-subject scope
 
 - **Owner:** content + design + seo
-- **Status:** open
+- **Status:** closed for V8 P0/P1 planning — see `docs/research/ap-score-top-competitor-ux-teardown.md`. Browser screenshot/visual QA remains optional before a major redesign.
 - **Priority:** P1, needed before major visual/content redesign
 - **Evidence already available:** APUSH-focused teardown and broad competitor notes exist.
 - **What is missing:** current-version teardown across hub and representative subject pages, not just APUSH.
@@ -114,12 +114,12 @@ This corrects the outdated statement in the Semrush report that “we currently 
   - What to copy structurally, not textually
   - What to avoid
 - **Impact if left open:** development may improve pages technically but still miss user-perceived competitive quality.
-- **Acceptance criteria:** at least 10 concrete recommendations mapped to P0/P1/P2.
+- **Acceptance criteria:** met. The teardown includes Test Ninjas, Knowt, GradGPT, Fiveable, Albert, NUM8ERS and 15 concrete P0/P1 recommendations.
 
 ### Gap 4 — Keyword validation for expanded subjects
 
 - **Owner:** seo
-- **Status:** open
+- **Status:** closed as directional V8 P1 validation — see `docs/research/ap-score-expanded-subject-keyword-validation.md`.
 - **Priority:** P1 before promotion / internal-link emphasis
 - **Evidence already available:** many original high-priority subjects have Semrush volume/KD data.
 - **What is missing:** refreshed validation for the expanded 16-subject set, especially pages added after earlier reports.
@@ -139,7 +139,7 @@ This corrects the outdated statement in the Semrush report that “we currently 
   - Top competitor URL pattern
   - Whether current page should remain index-priority, be de-emphasized, or be improved
 - **Impact if left open:** these pages can remain live, but should not be treated as proven priority pages.
-- **Acceptance criteria:** each subject has Semrush data or clearly labeled fallback/public evidence.
+- **Acceptance criteria:** met directionally. AP World and Physics 1 have Semrush demand evidence; CSP, Physics 2, Macro, Micro, Human Geography have clearly labeled public competitor/fallback evidence and remain lower-priority until GSC/Semrush demand appears.
 
 ### Gap 5 — Similarweb second-pass details
 
@@ -190,8 +190,8 @@ This corrects the outdated statement in the Semrush report that “we currently 
 
 ## Current recommended next actions
 
-1. Fill GSC status into `docs/seo/current-index-checklist.md`.
-2. Use `semrush-keyword-gap-summary-2026-05-16.md` to prioritize page/module work; optionally enrich top 20 keywords with URL-level SERP/competitor landing pages.
-3. Create `docs/research/ap-score-expanded-subject-keyword-validation.md` for the 7 expanded subjects.
-4. Create `docs/research/ap-score-top-competitor-ux-teardown.md` before another large design pass.
-5. Keep monetization out of v6 unless Ningge explicitly chooses a CTA strategy.
+1. GSC URL Inspection / Google-selected canonical gate is closed for all 22 live sitemap URLs; use `docs/seo/gsc-url-inspection-snapshot-2026-05-17.md` as the baseline. Current index follow-ups: AP Lang + AP Calculus AB are crawled-not-indexed; AP World, CSP, Physics 1/2, Privacy, Terms, Contact are unknown to Google.
+2. Use `semrush-keyword-gap-summary-2026-05-16.md` plus `ap-score-expanded-subject-keyword-validation.md` to prioritize page/module work.
+3. Use `ap-score-top-competitor-ux-teardown.md` before another large design pass.
+4. Use `ap-score-official-source-evidence-pack-2026-05-17.md` before drafting/deploying P1 schedule/distribution pages.
+5. Keep monetization out of V8 unless Ningge explicitly chooses a CTA strategy.

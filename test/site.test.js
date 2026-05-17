@@ -31,9 +31,14 @@ test('v7 Semrush-backed priority subjects expose alias metadata without invalid 
       relatedSlugs: ['apush', 'ap-psychology', 'ap-human-geography']
     },
     'ap-lang': {
-      aliases: ['ap lang score calculator', 'ap language and composition score calculator'],
+      aliases: ['ap lang score calculator', 'ap language and composition score calculator', 'ap english language score calculator'],
       group: 'english',
       relatedSlugs: ['ap-lit']
+    },
+    'ap-calculus-ab': {
+      aliases: ['ap calc ab score calculator', 'ap calculus ab score calculator', 'ap calculus ab calculator'],
+      group: 'stem',
+      relatedSlugs: ['ap-statistics', 'ap-physics-1', 'ap-chemistry']
     }
   };
 
@@ -105,7 +110,7 @@ test('subject pages contain SEO, calculator, schema, internal links, and require
   for (const subject of subjects) {
     const page = pages.find((item) => item.path === `${subject.slug}-score-calculator/index.html`);
     assert(page, `missing page for ${subject.slug}`);
-    assert.match(page.html, new RegExp(`<title>${subject.title}`));
+    assert.match(page.html, new RegExp(`<title>${subject.slug === 'ap-csp' ? 'AP CSP Score Calculator 2026' : subject.title}`));
     if (subject.slug === 'apush') {
       assert.match(page.html, /<h1>APUSH Score Calculator 2026<\/h1>/);
     } else {
@@ -135,6 +140,9 @@ test('hub links to all subject pages with indexable subject matrix and 2026 posi
   assert.match(hub.html, /AP score calculator/);
   assert.match(hub.html, /AP calculator/);
   assert.match(hub.html, /AP exam calculator/);
+  assert.match(hub.html, /AP test calculator/);
+  assert.match(hub.html, /AP grade calculator/);
+  assert.match(hub.html, /Newer AP calculator pages to try next/);
   for (const subject of subjects) {
     assert.match(hub.html, new RegExp(`href="/${subject.slug}-score-calculator/"`));
     assert.match(hub.html, new RegExp(subject.title));
